@@ -1,9 +1,5 @@
 /* TODO: I need to remove this file and do this the right way */
-body {
-    padding-top: 60px;
-    padding-bottom: 60px;
-    font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
-}
+
 .jumbotron {
     text-align: center;
 }
@@ -45,18 +41,7 @@ body {
     padding-bottom: 15px;
 }
 .signin-page {
-    width: 100%;
-    background: url(/images/um_psu_stack.jpg);
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
     position: absolute;
-    z-index: -5;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
 }
 .form-signin-heading {
     font-size: 16px;
@@ -80,10 +65,7 @@ body {
     text-align: center;
     color: #FFFFFF;
 }
-.navbar-inverse {
-    background-color: #ececec;
-    border-color: #ececec;
-}
+
 .navbar-inverse .navbar-toggle {
     border-color: #777574;
 }
