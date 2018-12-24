@@ -23,30 +23,12 @@ code {
   position: absolute;
 }
 
-.mobile-menu > .nav > li > a {
-  color: #FFFFFF;
-}
-.mobile-menu > .nav > li {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.mobile-menu > .nav > li > a {
-  display: inline;
-}
-.navbar-fixed-top .navbar-collapse {
-  min-height: 100vh;
-}
-.navbar-inverse .navbar-collapse {
-  border-color: #000B26;
-}
-
 .menu-close {
   position: absolute;
-  top: 0;
-  left: 0;
-  margin-left: 18px;
-  margin-top: 0px;
-  background-color: transparent;
-  border: 0;
 }
+
+.menu-account-bottom {
+  position: absolute;
+}
+
 

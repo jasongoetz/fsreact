@@ -39,6 +39,7 @@ class App extends Component {
               {this.state.showMobileMenu && <MobileMenu
                   isAdmin={true}
                   gamblerMoney={0}
+                  closeMenu={this.toggleMobileMenu}
               />}
 
               <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>

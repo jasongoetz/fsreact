@@ -16,8 +16,8 @@ import {Colors} from "../theme/theme";
 
 export interface Props {
     isAdmin: boolean;
-    toggleMobileMenu: any; //TODO: Change from any to function
-    toggleBetSlip: any; //TODO: Change from any to function
+    toggleMobileMenu: () => void;
+    toggleBetSlip: () => void;
 }
 
 export interface State {
