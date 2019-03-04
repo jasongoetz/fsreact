@@ -1,18 +1,18 @@
 import {Component} from "react";
 import React from "react";
 import {
-    Col,
-    Collapse, Container, DropdownItem, DropdownMenu,
+    Collapse, DropdownItem, DropdownMenu,
     DropdownToggle,
     Nav,
     Navbar,
     NavbarBrand,
     NavbarToggler,
     NavItem,
-    NavLink, Row,
+    NavLink,
     UncontrolledDropdown
 } from "reactstrap";
 import {Colors} from "../theme/theme";
+import { NavLink as Link } from "react-router-dom";
 
 export interface Props {
     isAdmin: boolean;
@@ -127,8 +127,8 @@ class NavHeader extends Component<Props, State> {
         </Nav>;
     };
 
-    navLink = (label: string, href: string) => {
-        return <NavLink style={navbarLinkStyle} href={href}>{label}</NavLink>;
+    navLink = (label: string, path: string) => {
+        return <NavLink style={navbarLinkStyle} tag={Link} to={path}>{label}</NavLink>;
     };
 }
 

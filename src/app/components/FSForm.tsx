@@ -5,7 +5,7 @@ import styled from "styled-components";
 import {Colors} from "../theme/theme";
 
 export interface FSFormProps {
-    onSubmit: () => void;
+    onSubmit: (e: any) => void;
     className?: string;
 }
 

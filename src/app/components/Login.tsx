@@ -2,8 +2,11 @@ import {Component} from "react";
 import React from "react";
 import {FormGroup, Button, Input, Container, Row, Col} from "reactstrap";
 import {FSButton, FSForm, FSInput} from "./FSForm";
+import {authenticate, Credentials} from "../auth/authActions";
+import { connect } from 'react-redux';
 
 export interface Props {
+    authenticate: (user: Credentials) => void;
 }
 
 export interface State {
@@ -53,14 +56,27 @@ class Login extends Component<Props, State> {
         );
     }
 
-    submitLogin = () => {
-        const { email, password } = this.state;
-        alert("HI THERE: " + email);
-    };
+    submitLogin = async (e: any) => {
+        e.preventDefault();
+        try {
+            const {email, password} = this.state;
+            await this.props.authenticate({email, password});
 
+            console.log("I think I successfully logged in");
+        } catch (err) {
+            alert("Nope. You'll get an error message here normally" + err.message);
+        }
+    };
 }
 
-export default Login;
+const mapDispatchToProps = {
+    authenticate,
+};
+
+export default connect(
+    undefined,
+    mapDispatchToProps,
+)(Login);
 
 
 
