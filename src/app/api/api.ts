@@ -1,5 +1,6 @@
 
 import { post, get } from './fetch';
+import {Credentials} from "../auth/authModels";
 
 export interface Token {
     userId: number;
@@ -21,21 +22,19 @@ export interface LoginUser {
     token?: string;
 }
 
-export const login: any = async ({ //TODO: Make this an auth object
+export const login: any = async ({
                                 email,
                                 password,
                                 token,
-                            }: LoginUser): Promise<string> => {
+                            }: Credentials): Promise<string> => {
     const response = await post({
         path: `/api/auth`,
         body: JSON.stringify({ email, password, token }),
     });
 
     let headers = await response.headers;
-    console.log("HEADERS: " + JSON.stringify(headers));
 
     let data = await response.json();
-    console.log("Data: " + JSON.stringify(data));
 
     return data;
 };

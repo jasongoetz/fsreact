@@ -13,7 +13,7 @@ interface Fetch extends FetchBody {
     method: Method;
 }
 
-const BASE_URL = 'http://localhost:1337'; //TODO: Fix this. Get from env.
+const BASE_URL = process.env.REACT_APP_SERVER_URL;
 
 const appFetch = async ({ method, token, path, body, headers = {} }: Fetch) => {
     let authHeaders = {};

@@ -12,12 +12,16 @@ import {
     UncontrolledDropdown
 } from "reactstrap";
 import {Colors} from "../theme/theme";
-import { NavLink as Link } from "react-router-dom";
+import {Link} from "react-router-dom";
+import {connect} from "react-redux";
+import {logout} from "../auth/authActions";
+//import { NavLink as Link } from "react-router-dom";
 
 export interface Props {
     isAdmin: boolean;
     toggleMobileMenu: () => void;
     toggleBetSlip: () => void;
+    handleLogout: () => void;
 }
 
 export interface State {
@@ -68,6 +72,11 @@ class NavHeader extends Component<Props, State> {
 
     toggleBetSlip = () => {
         this.props.toggleBetSlip();
+    };
+
+    handleLogout = (e) => {
+        e.preventDefault();
+        this.props.handleLogout();
     };
 
     render() {
@@ -122,15 +131,22 @@ class NavHeader extends Component<Props, State> {
                 {this.navLink("$500.00", "/account")}
             </NavItem>
             <NavItem>
-                {this.navLink("SIGN OUT", "/logout")}
+                {this.navLink("SIGN OUT", "/logout", this.handleLogout)}
             </NavItem>
         </Nav>;
     };
 
-    navLink = (label: string, path: string) => {
-        return <NavLink style={navbarLinkStyle} tag={Link} to={path}>{label}</NavLink>;
+    navLink = (label: string, path: string, onClick?: (e) => void) => {
+        return <NavLink style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
     };
 }
 
-export default NavHeader;
+const mapDispatchToProps = {
+    handleLogout: logout,
+};
+export default connect(
+    undefined,
+    mapDispatchToProps,
+)(NavHeader);
+
 

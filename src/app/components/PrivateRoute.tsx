@@ -1,23 +1,22 @@
-import {Redirect, Route} from "react-router";
-import React, {Component} from "react";
+import {Redirect, Route} from "react-router-dom";
+import React from "react";
 import {connect} from "react-redux";
 import {State} from "../reducers/root";
+import {isLoggedIn} from "../auth/authSelector";
 
-const PrivateRoute = ({component: Component, authenticated, ...rest}) => {
-    console.log(`PrivateRoute, authenticated: ${authenticated}`);
-    return (
-        <Route
-            {...rest}
-            render={(props) => !!authenticated
-                ? <Component {...props} />
-                : <Redirect to={{pathname: '/login', state: {from: props.location}}} />}
-        />
-    )
-};
+const PrivateRoute = ({component: Comp, authenticated, ...rest}) => (
+    <Route
+        {...rest}
+        render={props => !!authenticated
+            ? <Comp {...props} />
+            : <Redirect to={{pathname: '/login', state: {from: props.location}}} />
+        }
+    />
+);
 
 const mapStateToProps = (state: State) => {
     return {
-        authenticated: state.auth.authenticated,
+        authenticated: isLoggedIn(state),
     };
 };
 

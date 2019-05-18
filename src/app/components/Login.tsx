@@ -2,16 +2,19 @@ import {Component} from "react";
 import React from "react";
 import {FormGroup, Button, Input, Container, Row, Col} from "reactstrap";
 import {FSButton, FSForm, FSInput} from "./FSForm";
-import {authenticate, Credentials} from "../auth/authActions";
+import {authenticate} from "../auth/authActions";
 import { connect } from 'react-redux';
+import {Redirect, RouteComponentProps} from "react-router";
+import {Credentials} from "../auth/authModels";
 
-export interface Props {
+export interface Props extends RouteComponentProps {
     authenticate: (user: Credentials) => void;
 }
 
 export interface State {
     email: string
     password: string
+    redirectToReferrer: boolean
 }
 
 class Login extends Component<Props, State> {
@@ -19,9 +22,15 @@ class Login extends Component<Props, State> {
     state = {
         email: "",
         password: "",
+        redirectToReferrer: false,
     };
 
     render() {
+        let { from } = this.props.location.state || { from: { pathname: "/" } };
+        let { redirectToReferrer } = this.state;
+
+        if (redirectToReferrer) return <Redirect to={from} />;
+
         return (
             <Row>
                 <Col
@@ -62,7 +71,7 @@ class Login extends Component<Props, State> {
             const {email, password} = this.state;
             await this.props.authenticate({email, password});
 
-            console.log("I think I successfully logged in");
+            this.setState({ redirectToReferrer: true });
         } catch (err) {
             alert("Nope. You'll get an error message here normally" + err.message);
         }

@@ -49,12 +49,12 @@ class App extends Component {
                             closeMenu={this.toggleMobileMenu}
                         />}
 
-                        <Route exact path="/login" component={this.LoginPage} redirectTo="/" />
-                        <Route exact path="/" component={this.HomePage} />
-                        <Route path="/games" component={this.GamesPage} />
-                        <Route path="/standings" component={this.StandingsPage} />
-                        <Route path="/bets" component={this.BetsPage} />
-                        <Route path="/league/settings" component={this.LeagueManagePage} />
+                        <UnauthenticatedRoute exact path="/login" component={this.LoginPage} redirectTo="/" />
+                        <PrivateRoute exact path="/" component={this.HomePage} />
+                        <PrivateRoute exact path="/games" component={this.GamesPage} />
+                        <PrivateRoute exact path="/standings" component={this.StandingsPage} />
+                        <PrivateRoute exact path="/bets" component={this.BetsPage} />
+                        <PrivateRoute exact path="/league/settings" component={this.LeagueManagePage} />
                     </div>
                 </Router>
             </Provider>
@@ -62,7 +62,6 @@ class App extends Component {
     }
 
     HomePage = () => {
-        console.log("HOME");
         return (
             <div>
                 <h2>Home</h2>
@@ -70,17 +69,15 @@ class App extends Component {
         )
     };
 
-    LoginPage = () => {
-        console.log("LOGIN");
+    LoginPage = (navProps) => {
         return (
             <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
-                <Login/>
+                <Login {...navProps}/>
             </ImagePage>
         )
     };
 
     GamesPage = () => {
-        console.log("GAMES");
         return (
             <div>
                 <h2>Games</h2>
@@ -89,7 +86,6 @@ class App extends Component {
     };
 
     StandingsPage = () => {
-        console.log("STANDINGS");
         return (
             <div>
                 <h2>Standings</h2>
@@ -98,7 +94,6 @@ class App extends Component {
     };
 
     BetsPage = () => {
-        console.log("BETS");
         return (
             <div>
                 <h2>Bets</h2>
@@ -107,7 +102,6 @@ class App extends Component {
     };
 
     LeagueManagePage = () => {
-        console.log("MANAGE");
         return (
             <div>
                 <h2>Manage</h2>

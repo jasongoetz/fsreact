@@ -4,7 +4,6 @@ import {connect} from "react-redux";
 import {State} from "../reducers/root";
 
 const UnauthenticatedRoute = ({component: Component, authenticated, redirectTo, ...rest}) => {
-    console.log(`UnauthenticatedRoute, authenticated: ${authenticated}`);
     return (
         <Route
             {...rest}
