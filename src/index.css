@@ -31,4 +31,11 @@ code {
   position: absolute;
 }
 
+.league-header {
+  position: absolute;
+}
+
+.btn {
+  border-radius: 0px;
+}
 

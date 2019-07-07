@@ -1,11 +1,12 @@
 import {Component} from "react";
 import React from "react";
 import {FormGroup, Button, Input, Container, Row, Col} from "reactstrap";
-import {FSButton, FSForm, FSInput} from "./FSForm";
+import {FSForm, FSInput} from "./FSForm";
 import {authenticate} from "../auth/authActions";
 import { connect } from 'react-redux';
 import {Redirect, RouteComponentProps} from "react-router";
 import {Credentials} from "../auth/authModels";
+import {FSButton} from "./FSComponents";
 
 export interface Props extends RouteComponentProps {
     authenticate: (user: Credentials) => void;
@@ -57,7 +58,7 @@ class Login extends Component<Props, State> {
                                 onChange={(event: any) => this.setState({password: event.target.value})}
                             />
                         </FormGroup>
-                        <FSButton color="primary" size="lg" className="btn-block btn">SIGN IN</FSButton>
+                        <FSButton color="primary" size="lg">SIGN IN</FSButton>
                         {/*<div className="register-invite">New to Fake Stacks? <a href="/register">Sign up.</a></div>*/}
                     </FSForm>
                 </Col>

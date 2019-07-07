@@ -9,12 +9,6 @@ export interface FSFormProps {
     className?: string;
 }
 
-export const FSButton = styled(Button)`
-    && {
-        border-radius: 0;
-    }
-`;
-
 export const FSInput = styled(Input)`
     && {
         border-radius: 0;

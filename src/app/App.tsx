@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import NavHeader from "./components/NavHeader";
 import Login from "./components/Login";
@@ -11,6 +10,8 @@ import { Provider } from "react-redux";
 import store from "./store";
 import PrivateRoute from "./components/PrivateRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
+import LeaguePage from "./components/LeaguePage";
+import GamesPage from "./components/GamesPage";
 
 export interface State {
     showMobileMenu: boolean
@@ -51,7 +52,7 @@ class App extends Component {
 
                         <UnauthenticatedRoute exact path="/login" component={this.LoginPage} redirectTo="/" />
                         <PrivateRoute exact path="/" component={this.HomePage} />
-                        <PrivateRoute exact path="/games" component={this.GamesPage} />
+                        <PrivateRoute exact path="/games" component={this.GamePage} />
                         <PrivateRoute exact path="/standings" component={this.StandingsPage} />
                         <PrivateRoute exact path="/bets" component={this.BetsPage} />
                         <PrivateRoute exact path="/league/settings" component={this.LeagueManagePage} />
@@ -61,11 +62,9 @@ class App extends Component {
         );
     }
 
-    HomePage = () => {
+    HomePage = (navProps) => {
         return (
-            <div>
-                <h2>Home</h2>
-            </div>
+            <LeaguePage {...navProps}/>
         )
     };
 
@@ -77,12 +76,8 @@ class App extends Component {
         )
     };
 
-    GamesPage = () => {
-        return (
-            <div>
-                <h2>Games</h2>
-            </div>
-        )
+    GamePage = () => {
+        return <GamesPage/>;
     };
 
     StandingsPage = () => {
