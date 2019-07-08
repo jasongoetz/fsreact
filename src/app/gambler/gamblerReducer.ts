@@ -2,7 +2,11 @@
 import { GAMBLER_LOAD_SUCCESS, GAMBLER_LOAD_FAILURE, LOAD_GAMBLER_AND_LEAGUE } from '../user/userActions';
 import { User, Gambler, League } from "../types";
 
-const gamblerReducer = (state = {user: {}}, action: any) => {
+const initialState = {
+    user: {},
+};
+
+const gamblerReducer = (state = initialState, action: any) => {
     switch (action.type) {
         case LOAD_GAMBLER_AND_LEAGUE:
             return { ...state, loading: true };

@@ -1,9 +1,12 @@
 import React, {Component} from "react";
 import {FSButton} from "./FSComponents";
 import {State} from "./GamesPage";
+import {Bettable} from "../bettables/bettableReducer";
+import {Input} from "reactstrap";
+import {FSInput} from "./FSForm";
 
 interface Props {
-    bettable: any; //TODO: Fix
+    bettable: Bettable;
     over: boolean; //TODO: Replace this with an enum
 }
 
@@ -19,12 +22,12 @@ export class OverUnderBettableButton extends Component<Props, State> {
 
     render() {
         if (!this.props.bettable.ouoff) {
-            let disabled = this.bettableInCart(this.props.bettable, this.props.over);
+            let disabled = this.bettableInCart(this.props.bettable.id, this.props.over);
             let overUnderName = this.props.over ? "Over " : "Under ";
             return <FSButton disabled={disabled}
                              onClick={this.betClick}>{overUnderName} {this.props.bettable.overunder}</FSButton>;
         } else {
-            return <FSButton disabled={true}>OFF</FSButton>;
+            return <FSButton disabled={true}>O/U OFF</FSButton>;
         }
     }
 

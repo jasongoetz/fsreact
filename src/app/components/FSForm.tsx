@@ -7,6 +7,7 @@ import {Colors} from "../theme/theme";
 export interface FSFormProps {
     onSubmit: (e: any) => void;
     className?: string;
+    style?: any;
 }
 
 export const FSInput = styled(Input)`
@@ -26,7 +27,7 @@ export class FSForm extends React.Component<FSFormProps> {
 
     render() {
         return (
-            <Form onSubmit={this.props.onSubmit} style={fsFormStyle} className={this.props.className}>
+            <Form onSubmit={this.props.onSubmit} style={{...fsFormStyle, ...this.props.style}} className={this.props.className}>
                 {this.props.children}
             </Form>
         );

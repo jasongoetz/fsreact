@@ -8,10 +8,11 @@ import MiniStandings from "./MiniStandings";
 import Rules from "./Rules";
 import MiniBets from "./MiniBets";
 import HomePagePanel from "./HomePagePanel";
+import {League} from "../types";
 
 export interface Props {
     loadUserContext: () => void;
-    league: any; //TODO: Fix
+    league: League;
 }
 
 export interface State {

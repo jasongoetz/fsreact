@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Col, Row} from "reactstrap";
 import {TeamBettableButton} from "./TeamBettableButton";
 import {OverUnderBettableButton} from "./OverUnderBettableButton";
+import moment from 'moment';
 
 const teamRowStyle = {
     paddingTop: "5px",
@@ -29,7 +30,7 @@ export class GameRow extends Component<{ bettable: any }> {
     render() {
         return <Row style={gameRowStyle}>
             <Col md={4} style={gameTimeStyle}>
-                {this.props.bettable.gameTime}
+                {moment(this.props.bettable.gameTime).format("dddd, MMM Do, h:mma z")}
             </Col>
             <Col md={8}>
                 <Row style={teamRowStyle}>

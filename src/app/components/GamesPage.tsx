@@ -6,12 +6,15 @@ import {Col, Container, Row} from "reactstrap";
 import {loadGames} from "../bettables/bettableActions";
 import {getBettables} from "../bettables/bettableSelector";
 import {GameRow} from "./GameRow";
+import {PageHeader} from "./PageHeader";
+import {League} from "../types";
+import {Bettable} from "../bettables/bettableReducer";
 
 export interface Props {
     loadUserContext: () => void;
     loadGames: () => void;
-    league: any; //TODO: Fix
-    bettables: any[]; //TODO: Fix
+    league: League;
+    bettables: Bettable[];
 }
 
 export interface State {
@@ -34,10 +37,8 @@ class GamesPage extends Component<Props, State> {
         return <Container>
             <Row>
                 <Col md={8}>
-                    <h3>Games</h3>
-                    {
-                        this.props.bettables.map(bettable => <GameRow bettable={bettable}/>)
-                    }
+                    <PageHeader>Games</PageHeader>
+                    {this.props.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
                 </Col>
                 <Col md={4} style={sidebarOuterStyle}>
                 </Col>

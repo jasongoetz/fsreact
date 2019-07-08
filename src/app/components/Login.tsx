@@ -8,6 +8,10 @@ import {Redirect, RouteComponentProps} from "react-router";
 import {Credentials} from "../auth/authModels";
 import {FSButton} from "./FSComponents";
 
+const formSigninStyle = {
+    paddingBottom: "15px"
+};
+
 export interface Props extends RouteComponentProps {
     authenticate: (user: Credentials) => void;
 }
@@ -26,6 +30,23 @@ class Login extends Component<Props, State> {
         redirectToReferrer: false,
     };
 
+    private _isMounted: boolean = false;
+
+    componentDidMount(): void {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount(): void {
+        this._isMounted = false;
+    }
+
+    //Override
+    setState(state: any) {
+        if (this._isMounted) {
+            super.setState(state);
+        }
+    }
+
     render() {
         let { from } = this.props.location.state || { from: { pathname: "/" } };
         let { redirectToReferrer } = this.state;
@@ -40,7 +61,7 @@ class Login extends Component<Props, State> {
                     md={{offset: 3, size: 6}}
                     lg={{offset: 4, size: 4}}
                 >
-                    <FSForm onSubmit={this.submitLogin} className="form-signin">
+                    <FSForm onSubmit={this.submitLogin} style={formSigninStyle}>
                         <FormGroup>
                             <FSInput
                                 autoFocus

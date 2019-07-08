@@ -2,9 +2,8 @@ import {Component} from "react";
 import {Button, Nav, NavItem, NavLink} from "reactstrap";
 import React from "react";
 import {Link} from "react-router-dom";
-import {Gambler} from "../types";
+import {FullLeague, League} from "../types";
 import {getLeague, getLeagueGamblers} from "../league/leagueSelector";
-import {loadUserContext} from "../user/userActions";
 import {connect} from "react-redux";
 import HomePagePanel from "./HomePagePanel";
 
@@ -12,7 +11,7 @@ export interface State {
 }
 
 export interface Props {
-    league: any; //TODO: Fix
+    league: FullLeague;
 }
 
 const pendingBetPanelStyle = {
@@ -49,7 +48,7 @@ class MiniBets extends Component<Props, State> {
         return (
             <div style={pendingBetPanelStyle}>
                 {this.props.league.topBets.bets.map(bet => {
-                    return <div style={pendingMiniBetCardStyle}>
+                    return <div key={`top-bet-card-${bet.id}`} style={pendingMiniBetCardStyle}>
                         <div style={betHeadlineStyle}>
                             ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}
                         </div>

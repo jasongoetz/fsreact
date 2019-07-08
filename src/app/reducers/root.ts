@@ -5,6 +5,7 @@ import leagueReducer from '../league/leagueReducer';
 import { State as AuthState } from '../auth/authReducer';
 import gamblerReducer from "../gambler/gamblerReducer";
 import bettableReducer from "../bettables/bettableReducer";
+import transactionsReducer from "../transactions/transactionsReducer";
 
 export interface State {
     auth: AuthState;
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     gambler: gamblerReducer,
     bettable: bettableReducer,
     league: leagueReducer,
+    transactions: transactionsReducer,
 });
 
 export default rootReducer;

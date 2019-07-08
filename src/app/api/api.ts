@@ -32,11 +32,7 @@ export const login: any = async ({
         body: JSON.stringify({ email, password, token }),
     });
 
-    //TODO: Why do I have this here? Do I need to check headers?
-    let headers = await response.headers;
-
     let data = await response.json();
-
     return data;
 };
 
@@ -45,8 +41,15 @@ export const getUserContext: any = async (userId): Promise<string> => {
         path: `/api/users/${userId}/context`,
     });
 
-    //TODO: Same as above
-    let headers = await response.headers;
+    let data = await response.json();
+    return data;
+};
+
+export const getTransactionsForGambler: any = async (gamblerId): Promise<string> => {
+    const response = await get({
+        path: `/api/gamblers/${gamblerId}/transactions`,
+    });
+
     let data = await response.json();
     return data;
 };
@@ -56,8 +59,6 @@ export const getGamesForSport: any = async (sportKey): Promise<string> => {
         path: `/api/games?sport=${sportKey}`,
     });
 
-    //TODO: Same as above
-    let headers = await response.headers;
     let data = await response.json();
     return data;
 };

@@ -18,17 +18,15 @@ import {logout} from "../auth/authActions";
 import {getGamblerWithAccount} from "../gambler/gamblerSelector";
 import {getLeague} from "../league/leagueSelector";
 import {isLoggedIn} from "../auth/authSelector";
+import {GamblerInfo, League} from "../types";
 
 export interface Props {
-    league: any; //TODO: Fix
-    gambler: any; //TODO: Fix
+    league: League;
+    gambler: GamblerInfo;
     loggedIn: boolean;
     toggleMobileMenu: () => void;
     toggleBetSlip: () => void;
     handleLogout: () => void;
-}
-
-export interface State {
 }
 
 const navbarStyle = {
@@ -62,7 +60,7 @@ const betSlipButtonStyle = {
     paddingRight: "5px"
 };
 
-class NavHeader extends Component<Props, State> {
+class NavHeader extends Component<Props> {
 
     toggleMenu = () => {
         this.props.toggleMobileMenu();
@@ -150,11 +148,11 @@ class NavHeader extends Component<Props, State> {
     }
 }
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state) => {
     return {
         loggedIn: isLoggedIn(state),
         league: getLeague(state),
-        gambler: getGamblerWithAccount(state),
+        gambler: getGamblerWithAccount(state, state.gambler.id),
     };
 };
 

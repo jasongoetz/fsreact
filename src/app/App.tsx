@@ -12,6 +12,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 import LeaguePage from "./components/LeaguePage";
 import GamesPage from "./components/GamesPage";
+import Standings from "./components/Standings";
+import AccountPage from './components/AccountPage';
 
 export interface State {
     showMobileMenu: boolean
@@ -37,9 +39,8 @@ class App extends Component {
         return (
             <Provider store={store}>
                 <Router>
-                    <div style={appStyle} className="App MainBody">
+                    <div style={appStyle} className="App">
                         <NavHeader
-                            isAdmin={true}
                             toggleMobileMenu={this.toggleMobileMenu}
                             toggleBetSlip={() => alert("NOT DONE YET")}
                         />
@@ -55,6 +56,8 @@ class App extends Component {
                         <PrivateRoute exact path="/games" component={this.GamePage} />
                         <PrivateRoute exact path="/standings" component={this.StandingsPage} />
                         <PrivateRoute exact path="/bets" component={this.BetsPage} />
+                        <PrivateRoute exact path="/account" component={this.AccountPage}/>
+                        <PrivateRoute exact path="/transaction/show/:gamblerId" component={this.AccountPage}/>
                         <PrivateRoute exact path="/league/settings" component={this.LeagueManagePage} />
                     </div>
                 </Router>
@@ -81,11 +84,7 @@ class App extends Component {
     };
 
     StandingsPage = () => {
-        return (
-            <div>
-                <h2>Standings</h2>
-            </div>
-        )
+        return <Standings/>;
     };
 
     BetsPage = () => {
@@ -103,6 +102,10 @@ class App extends Component {
             </div>
         )
     };
+
+    AccountPage = ({match}) => {
+        return <AccountPage gamblerId={match.params.gamblerId}/>
+    }
 }
 
 export default App;
