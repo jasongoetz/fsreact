@@ -1,0 +1,1 @@
+export const getBetsAndParlaysByGambler = state => state.bet.betsAndParlaysByGambler;

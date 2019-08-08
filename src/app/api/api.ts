@@ -63,6 +63,15 @@ export const getGamesForSport: any = async (sportKey): Promise<string> => {
     return data;
 };
 
+export const getBetsForLeague: any = async (leagueId): Promise<string> => {
+    const response = await get({
+        path: `/api/leagues/${leagueId}/bets`,
+    });
+
+    let data = await response.json();
+    return data;
+};
+
 
 
 

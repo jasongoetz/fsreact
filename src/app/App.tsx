@@ -14,6 +14,7 @@ import LeaguePage from "./components/LeaguePage";
 import GamesPage from "./components/GamesPage";
 import Standings from "./components/Standings";
 import AccountPage from './components/AccountPage';
+import LeagueBetList from "./components/LeagueBetList";
 
 export interface State {
     showMobileMenu: boolean
@@ -88,11 +89,7 @@ class App extends Component {
     };
 
     BetsPage = () => {
-        return (
-            <div>
-                <h2>Bets</h2>
-            </div>
-        )
+        return <LeagueBetList/>;
     };
 
     LeagueManagePage = () => {

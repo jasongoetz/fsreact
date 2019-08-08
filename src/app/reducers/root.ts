@@ -6,6 +6,7 @@ import { State as AuthState } from '../auth/authReducer';
 import gamblerReducer from "../gambler/gamblerReducer";
 import bettableReducer from "../bettables/bettableReducer";
 import transactionsReducer from "../transactions/transactionsReducer";
+import betReducer from "../bets/betReducer";
 
 export interface State {
     auth: AuthState;
@@ -13,6 +14,7 @@ export interface State {
 
 const rootReducer = combineReducers({
     auth: authReducer,
+    bet: betReducer,
     user: userReducer,
     gambler: gamblerReducer,
     bettable: bettableReducer,

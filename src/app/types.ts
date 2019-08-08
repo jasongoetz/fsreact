@@ -19,6 +19,8 @@ export interface Gambler {
 export interface GamblerInfo {
     id: number;
     user: User;
+    bets: Bet[];
+    parlays: Parlay[];
     league: number;
     money: number;
     pending: number;
@@ -52,6 +54,10 @@ export interface Bet {
     gambler: Gambler,
     bettable: Bettable,
     parlay: any,
+}
+
+export interface Parlay extends Bet {
+    bets: Bet[]
 }
 
 export interface FullLeague extends League {
