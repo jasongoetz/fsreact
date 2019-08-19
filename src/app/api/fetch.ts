@@ -17,6 +17,9 @@ const BASE_URL = process.env.REACT_APP_SERVER_URL;
 
 const appFetch = async ({ method, token, path, body, headers = {} }: Fetch) => {
     let authHeaders = {};
+    if (!token) {
+        token = localStorage.token;
+    }
     if (token) {
         authHeaders = {
             Authorization: `Bearer ${token}`,

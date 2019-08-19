@@ -2,28 +2,38 @@ import React, {Component} from "react";
 import {FSButton} from "./FSComponents";
 import {State} from "./GamesPage";
 import {Bettable} from "../bettables/bettableReducer";
-import {Input} from "reactstrap";
-import {FSInput} from "./FSForm";
+import {getCartBets} from "../cart/cartSelector";
+import {connect} from "react-redux";
+import {CartBet} from "../cart/cartReducer";
+import {OverUnder} from "../bets/betReducer";
+import {loadUserContext} from "../user/userActions";
+import {loadGames} from "../bettables/bettableActions";
+import {addBetToCart} from "../cart/cartActions";
 
 interface Props {
+    addBetToCart: (any) => void;
+    cartBets: CartBet[];
     bettable: Bettable;
-    over: boolean; //TODO: Replace this with an enum
+    overunder: OverUnder;
 }
 
-export class OverUnderBettableButton extends Component<Props, State> {
+class OverUnderBettableButton extends Component<Props, State> {
 
-    bettableInCart = (bettableId: number, over: boolean) => {
-        return false; //TODO: Implement
+    bettableInCart = (bettableId: number, overunder: OverUnder) => {
+        let cartBet = this.props.cartBets
+            .find(cartBet => cartBet.bettable.id === bettableId && cartBet.overunder === overunder);
+        return !!cartBet;
     };
 
     betClick = () => {
-        alert(`Bettable ${this.props.bettable.id}, Over ${this.props.over} was clicked`);
+        let bet = {bettableId: this.props.bettable.id, overunder: this.props.overunder};
+        this.props.addBetToCart(bet);
     };
 
     render() {
         if (!this.props.bettable.ouoff) {
-            let disabled = this.bettableInCart(this.props.bettable.id, this.props.over);
-            let overUnderName = this.props.over ? "Over " : "Under ";
+            let disabled = this.bettableInCart(this.props.bettable.id, this.props.overunder);
+            let overUnderName = this.props.overunder === 'OVER' ? "Over " : "Under ";
             return <FSButton disabled={disabled}
                              onClick={this.betClick}>{overUnderName} {this.props.bettable.overunder}</FSButton>;
         } else {
@@ -32,3 +42,18 @@ export class OverUnderBettableButton extends Component<Props, State> {
     }
 
 }
+
+const mapStateToProps = (state: State) => {
+    return {
+        cartBets: getCartBets(state),
+    };
+};
+
+const mapDispatchToProps = {
+    addBetToCart,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(OverUnderBettableButton);

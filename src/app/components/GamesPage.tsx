@@ -9,6 +9,7 @@ import {GameRow} from "./GameRow";
 import {PageHeader} from "./PageHeader";
 import {League} from "../types";
 import {Bettable} from "../bettables/bettableReducer";
+import BetSlip from "./BetSlip";
 
 export interface Props {
     loadUserContext: () => void;
@@ -21,7 +22,7 @@ export interface State {
 }
 
 const sidebarOuterStyle = {
-    display: "none"
+    //display: "none"
 };
 
 class GamesPage extends Component<Props, State> {
@@ -41,6 +42,7 @@ class GamesPage extends Component<Props, State> {
                     {this.props.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
                 </Col>
                 <Col md={4} style={sidebarOuterStyle}>
+                    <BetSlip></BetSlip>
                 </Col>
             </Row>
         </Container>

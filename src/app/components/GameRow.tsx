@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {Col, Row} from "reactstrap";
-import {TeamBettableButton} from "./TeamBettableButton";
-import {OverUnderBettableButton} from "./OverUnderBettableButton";
 import moment from 'moment';
+import TeamBettableButton from "./TeamBettableButton";
+import OverUnderBettableButton from "./OverUnderBettableButton";
 
 const teamRowStyle = {
     paddingTop: "5px",
@@ -39,7 +39,7 @@ export class GameRow extends Component<{ bettable: any }> {
                         <TeamBettableButton bettable={this.props.bettable} team={1}/>
                     </Col>
                     <Col xs={4}>
-                        <OverUnderBettableButton bettable={this.props.bettable} over={true}/>
+                        <OverUnderBettableButton bettable={this.props.bettable} overunder='OVER'/>
                     </Col>
                 </Row>
                 <Row style={teamRowStyle}>
@@ -48,7 +48,7 @@ export class GameRow extends Component<{ bettable: any }> {
                         <TeamBettableButton bettable={this.props.bettable} team={2}/>
                     </Col>
                     <Col xs={4}>
-                        <OverUnderBettableButton bettable={this.props.bettable} over={false}/>
+                        <OverUnderBettableButton bettable={this.props.bettable} overunder='UNDER'/>
                     </Col>
                 </Row>
             </Col>
