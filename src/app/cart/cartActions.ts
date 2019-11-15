@@ -7,13 +7,14 @@ import {
     createCartBet,
     toggleParlayOnGamblerBetCart,
     editCartAmount,
-    removeFromCart
+    removeFromCart, editParlayAmount
 } from "../api/api";
 import {Bet} from "../types";
 
 export const LOAD_CART = "LOAD_CART";
 export const CART_LOAD_SUCCESS = "CART_LOAD_SUCCESS";
 export const CART_PARLAY_TOGGLE_SUCCESS = "CART_PARLAY_TOGGLE_SUCCESS";
+export const CART_PARLAY_EDIT_SUCCESS = "CART_PARLAY_EDIT_SUCCESS";
 export const CART_PLACE_BET_SUCCESS = "CART_PLACE_BET_SUCCESS";
 export const CART_EDIT_BET_SUCCESS = "CART_EDIT_BET_SUCCESS";
 export const CART_REMOVE_SUCCESS = "CART_REMOVE_SUCCESS";
@@ -36,10 +37,12 @@ export const addBetToCart = (bet): ThunkAction<void, State, void, AnyAction> => 
         const gambler = getGambler(getState());
         const cartBet = await createCartBet(gambler.id, bet);
 
-        dispatch({
-            type: CART_PLACE_BET_SUCCESS,
-            data: {cartBet: cartBet}
-        });
+        if (cartBet) {
+            dispatch({
+                type: CART_PLACE_BET_SUCCESS,
+                data: {cartBet: cartBet}
+            });
+        }
     };
 };
 
@@ -75,6 +78,18 @@ export const toggleParlay = (active: boolean): ThunkAction<void, State, void, An
         dispatch({
             type: CART_PARLAY_TOGGLE_SUCCESS,
             data: {active: active}
+        });
+    };
+};
+
+export const editCartParlay = (amount: number): ThunkAction<void, State, void, AnyAction> => {
+    return async (dispatch, getState) => {
+        const gambler = getGambler(getState());
+        await editParlayAmount(gambler.id, amount);
+
+        dispatch({
+            type: CART_PARLAY_EDIT_SUCCESS,
+            data: { amount }
         });
     };
 };

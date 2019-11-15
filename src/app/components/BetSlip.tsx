@@ -17,7 +17,7 @@ import {
 import {Bet, League} from "../types";
 import {connect} from "react-redux";
 import {getCart} from "../cart/cartSelector";
-import {loadCart, toggleParlay, editCartBet, removeCartBet} from "../cart/cartActions";
+import {loadCart, toggleParlay, editCartBet, removeCartBet, editCartParlay} from "../cart/cartActions";
 import {getLeague} from "../league/leagueSelector";
 import {loadUserContext} from "../user/userActions";
 import PotentialBetCard from "./PotentialBetCard";
@@ -25,6 +25,7 @@ import PotentialBetCard from "./PotentialBetCard";
 const containerStyle = {
     borderRadius: "0px",
     marginTop: "20px",
+    minWidth: "400px",
     backgroundColor: "#ececec",
 };
 
@@ -43,6 +44,9 @@ const panelTitleStyle = {
 };
 
 const totalTallyStyle = {
+    marginTop: '20px',
+    display: 'flex',
+    justifyContent: 'center',
     backgroundColor: "#ececec",
     border: "0px",
 };
@@ -54,7 +58,7 @@ const parlayWagerLineStyle = {
 };
 
 const wagerAmountLabelStyle = {
-    padding: "3px 6px",
+    padding: "7px 0px",
     textAlign: "center" as "center",
     backgroundColor: "transparent",
     float: "right" as "right",
@@ -63,18 +67,13 @@ const wagerAmountLabelStyle = {
     display: "table-cell",
 };
 
-const betAmountStyle = {
-    position: "absolute" as "absolute",
-    bottom: "15px",
-    right: "15px",
-    width: "65px",
-    textAlign: "right" as "right",
-};
-
 export const inputGroupAddOn = {
-    borderRadius: "0px",
-    padding: "4px 6px",
+    borderRadius: "1px solid #EEEEEE",
+    padding: "7px 3px 6px 5px",
     backgroundColor: "#FFFFFF",
+    borderLeft: '1px solid lightgray',
+    borderTop: '1px solid lightgray',
+    borderBottom: '1px solid lightgray',
 };
 
 const disabledGroupAddOn = {
@@ -85,22 +84,30 @@ const disabledGroupAddOn = {
 const wagerAmountStyle = {
     borderRadius: "0px",
     padding: "6px 3px",
-    maxWidth: "50px",
+    width: "50px",
+    maxWidth: "65px",
 };
 
 const wagerWinningsStyle = {
     borderRadius: "0px",
     padding: "6px 3px",
-    maxWidth: "50px",
+    width: "50px",
+    maxWidth: "65px",
 };
 
+interface BettingValidationErrors {
+
+}
+
 export interface Props {
+    errors: BettingValidationErrors[];
     loadUserContext: () => void;
     league: League;
     loadCart: () => void;
     editCartBet: (cartId, amount) => void;
     removeCartBet: (cartId) => void;
     toggleParlay: (boolean) => void;
+    editCartParlay: (amount) => void;
     cart: any;
 }
 
@@ -144,24 +151,24 @@ class BetSlip extends Component<Props, State> {
             </Nav>
             <TabContent activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
 
-                <TabPane fade in tabId="bet-straight">
+                <TabPane tabId="bet-straight">
                     <Row style={{color: "#777574"}} hidden={(potentialBets.length > 0)}>
                         <Col sm={12}>Add games to your bet slip</Col>
                     </Row>
                     <ListGroup>
                         {potentialBets.map(bet =>
                             <PotentialBetCard
+                                key={bet.id}
                                 cartId={bet.id}
                                 bet={bet}
                                 partOfParlay={false}
-                                confirmation={false}
                                 onClose={this.props.removeCartBet}
                                 onEdit={this.props.editCartBet}
                             />
                         )}
                     </ListGroup>
                     <ListGroup hidden={(potentialBets.length == 0)}>
-                        <ListGroupItem>Reserve for Error Panel</ListGroupItem>
+                        {this.props.errors && <ListGroupItem>Reserve for Error Panel</ListGroupItem>}
                         <ListGroupItem style={totalTallyStyle}>
                             <Button>
                                 Review {potentialBets.length} Bet{((potentialBets.length == 1) ? "" : "s")} for ${totalAmount}
@@ -170,17 +177,17 @@ class BetSlip extends Component<Props, State> {
                     </ListGroup>
                 </TabPane>
 
-                <TabPane fade in tabId="bet-parlay">
+                <TabPane tabId="bet-parlay">
                     <Row style={{color: "#777574"}} hidden={(potentialBets.length > 1)}>
                         <Col sm="12">Parlays only apply to more than one bet</Col>
                     </Row>
                     <ListGroup>
                         {potentialBets.map(bet =>
                             <PotentialBetCard
+                                key={bet.id}
                                 cartId={bet.id}
                                 bet={bet}
                                 partOfParlay={true}
-                                confirmation={false}
                                 onClose={this.props.removeCartBet}
                                 onEdit={this.props.editCartBet}
                             />
@@ -188,32 +195,34 @@ class BetSlip extends Component<Props, State> {
                     </ListGroup>
                     <ListGroup>
                         <ListGroupItem style={parlayWagerLineStyle}>
-                                <Col xs={9}>
-                                    <span style={wagerAmountLabelStyle}>Wager: </span>
-                                </Col>
-                                <Col xs={3} style={betAmountStyle}>
+                            <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                                <div>
                                     <InputGroup>
                                         <span style={inputGroupAddOn}>$</span>
-                                        <Input type="number" min="0" step="1" style={wagerAmountStyle} className="form-control" id="amount" value={parlay.amount || 0}/>
+                                        <Input type="number" min="0" step="1" style={wagerAmountStyle} className="form-control" id="amount" onChange={(e) => this.props.editCartParlay(parseInt(e.target.value))} value={parlay.amount || 0} />
                                     </InputGroup>
-                                </Col>
+                                </div>
+                                <div>
+                                    <span style={wagerAmountLabelStyle}>Wager: </span>
+                                </div>
+                            </div>
                         </ListGroupItem>
                         <ListGroupItem style={parlayWagerLineStyle}>
-                            <Row>
-                                <Col xs={9}>
-                                    <span style={wagerAmountLabelStyle}>Potential Winnings: </span>
-                                </Col>
-                                <Col xs={3} style={betAmountStyle}>
+                            <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                                <div>
                                     <InputGroup>
                                         <span style={disabledGroupAddOn}>$</span>
-                                        <Input disabled type="number" min="0" step="1" style={wagerWinningsStyle} className="form-control" value={Math.pow(2, potentialBets.length) * (parlay.amount || 0)}/>
+                                        <Input readOnly disabled type="number" min="0" step="1" style={wagerWinningsStyle} className="form-control" value={Math.pow(2, potentialBets.length) * (parlay.amount || 0)} />
                                     </InputGroup>
-                                </Col>
-                            </Row>
+                                </div>
+                                <div>
+                                    <span style={wagerAmountLabelStyle}>Potential Winnings: </span>
+                                </div>
+                            </div>
                         </ListGroupItem>
                     </ListGroup>
                     <ListGroup>
-                        <ListGroupItem>Reserve for Error Panel</ListGroupItem>
+                        {this.props.errors && <ListGroupItem>Reserve for Error Panel</ListGroupItem>}
                         <ListGroupItem style={totalTallyStyle}>
                             <Button>Review {potentialBets.length} bet parlay for ${parlay.amount || 0}</Button>
                         </ListGroupItem>
@@ -251,6 +260,7 @@ const mapDispatchToProps = {
     editCartBet,
     removeCartBet,
     toggleParlay,
+    editCartParlay,
 };
 
 export default connect(

@@ -34,10 +34,10 @@ class LeagueBetList extends Component<Props, State> {
                     let bets = this.props.betsAndParlaysByGambler[gamblerId].bets;
                     let parlays = this.props.betsAndParlaysByGambler[gamblerId].parlays;
                     let betCards = bets.map(bet => {
-                        return <PendingBetCard gambler={bet.gambler} bet={bet} isParlay={false}></PendingBetCard>
+                        return <PendingBetCard key={bet.id} gambler={bet.gambler} bet={bet} isParlay={false}></PendingBetCard>
                     });
                     let parlayCards = parlays.map(parlay => {
-                        return <PendingBetCard gambler={parlay.gambler} bet={parlay} isParlay={true}></PendingBetCard>
+                        return <PendingBetCard key={parlay.id} gambler={parlay.gambler} bet={parlay} isParlay={true}></PendingBetCard>
                     });
                     return betCards.concat(parlayCards);
                 })}

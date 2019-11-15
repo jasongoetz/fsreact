@@ -1,5 +1,5 @@
 
-import { post, get } from './fetch';
+import {post, get, deLete, put} from './fetch';
 import {Credentials} from "../auth/authModels";
 import {Bet} from "../types";
 
@@ -83,37 +83,46 @@ export const getGamblerBetCart: any = async (gamblerId): Promise<string> => {
 };
 
 export const createCartBet: any = async (gamblerId: number, bet: Bet) => {
-    let queryString = Object.keys(bet).map(key => key + '=' + bet[key]).join('&');
-    const response = await get({
-        path: `/api/gamblers/${gamblerId}/cart/create?${queryString}`,
+    const response = await post({
+        path: `/api/gamblers/${gamblerId}/cart`,
+        body: JSON.stringify(bet)
     });
 
-    let data = await response.json();
-    return data;
+    if (response.status === 201) {
+        let data = await response.json();
+        return data;
+    }
 };
 
 export const editCartAmount: any = async (gamblerId: number, cartId: number, amount: number) => {
-    await get({
-        path: `/api/gamblers/${gamblerId}/cart/${cartId}/edit?amount=${amount}`,
+    await put({
+        path: `/api/gamblers/${gamblerId}/cart/${cartId}`,
+        body: JSON.stringify({amount: amount})
     });
     return;
 };
 
 export const removeFromCart: any = async (gamblerId: number, cartId: number) => {
-    await get({
-        path: `/api/gamblers/${gamblerId}/cart/${cartId}/destroy`,
+    await deLete({
+        path: `/api/gamblers/${gamblerId}/cart/${cartId}`,
     });
     return;
 };
 
-
-export const toggleParlayOnGamblerBetCart: any = async (gamblerId, active: boolean): Promise<string> => {
-    const response = await get({
-        path: `/api/gamblers/${gamblerId}/cart/parlay?parlay=${active}`,
+export const toggleParlayOnGamblerBetCart: any = async (gamblerId, active: boolean) => {
+    await put({
+        path: `/api/gamblers/${gamblerId}/cart/parlay`,
+        body: JSON.stringify({active: active})
     });
+    return;
+};
 
-    let data = await response.json();
-    return data;
+export const editParlayAmount: any = async (gamblerId: number, amount: number) => {
+    await put({
+        path: `/api/gamblers/${gamblerId}/cart/parlay`,
+        body: JSON.stringify({amount: amount})
+    });
+    return;
 };
 
 

@@ -124,7 +124,7 @@ class NavHeader extends Component<Props> {
                 </DropdownMenu>
             </UncontrolledDropdown>
             <NavItem>
-                {this.navLink(`$${this.getGamblerAccountBalance()}.00`, "/account")}
+                {this.navLink(`$${this.getGamblerAccountBalance().toFixed(2)}`, "/account")}
             </NavItem>
             <NavItem>
                 {this.navLink("SIGN OUT", "/logout", this.handleLogout)}

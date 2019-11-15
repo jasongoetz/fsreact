@@ -43,6 +43,7 @@ const appFetch = async ({ method, token, path, body, headers = {} }: Fetch) => {
 export const put = (data: FetchBody) => appFetch({ method: 'PUT', ...data });
 export const post = (data: FetchBody) => appFetch({ method: 'POST', ...data });
 export const get = (data: FetchBody) => appFetch({ method: 'GET', ...data });
+export const deLete = (data: FetchBody) => appFetch({ method: 'DELETE', ...data });
 
 export const checkStatus = (resp: Response) => {
     if (resp.status >= 200 && resp.status < 300) {

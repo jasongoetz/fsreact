@@ -36,9 +36,9 @@ class Rules extends Component<Props, State> {
                     any bets.
                 </div>
                 <div style={ruleStyle}>
-                    3. You cannot bet more than {this.props.league.weeklyBetAccountRatio}% of the stash you started the
+                    3. You cannot bet more than {this.props.league.weeklyBetAccountRatio * 100}% of the stash you started the
                     week with. If you come into the week with $100, then the most you can spread over your bets is
-                    ${this.props.league.weeklyBetAccountRatio}.
+                    ${100 * this.props.league.weeklyBetAccountRatio}.
                 </div>
                 <div style={lastRuleStyle}>
                     4. Lines move, so please be aware that you are locked into whatever point spread or over/under you

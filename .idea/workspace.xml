@@ -2,20 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c9f702e-8618-4933-b09d-78b4f42e8ad1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/cart/cartActions.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/cart/cartReducer.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/cart/cartSelector.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/components/BetSlip.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/components/PotentialBetCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/jasongoetz.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/jasongoetz.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/custom.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/api/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/api.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/api/fetch.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/fetch.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/GameRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/GameRow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/GamesPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/GamesPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/OverUnderBettableButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/OverUnderBettableButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/TeamBettableButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/TeamBettableButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/reducers/root.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/reducers/root.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/cart/cartActions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/cart/cartActions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/cart/cartReducer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/cart/cartReducer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/AccountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/AccountPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/BetSlip.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/BetSlip.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/LeagueBetList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/LeagueBetList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/MiniStandings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/MiniStandings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/NavHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/NavHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/PotentialBetCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/PotentialBetCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/Rules.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/Rules.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/Standings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/Standings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -128,7 +130,13 @@
       <workItem from="1565237107545" duration="6062000" />
       <workItem from="1565323371198" duration="659000" />
       <workItem from="1565743575077" duration="6399000" />
-      <workItem from="1565967731509" duration="37952000" />
+      <workItem from="1565967731509" duration="38541000" />
+      <workItem from="1570423165579" duration="3506000" />
+      <workItem from="1570506698295" duration="2187000" />
+      <workItem from="1570592615626" duration="3820000" />
+      <workItem from="1570990516337" duration="16430000" />
+      <workItem from="1573702766665" duration="6152000" />
+      <workItem from="1573790193597" duration="4789000" />
     </task>
     <servers />
   </component>

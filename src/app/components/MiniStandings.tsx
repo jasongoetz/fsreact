@@ -30,7 +30,7 @@ class MiniStandings extends Component<Props, State> {
                             <td>{gambler.user.firstName} {gambler.user.lastName}</td>
                             <td>
                                 <a href={`transaction/show/${gambler.id}`}>
-                                    ${gambler.money}
+                                    ${gambler.money.toFixed(2)}
                                 </a>
                             </td>
                         </tr>)
@@ -44,7 +44,7 @@ class MiniStandings extends Component<Props, State> {
 
 const mapStateToProps = (state: State) => {
     return {
-        gamblers: getLeagueGamblers(state),
+        gamblers: getLeagueGamblers(state).slice(0, 7),
     };
 };
 

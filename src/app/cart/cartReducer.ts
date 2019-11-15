@@ -4,7 +4,7 @@ import {
     CART_LOAD_SUCCESS,
     CART_LOAD_FAILURE,
     CART_PARLAY_TOGGLE_SUCCESS,
-    CART_PLACE_BET_SUCCESS, CART_EDIT_BET_SUCCESS, CART_REMOVE_SUCCESS
+    CART_PLACE_BET_SUCCESS, CART_EDIT_BET_SUCCESS, CART_REMOVE_SUCCESS, CART_PARLAY_EDIT_SUCCESS
 } from './cartActions';
 import {Bet, Parlay} from "../types";
 import {Bettable} from "../bettables/bettableReducer";
@@ -51,6 +51,8 @@ const cartReducer = (state = initialState, action: any) => {
             return { ...state, bets, parlay };
         case CART_PARLAY_TOGGLE_SUCCESS:
             return { ...state, parlay: { ...state.parlay, active: action.data.active } };
+        case CART_PARLAY_EDIT_SUCCESS:
+            return { ...state, parlay: { ...state.parlay, amount: action.data.amount } };
         case CART_LOAD_FAILURE:
             return { ...state, loading: false };
         default:

@@ -63,10 +63,10 @@ class Standings extends Component<Props, State> {
                             <td>{gambler.user.firstName} {gambler.user.lastName}</td>
                             <td>
                                 <a href={`transaction/show/${gambler.id}`}>
-                                    ${gambler.money}
+                                    ${gambler.money.toFixed(2)}
                                 </a>
                             </td>
-                            <td>${gambler.pending}</td>
+                            <td>${gambler.pending.toFixed(2)}</td>
                             <td>{gambler.record}</td>
                             <td></td>
                             <td></td>

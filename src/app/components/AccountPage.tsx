@@ -8,7 +8,7 @@ import {getGambler, getGamblerWithAccount} from "../gambler/gamblerSelector";
 import {loadTransactions} from "../transactions/transactionActions";
 import {getTransactionsMap} from "../transactions/transactionsSelector";
 import moment from 'moment';
-import {GamblerInfo, League} from "../types";
+import {Bet, GamblerInfo, League, Parlay} from "../types";
 
 export interface Props {
     loadUserContext: () => void;
@@ -55,17 +55,18 @@ export interface BetOrParlay {
     tally: number;
 }
 
-class TransactionRow extends Component<{betOrParlay: BetOrParlay}> {
+class TransactionRow extends Component<{betOrParlay: BetOrParlay, moneyline: string}> {
     render() {
         let betOrParlay = this.props.betOrParlay;
+        let amount = this.getAmount(betOrParlay)
         return (
             <React.Fragment>
                 <tr style={{backgroundColor: this.getRowColor(betOrParlay)}}>
                     <td>{betOrParlay.type === 'bet' ? moment(betOrParlay.value.bettable.gameTime).format("dddd, MMMM Do") : ''}</td>
                     <td>{this.getDescription(betOrParlay)}</td>
                     <td>{this.getOutcome(betOrParlay.value)}</td>
-                    <td>{this.getAmount(betOrParlay)}</td>
-                    <td>{betOrParlay.tally}</td>
+                    <td>{isNaN(amount) ? amount : amount.toFixed(2)}</td>
+                    <td>{betOrParlay.tally.toFixed(2)}</td>
                 </tr>
                 {this.props.betOrParlay.type === 'parlay' && betOrParlay.value.bets.map((bet, index) => {
                     return <tr key={`trr-${index}`} style={{backgroundColor: this.getRowColor(betOrParlay)}}>
@@ -126,12 +127,17 @@ class TransactionRow extends Component<{betOrParlay: BetOrParlay}> {
         }
     };
 
+    vigFactor = () => {
+        let num = parseFloat(this.props.moneyline);
+        return (num > 0) ? (num+100)/100 : (num < 0) ? (-num+100)/-num : 1 ;
+    };
+
     getAmount = (betOrParlay: any) => {
         if (betOrParlay.value.outcome === 'WIN') {
             if (betOrParlay.type === 'parlay') {
-                return this.parlayWinnings(betOrParlay);
+                return this.parlayWinnings(betOrParlay.value);
             } else {
-                return betOrParlay.value.amount
+                return this.betWinnings(betOrParlay.value);
             }
         } else if (betOrParlay.value.outcome === 'LOSS') {
             return betOrParlay.value.amount;
@@ -141,13 +147,21 @@ class TransactionRow extends Component<{betOrParlay: BetOrParlay}> {
             if (betOrParlay.type === 'parlay') {
                 return `${betOrParlay.value.amount} to win ${this.parlayWinnings(betOrParlay)}`;
             } else {
-                return betOrParlay.value.amount
+                return this.betWinnings(betOrParlay.value);
             }
         }
     };
 
-    parlayWinnings = (betOrParlay: any) => {
-        return (betOrParlay.value.amount * Math.pow(2, betOrParlay.value.bets.length)) - betOrParlay.value.amount;
+    private betWinnings(bet: Bet) {
+        let winning = bet.amount * this.vigFactor();
+        winning = Math.round(winning * 100) / 100;
+        return winning - bet.amount;
+    }
+
+    parlayWinnings = (parlay: Parlay) => {
+        let wonBets = parlay.bets.filter(bet => bet.outcome === 'WIN');
+        let amount = parlay.amount * Math.pow(this.vigFactor(), wonBets.length);
+        return Math.round(amount * 100) / 100 - parlay.amount;
     };
 }
 
@@ -171,7 +185,7 @@ export class AccountPage extends Component<Props> {
         return <Container>
             <PageHeader>{gambler.user.firstName} {gambler.user.lastName}</PageHeader>
             <div style={userStatsStyle}>
-                Account Balance: ${gambler.money - gambler.pending} (Money: ${gambler.money} Pending: ${gambler.pending})
+                Account Balance: ${(gambler.money - gambler.pending).toFixed(2)} (Money: ${gambler.money.toFixed(2)} Pending: ${gambler.pending.toFixed(2)})
                 <span style={userRecordStyle}>Record: {gambler.record}</span>
             </div>
             <Table>
@@ -189,11 +203,11 @@ export class AccountPage extends Component<Props> {
                         <td>{moment(gambler.user.createdAt).format("dddd, MMMM Do")}</td>
                         <td>Account Creation</td>
                         <td></td>
-                        <td>{this.props.league.startingAccount}</td>
-                        <td>{this.props.league.startingAccount}</td>
+                        <td>{this.props.league.startingAccount.toFixed(2)}</td>
+                        <td>{this.props.league.startingAccount.toFixed(2)}</td>
                     </tr>
                     {betsAndParlays &&
-                        betsAndParlays.map((betOrParlay, index) => <TransactionRow key={`tr-${index}`} betOrParlay={betOrParlay}/>)
+                        betsAndParlays.map((betOrParlay, index) => <TransactionRow key={`tr-${index}`} betOrParlay={betOrParlay} moneyline={this.props.league.moneyline} />)
                     }
                 </tbody>
             </Table>
