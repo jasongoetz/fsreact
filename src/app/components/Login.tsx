@@ -6,7 +6,7 @@ import {authenticate} from "../auth/authActions";
 import { connect } from 'react-redux';
 import {Redirect, RouteComponentProps} from "react-router";
 import {Credentials} from "../auth/authModels";
-import {FSButton} from "./FSComponents";
+import {FSButton, FSWideButton} from "./FSComponents";
 
 const formSigninStyle = {
     paddingBottom: "15px"
@@ -79,7 +79,7 @@ class Login extends Component<Props, State> {
                                 onChange={(event: any) => this.setState({password: event.target.value})}
                             />
                         </FormGroup>
-                        <FSButton color="primary" size="lg">SIGN IN</FSButton>
+                        <FSWideButton color="primary" size="lg">SIGN IN</FSWideButton>
                         {/*<div className="register-invite">New to Fake Stacks? <a href="/register">Sign up.</a></div>*/}
                     </FSForm>
                 </Col>

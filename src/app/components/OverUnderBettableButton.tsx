@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {FSButton} from "./FSComponents";
+import {FSButton, FSWideButton} from "./FSComponents";
 import {State} from "./GamesPage";
 import {Bettable} from "../bettables/bettableReducer";
 import {getCartBets} from "../cart/cartSelector";
@@ -34,10 +34,10 @@ class OverUnderBettableButton extends Component<Props, State> {
         if (!this.props.bettable.ouoff) {
             let disabled = this.bettableInCart(this.props.bettable.id, this.props.overunder);
             let overUnderName = this.props.overunder === 'OVER' ? "Over " : "Under ";
-            return <FSButton disabled={disabled}
-                             onClick={this.betClick}>{overUnderName} {this.props.bettable.overunder}</FSButton>;
+            return <FSWideButton disabled={disabled}
+                             onClick={this.betClick}>{overUnderName} {this.props.bettable.overunder}</FSWideButton>;
         } else {
-            return <FSButton disabled={true}>O/U OFF</FSButton>;
+            return <FSWideButton disabled={true}>O/U OFF</FSWideButton>;
         }
     }
 

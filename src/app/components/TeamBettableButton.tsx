@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {FSButton} from "./FSComponents";
+import {FSButton, FSWideButton} from "./FSComponents";
 import {State} from "./GamesPage";
 import {Bettable} from "../bettables/bettableReducer";
 import {connect} from "react-redux";
@@ -35,9 +35,9 @@ class TeamBettableButton extends Component<Props, State> {
             let spread = this.getSpread();
             let sideId = this.getSideId();
             let disabled = this.bettableInCart(this.props.bettable.id, sideId);
-            return <FSButton disabled={disabled} onClick={this.betClick}>{spread}</FSButton>;
+            return <FSWideButton disabled={disabled} onClick={this.betClick}>{spread}</FSWideButton>;
         } else {
-            return <FSButton disabled={true}>OFF</FSButton>;
+            return <FSWideButton disabled={true}>OFF</FSWideButton>;
         }
     }
 

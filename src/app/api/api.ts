@@ -125,6 +125,17 @@ export const editParlayAmount: any = async (gamblerId: number, amount: number) =
     return;
 };
 
+export const validateBets: any = async (gamblerId: number) => {
+    const response = await get({
+        path: `/api/gamblers/${gamblerId}/cart/validate`
+    });
+
+    let data = await response.json();
+    return data;
+};
+
+
+
 
 
 

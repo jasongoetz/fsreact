@@ -15,6 +15,7 @@ import GamesPage from "./components/GamesPage";
 import Standings from "./components/Standings";
 import AccountPage from './components/AccountPage';
 import LeagueBetList from "./components/LeagueBetList";
+import ConfirmationPage from "./components/ConfirmationPage";
 
 export interface State {
     showMobileMenu: boolean
@@ -60,6 +61,7 @@ class App extends Component {
                         <PrivateRoute exact path="/account" component={this.AccountPage}/>
                         <PrivateRoute exact path="/transaction/show/:gamblerId" component={this.AccountPage}/>
                         <PrivateRoute exact path="/league/settings" component={this.LeagueManagePage} />
+                        <PrivateRoute exact path="/confirmation" component={this.ConfirmationPage} />
                     </div>
                 </Router>
             </Provider>
@@ -99,6 +101,10 @@ class App extends Component {
             </div>
         )
     };
+
+    ConfirmationPage = () => {
+        return <ConfirmationPage/>;
+    }
 
     AccountPage = ({match}) => {
         return <AccountPage gamblerId={match.params.gamblerId}/>

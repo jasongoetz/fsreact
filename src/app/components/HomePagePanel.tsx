@@ -2,7 +2,7 @@ import {Component} from "react";
 import React from "react";
 import HomePagePanelContent from "./MiniStandings";
 import {Link} from "react-router-dom";
-import {FSButton} from "./FSComponents";
+import {FSButton, FSWideButton} from "./FSComponents";
 
 export interface State {
 }
@@ -45,7 +45,7 @@ class HomePagePanel extends Component<Props, State> {
             </div>
             <div style={panelActionRowStyle}>
                 <Link to={this.props.linkUrl}>
-                    <FSButton color="primary" size="lg">{this.props.action}</FSButton>
+                    <FSWideButton color="primary" size="lg">{this.props.action}</FSWideButton>
                 </Link>
             </div>
         </div>;

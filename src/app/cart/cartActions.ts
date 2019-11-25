@@ -48,6 +48,9 @@ export const addBetToCart = (bet): ThunkAction<void, State, void, AnyAction> => 
 
 export const editCartBet = (cartId: number, amount: number): ThunkAction<void, State, void, AnyAction> => {
     return async (dispatch, getState) => {
+        if (isNaN(amount)) {
+            return;
+        }
         const gambler = getGambler(getState());
         await editCartAmount(gambler.id, cartId, amount);
 

@@ -14,13 +14,20 @@ import {
     TabContent,
     TabPane
 } from "reactstrap";
-import {Bet, League} from "../types";
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import Pluralize from 'pluralize';
+import {Bet, Gambler, League} from "../types";
 import {connect} from "react-redux";
 import {getCart} from "../cart/cartSelector";
 import {loadCart, toggleParlay, editCartBet, removeCartBet, editCartParlay} from "../cart/cartActions";
 import {getLeague} from "../league/leagueSelector";
 import {loadUserContext} from "../user/userActions";
 import PotentialBetCard from "./PotentialBetCard";
+import {validateBets} from "../api/api";
+import {getGambler} from "../gambler/gamblerSelector";
+import {Colors} from "../theme/theme";
+import {FSButton} from "./FSComponents";
+import {getButtonMessage} from "../../util/BetUtil";
 
 const containerStyle = {
     borderRadius: "0px",
@@ -95,12 +102,20 @@ const wagerWinningsStyle = {
     maxWidth: "65px",
 };
 
-interface BettingValidationErrors {
+const errorPanelStyle = {
+    color: "#a94442",
+    backgroundColor: "#f2dede",
+    borderColor: "#ebccd1",
+    padding: "15px",
+    marginTop: "20px",
+    border: "1px solid transparent",
+};
 
-}
+const errorRowStyle = {
+    padding: "5px 2px",
+};
 
-export interface Props {
-    errors: BettingValidationErrors[];
+export interface Props extends RouteComponentProps {
     loadUserContext: () => void;
     league: League;
     loadCart: () => void;
@@ -109,13 +124,18 @@ export interface Props {
     toggleParlay: (boolean) => void;
     editCartParlay: (amount) => void;
     cart: any;
+    gambler: Gambler;
 }
 
 export interface State {
-    activeTab: string;
+    errors: string[];
 }
 
 class BetSlip extends Component<Props, State> {
+
+    state = {
+        errors: [],
+    };
 
     async componentDidMount() {
         if (!this.props.league.id) {
@@ -168,11 +188,17 @@ class BetSlip extends Component<Props, State> {
                         )}
                     </ListGroup>
                     <ListGroup hidden={(potentialBets.length == 0)}>
-                        {this.props.errors && <ListGroupItem>Reserve for Error Panel</ListGroupItem>}
+                        {this.state.errors.length > 0 &&
+                            <ListGroupItem style={errorPanelStyle}>
+                                {this.state.errors.map(error =>
+                                    <div style={errorRowStyle}>{error}</div>
+                                )}
+                            </ListGroupItem>
+                        }
                         <ListGroupItem style={totalTallyStyle}>
-                            <Button>
-                                Review {potentialBets.length} Bet{((potentialBets.length == 1) ? "" : "s")} for ${totalAmount}
-                            </Button>
+                            <FSButton onClick={this.confirmBets}>
+                                {getButtonMessage('Review', potentialBets.length, totalAmount, !betParlayTabActive)}
+                            </FSButton>
                         </ListGroupItem>
                     </ListGroup>
                 </TabPane>
@@ -222,9 +248,17 @@ class BetSlip extends Component<Props, State> {
                         </ListGroupItem>
                     </ListGroup>
                     <ListGroup>
-                        {this.props.errors && <ListGroupItem>Reserve for Error Panel</ListGroupItem>}
+                        {this.state.errors.length > 0 &&
+                                <ListGroupItem style={errorPanelStyle}>
+                                    {this.state.errors.map(error =>
+                                        <div style={errorRowStyle}>{error}</div>
+                                    )}
+                                </ListGroupItem>
+                        }
                         <ListGroupItem style={totalTallyStyle}>
-                            <Button>Review {potentialBets.length} bet parlay for ${parlay.amount || 0}</Button>
+                            <FSButton onClick={this.confirmBets}>
+                                {getButtonMessage('Review', potentialBets.length, parlay.amount, betParlayTabActive)}
+                            </FSButton>
                         </ListGroupItem>
                     </ListGroup>
                 </TabPane>
@@ -244,13 +278,24 @@ class BetSlip extends Component<Props, State> {
             backgroundColor: "#595756",
         };
         return active ? {...style, ...activeStyles} : style;
-    }
+    };
+
+    confirmBets = async () => {
+        const errors = await validateBets(this.props.gambler.id);
+        if (errors.length > 0) {
+            this.setState({errors: errors});
+        }
+        else {
+            this.props.history.push('/confirmation');
+        }
+    };
 }
 
 const mapStateToProps = (state: State) => {
     return {
         league: getLeague(state),
         cart: getCart(state),
+        gambler: getGambler(state),
     };
 };
 
@@ -263,7 +308,7 @@ const mapDispatchToProps = {
     editCartParlay,
 };
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps,
-)(BetSlip);
+)(BetSlip));

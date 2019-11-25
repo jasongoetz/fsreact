@@ -7,6 +7,11 @@ export const FSButton = styled(Button)`
         background-color: #428bca;
         border-color: #357ebd;
         border-radius: 0;
+    }
+`;
+
+export const FSWideButton = styled(FSButton)`
+    && {
         width: 100%;
     }
 `;

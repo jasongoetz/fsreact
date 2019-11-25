@@ -3,6 +3,7 @@ import {Button, Col, Input, InputGroup, ListGroupItem, Row} from "reactstrap";
 import {Bet, GamblerInfo, Parlay} from "../types";
 import {Link} from "react-router-dom";
 import moment from "moment";
+import {getBetSummary, getGameSummary} from "../../util/BetUtil";
 
 const potentialBetStyle = {
     backgroundColor: "#ececec",
@@ -81,54 +82,40 @@ class PotentialBetCard extends Component<Props, State> {
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                 <div style={{display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '10px'}}>
                     <div style={betChoiceStyle}>
-                        <strong>{this.getBetSummary(bet)}</strong>
+                        <strong>{getBetSummary(bet)}</strong>
                         <Button style={closeStyle} close onClick={() => this.props.onClose(this.props.cartId)}>
                             <span>&times;</span>
                         </Button>
                     </div>
-                    <div>{this.getGameSummary(bet)}</div>
+                    <div>{getGameSummary(bet)}</div>
                     <div>{moment(bet.bettable.gameTime).format("dddd, MMM Do, h:mma z")}</div>
                 </div>
-                {!this.props.partOfParlay &&
-                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '10px'}}>
-                        <span style={wagerAmountLabelStyle}>Wager:</span>
-                        <InputGroup style={{width: '30%'}}>
-                            <span style={inputGroupAddOn}>$</span>
-                            <Input
-                                type="number"
-                                min="0"
-                                style={betAmountStyle}
-                                value={bet.amount}
-                                onChange={(e) => this.props.onEdit(this.props.cartId, parseInt(e.target.value))}
-                            />
-                        </InputGroup>
-                        <span style={wagerAmountLabelStyle}>Win:</span>
-                        <InputGroup style={{width: '30%'}}>
-                            <span style={disabledGroupAddOn}>$</span>
-                            <Input readOnly disabled type="number" min="0" style={betWinningsStyle} className="form-control" value={2 * (bet.amount || 0)} />
-                        </InputGroup>
-                    </div>
+                {!this.props.partOfParlay && this.getWagerFields(bet)
                 }
             </div>
         </ListGroupItem>
     }
 
-    private getBetSummary(bet: Bet) {
-        if (bet.sideId == bet.bettable.sideId1) {
-            return `${bet.bettable.team1} ${bet.bettable.team1Spread}`;
-        } else if (bet.sideId == bet.bettable.sideId2) {
-            return `${bet.bettable.team2} ${bet.bettable.team2Spread}`;
-        } else if (bet.overunder != null) {
-            return (bet.overunder==='OVER' ? "Over " : "Under ") + bet.bettable.overunder;
-        }
-    }
-
-    private getGameSummary(bet: Bet) {
-        if (bet.overunder!= null || bet.sideId == bet.bettable.sideId1) {
-            return `${bet.bettable.team1} at ${bet.bettable.team2}`;
-        } else {
-            return `${bet.bettable.team2} at ${bet.bettable.team1}`;
-        }
+    private getWagerFields(bet) {
+        return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '10px'}}>
+            <span style={wagerAmountLabelStyle}>Wager:</span>
+            <InputGroup style={{width: '30%'}}>
+                <span style={inputGroupAddOn}>$</span>
+                <Input
+                    type="number"
+                    min="0"
+                    style={betAmountStyle}
+                    value={bet.amount}
+                    onChange={(e) => this.props.onEdit(this.props.cartId, parseInt(e.target.value))}
+                />
+            </InputGroup>
+            <span style={wagerAmountLabelStyle}>Win:</span>
+            <InputGroup style={{width: '30%'}}>
+                <span style={disabledGroupAddOn}>$</span>
+                <Input readOnly disabled type="number" min="0" style={betWinningsStyle} className="form-control"
+                       value={2 * (bet.amount || 0)}/>
+            </InputGroup>
+        </div>;
     }
 }
 
