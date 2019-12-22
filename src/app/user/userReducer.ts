@@ -1,6 +1,5 @@
 
 import { GAMBLER_LOAD_SUCCESS, GAMBLER_LOAD_FAILURE, LOAD_GAMBLER_AND_LEAGUE } from './userActions';
-import { User, Gambler, League } from "../types";
 
 export type User = {
     id: number;

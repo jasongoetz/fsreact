@@ -1,7 +1,7 @@
 import {Component} from "react";
 import React from "react";
 import {FormGroup, Button, Input, Form, Container, Row, Col, FormProps} from "reactstrap";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import {Colors} from "../theme/theme";
 
 export interface FSFormProps {

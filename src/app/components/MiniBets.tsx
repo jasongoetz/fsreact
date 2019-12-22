@@ -1,18 +1,7 @@
-import {Component} from "react";
-import {Button, Nav, NavItem, NavLink} from "reactstrap";
 import React from "react";
-import {Link} from "react-router-dom";
-import {FullLeague, League} from "../types";
-import {getLeague, getLeagueGamblers} from "../league/leagueSelector";
-import {connect} from "react-redux";
-import HomePagePanel from "./HomePagePanel";
-
-export interface State {
-}
-
-export interface Props {
-    league: FullLeague;
-}
+import {Bet, FullLeague, Sport} from "../types";
+import {getLeague} from "../league/leagueSelector";
+import {useSelector} from "react-redux";
 
 const pendingBetPanelStyle = {
     borderRadius: "0px",
@@ -32,56 +21,46 @@ const betHeadlineStyle = {
     fontWeight: "bold" as 'bold'
 };
 
-class MiniBets extends Component<Props, State> {
-
-    shortenTeamName = teamName => {
-        if (this.props.league.sport == "NFL") {
-            const lastIndex = teamName.lastIndexOf(" ");
-            return teamName.substring(0, lastIndex);
-        }
-        else {
-            return teamName;
-        }
-    };
-
-    render() {
-        return (
-            <div style={pendingBetPanelStyle}>
-                {this.props.league.topBets.bets.map(bet => {
-                    return <div key={`top-bet-card-${bet.id}`} style={pendingMiniBetCardStyle}>
-                        <div style={betHeadlineStyle}>
-                            ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}
-                        </div>
-                        <div>
-                            {this.getBetSummary(bet)}
-                        </div>
-                        <div>
-                            {this.shortenTeamName(bet.bettable.team1)} @ {this.shortenTeamName(bet.bettable.team2)}
-                        </div>
-                    </div>
-                })}
-            </div>
-        );
+const shortenTeamName = (teamName: string, sport: Sport) => {
+    if (sport == "NFL") {
+        const lastIndex = teamName.lastIndexOf(" ");
+        return teamName.substring(0, lastIndex);
     }
-
-    private getBetSummary(bet: any) {
-        if (bet.sideId == bet.bettable.sideId1) {
-            return `${bet.bettable.team1} ${bet.line}`;
-        } else if (bet.sideId == bet.bettable.sideId2) {
-            return `${bet.bettable.team2} ${bet.line}`;
-        } else {
-            return `${bet.overunder === 'OVER' ? "Over" : "Under"} ${bet.line}`;
-        }
+    else {
+        return teamName;
     }
-}
-
-const mapStateToProps = (state: State) => {
-    return {
-        league: getLeague(state),
-    };
 };
 
-export default connect(
-    mapStateToProps,
-    undefined,
-)(MiniBets);
+const getBetSummary = (bet: Bet) => {
+    if (bet.sideId == bet.bettable.sideId1) {
+        return `${bet.bettable.team1} ${bet.line}`;
+    } else if (bet.sideId == bet.bettable.sideId2) {
+        return `${bet.bettable.team2} ${bet.line}`;
+    } else {
+        return `${bet.overunder === 'OVER' ? "Over" : "Under"} ${bet.line}`;
+    }
+};
+
+const MiniBets = () => {
+    const league: FullLeague = useSelector(state => getLeague(state));
+
+    return (
+        <div style={pendingBetPanelStyle}>
+            {league.topBets.bets.map(bet => {
+                return <div key={`top-bet-card-${bet.id}`} style={pendingMiniBetCardStyle}>
+                    <div style={betHeadlineStyle}>
+                        ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}
+                    </div>
+                    <div>
+                        {getBetSummary(bet)}
+                    </div>
+                    <div>
+                        {shortenTeamName(bet.bettable.team1, league.sport)} @ {shortenTeamName(bet.bettable.team2, league.sport)}
+                    </div>
+                </div>
+            })}
+        </div>
+    );
+};
+
+export default MiniBets;

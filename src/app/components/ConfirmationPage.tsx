@@ -1,16 +1,13 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import Pluralize from 'pluralize';
-import {loadUserContext} from "../user/userActions";
-import {Col, Container, Row, Button, ListGroup, ListGroupItem, TabPane} from "reactstrap";
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {Col, Container, ListGroup} from "reactstrap";
 import {getCart} from "../cart/cartSelector";
-import {RouteComponentProps, withRouter} from "react-router-dom";
-import {loadCart} from "../cart/cartActions";
 import {PageHeader} from "./PageHeader";
-import PotentialBetCard from "./PotentialBetCard";
 import ReadOnlyBetCard from "./ReadOnlyBetCard";
 import {FSButton} from "./FSComponents";
 import {getButtonMessage} from "../../util/BetUtil";
+import { useHistory } from "react-router-dom";
+import {confirmBets} from "../cart/cartActions";
 
 const totalTallyStyle = {
     marginTop: '20px',
@@ -19,65 +16,43 @@ const totalTallyStyle = {
     border: "0px",
 };
 
-export interface Props extends RouteComponentProps {
-    loadUserContext: () => void;
-    loadCart: () => void;
-    cart: any;
-}
+const ConfirmationPage: React.FC = () => {
 
-export interface State {
-}
+    const dispatch = useDispatch();
+    const cart = useSelector(state => getCart(state));
+    const history = useHistory();
 
-class ConfirmationPage extends Component<Props, State> {
-
-    async componentDidMount() {
-        if (this.props.cart.bets.length === 0) {
-            this.props.history.push('/games');
+    useEffect(() => {
+        if (cart.bets.length === 0) {
+            history.push('/games');
         }
-    }
+    }, []);
 
-    render() {
-        let parlay = this.props.cart.parlay || {};
-        let potentialBets = this.props.cart.bets;
-        let insufficientBets = potentialBets.length < 2;
-        let parlayActive = !!parlay.active && !insufficientBets;
-        let totalAmount = potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
+    let parlay = cart.parlay || {};
+    let potentialBets = cart.bets;
+    let insufficientBets = potentialBets.length < 2;
+    let parlayActive = !!parlay.active && !insufficientBets;
+    let totalAmount = parlayActive ? parlay.amount : potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
 
-        return <Container>
-            <PageHeader>Bet Confirmation</PageHeader>
-            <Col sm={12} md={{size: 10, offset: 1}} lg={{size: 6, offset: 3}}>
-                <ListGroup>
-                    {potentialBets.map(bet =>
-                        <ReadOnlyBetCard
-                            key={bet.id}
-                            bet={bet}
-                            partOfParlay={parlayActive}
-                        />
-                    )}
-                </ListGroup>
-                <div style={totalTallyStyle}>
-                    <FSButton>
-                        {getButtonMessage('Confirm', potentialBets.length, totalAmount, parlayActive)}
-                    </FSButton>
-                </div>
-            </Col>
-        </Container>;
-    }
-}
-
-
-const mapStateToProps = (state: State) => {
-    return {
-        cart: getCart(state),
-    };
+    return <Container>
+        <PageHeader>Bet Confirmation</PageHeader>
+        <Col sm={12} md={{size: 10, offset: 1}} lg={{size: 6, offset: 3}}>
+            <ListGroup>
+                {potentialBets.map(bet =>
+                    <ReadOnlyBetCard
+                        key={bet.id}
+                        bet={bet}
+                        partOfParlay={parlayActive}
+                    />
+                )}
+            </ListGroup>
+            <div style={totalTallyStyle}>
+                <FSButton onClick={() => dispatch(confirmBets())}>
+                    {getButtonMessage('Confirm', potentialBets.length, totalAmount, parlayActive)}
+                </FSButton>
+            </div>
+        </Col>
+    </Container>;
 };
 
-const mapDispatchToProps = {
-    loadUserContext,
-    loadCart,
-};
-
-export default withRouter(connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(ConfirmationPage));
+export default ConfirmationPage;

@@ -61,6 +61,12 @@ export interface Parlay extends Bet {
     bets: Bet[]
 }
 
+export interface BetOrParlay {
+    type: string;
+    value: any;
+    tally: number;
+}
+
 export interface FullLeague extends League {
     gamblers: GamblerInfo[],
     topBets: any;

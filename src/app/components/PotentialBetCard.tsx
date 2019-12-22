@@ -103,7 +103,6 @@ class PotentialBetCard extends Component<Props, State> {
                 <span style={inputGroupAddOn}>$</span>
                 <Input
                     type="number"
-                    min="0"
                     style={betAmountStyle}
                     value={bet.amount}
                     onChange={(e) => this.props.onEdit(this.props.cartId, parseInt(e.target.value))}
