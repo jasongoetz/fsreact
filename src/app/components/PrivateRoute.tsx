@@ -3,12 +3,14 @@ import React from "react";
 import {connect} from "react-redux";
 import {State} from "../reducers/root";
 import {isLoggedIn} from "../auth/authSelector";
+import InternalServerError from "./error/InternalServerError";
+import ErrorPanel from "./error/ErrorPanel";
 
-const PrivateRoute = ({component: Comp, authenticated, ...rest}) => (
+const PrivateRoute = ({component: Comp, authenticated, error, ...rest}) => (
     <Route
         {...rest}
         render={props => !!authenticated
-            ? <Comp {...props} />
+            ? (error.isError ? <ErrorPanel {...error}/> : <Comp {...props} />)
             : <Redirect to={{pathname: '/login', state: {from: props.location}}} />
         }
     />
@@ -16,6 +18,7 @@ const PrivateRoute = ({component: Comp, authenticated, ...rest}) => (
 
 const mapStateToProps = (state: State) => {
     return {
+        error: state.error,
         authenticated: isLoggedIn(state),
     };
 };

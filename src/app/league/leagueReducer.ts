@@ -1,10 +1,19 @@
 
 import { GAMBLER_LOAD_SUCCESS, GAMBLER_LOAD_FAILURE, LOAD_GAMBLER_AND_LEAGUE } from '../user/userActions';
-import { User, Gambler, League } from "../types";
+import {User, Gambler, League, Bet, GamblerInfo, Parlay} from "../types";
 
+export interface LeagueContext extends League {
+    gamblers: GamblerInfo[];
+    invites: any[]; //TODO: Fix
+    topBets: {
+        bets: Bet[];
+        parlays: Parlay[];
+    }
+}
 
 const initialState = {
     gamblers: [],
+    invites: [],
     topBets: {bets: [], parlays: []}
 };
 

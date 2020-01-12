@@ -1,9 +1,5 @@
 import React, {Component} from "react";
 import {
-    Button,
-    Card,
-    CardBody,
-    CardImg, CardSubtitle, CardText, CardTitle,
     Col,
     Container, Input, InputGroup,
     ListGroup, ListGroupItem,
@@ -15,8 +11,7 @@ import {
     TabPane
 } from "reactstrap";
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import Pluralize from 'pluralize';
-import {Bet, Gambler, League} from "../types";
+import {Gambler, League} from "../types";
 import {connect} from "react-redux";
 import {getCart} from "../cart/cartSelector";
 import {loadCart, toggleParlay, editCartBet, removeCartBet, editCartParlay} from "../cart/cartActions";
@@ -25,7 +20,6 @@ import {loadUserContext} from "../user/userActions";
 import PotentialBetCard from "./PotentialBetCard";
 import {validateBets} from "../api/api";
 import {getGambler} from "../gambler/gamblerSelector";
-import {Colors} from "../theme/theme";
 import {FSButton} from "./FSComponents";
 import {getButtonMessage} from "../../util/BetUtil";
 
