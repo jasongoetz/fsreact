@@ -24,7 +24,7 @@ const LeagueMembers: React.FC<Props> = ({league}) => {
                         {league.gamblers.map(gambler => gambler.user)
                             .sort((u1, u2) => u1.lastName < u2.lastName ? -1 : 1)
                             .map(user =>
-                                <tr>
+                                <tr key={`member_${user.id}`}>
                                     <td>
                                         {user.firstName} {user.lastName} {(league.admin === user.id) && "(League Admin)"}
                                     </td>

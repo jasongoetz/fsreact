@@ -58,6 +58,13 @@ export const postInvite: any = async (leagueId: number, email: string) => {
     }
 };
 
+export const revokeInvite: any = async (leagueId: number, inviteId: number) => {
+    await deLete({
+        path: `/api/leagues/${leagueId}/invites/${inviteId}`,
+    });
+    return;
+};
+
 export const getTransactionsForGambler: any = async (gamblerId): Promise<string> => {
     const response = await get({
         path: `/api/gamblers/${gamblerId}/transactions`,

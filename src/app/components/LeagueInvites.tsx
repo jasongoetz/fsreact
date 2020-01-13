@@ -4,20 +4,11 @@ import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./League
 import {LeagueContext} from "../league/leagueReducer";
 import {FSButton, FSInput} from "./FSComponents";
 import {useDispatch} from "react-redux";
+import {inviteUser, uninviteUser} from "../league/leagueActions";
 
 interface Props {
     league: LeagueContext;
 }
-
-const revokeInvite = (inviteId: number) => {
-    //TODO
-    alert("INVITE REVOKED: " + inviteId);
-};
-
-const inviteUser = (email: string, league: LeagueContext) => {
-    //TODO
-    alert("INVITE!");
-};
 
 const isEmailValid = email => {
     const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -49,12 +40,12 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
                     </thead>
                     <tbody>
                     {league.invites.map(invite =>
-                        <tr>
+                        <tr key={`invite_${invite.id}`}>
                             <td>
                                 {invite.email}
                             </td>
                             <td>
-                                <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => revokeInvite(invite.id)}>
+                                <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => dispatch(uninviteUser(league.id, invite.id))}>
                                     Revoke Invite
                                 </Button>
                             </td>
