@@ -16,6 +16,8 @@ import Standings from "./components/Standings";
 import AccountPage from './components/AccountPage';
 import LeagueBetList from "./components/LeagueBetList";
 import ConfirmationPage from "./components/ConfirmationPage";
+import LeagueManagement from "./components/LeagueManagement";
+import ErrorPanel from "./components/error/ErrorPanel";
 
 export interface State {
     showMobileMenu: boolean
@@ -53,15 +55,18 @@ class App extends Component {
                             closeMenu={this.toggleMobileMenu}
                         />}
 
-                        <UnauthenticatedRoute exact path="/login" component={this.LoginPage} redirectTo="/" />
-                        <PrivateRoute exact path="/" component={this.HomePage} />
-                        <PrivateRoute exact path="/games" component={this.GamePage} />
-                        <PrivateRoute exact path="/standings" component={this.StandingsPage} />
-                        <PrivateRoute exact path="/bets" component={this.BetsPage} />
-                        <PrivateRoute exact path="/account" component={this.AccountPage}/>
-                        <PrivateRoute exact path="/transaction/show/:gamblerId" component={this.AccountPage}/>
-                        <PrivateRoute exact path="/league/settings" component={this.LeagueManagePage} />
-                        <PrivateRoute exact path="/confirmation" component={this.ConfirmationPage} />
+                        <Switch>
+                            <UnauthenticatedRoute exact path="/login" component={this.LoginPage} redirectTo="/" />
+                            <PrivateRoute exact path="/" component={this.HomePage} />
+                            <PrivateRoute exact path="/games" component={this.GamePage} />
+                            <PrivateRoute exact path="/standings" component={this.StandingsPage} />
+                            <PrivateRoute exact path="/bets" component={this.BetsPage} />
+                            <PrivateRoute exact path="/account" component={this.AccountPage}/>
+                            <PrivateRoute exact path="/transaction/show/:gamblerId" component={this.AccountPage}/>
+                            <PrivateRoute exact path="/league/settings" component={this.LeagueManagePage} />
+                            <PrivateRoute exact path="/confirmation" component={this.ConfirmationPage} />
+                            <Route component={this.Page404} />
+                        </Switch>
                     </div>
                 </Router>
             </Provider>
@@ -95,19 +100,19 @@ class App extends Component {
     };
 
     LeagueManagePage = () => {
-        return (
-            <div>
-                <h2>Manage</h2>
-            </div>
-        )
+        return <LeagueManagement/>
     };
 
     ConfirmationPage = () => {
         return <ConfirmationPage/>;
-    }
+    };
 
     AccountPage = ({match}) => {
         return <AccountPage gamblerId={match.params.gamblerId}/>
+    };
+
+    Page404 = () => {
+        return <ErrorPanel statusCode={404}/>
     }
 }
 

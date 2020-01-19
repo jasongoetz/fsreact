@@ -2,8 +2,10 @@ import {Redirect, Route} from "react-router";
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import {State} from "../reducers/root";
+import InternalServerError from "./error/InternalServerError";
+import ErrorPanel from "./error/ErrorPanel";
 
-const UnauthenticatedRoute = ({component: Component, authenticated, redirectTo, ...rest}) => {
+const UnauthenticatedRoute = ({component: Component, authenticated, error, redirectTo, ...rest}) => {
     return (
         <Route
             {...rest}
@@ -11,13 +13,14 @@ const UnauthenticatedRoute = ({component: Component, authenticated, redirectTo, 
                 ? <Redirect to={{
                     pathname: redirectTo,
                     state: { from: props.location }}}/>
-                : <Component {...props} />}
+                : (error.isError ? <ErrorPanel {...error}/> : <Component {...props} />)}
         />
     )
 };
 
 const mapStateToProps = (state: State) => {
     return {
+        error: state.error,
         authenticated: state.auth.authenticated,
     };
 };

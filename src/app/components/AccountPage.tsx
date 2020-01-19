@@ -75,9 +75,8 @@ const AccountPage: React.FC<Props> = ({gamblerId}) => {
                 <td>{league.startingAccount.toFixed(2)}</td>
                 <td>{league.startingAccount.toFixed(2)}</td>
             </tr>
-            {betsAndParlays &&
-            betsAndParlays.map((betOrParlay: BetOrParlay, index) => <TransactionRow key={`tr-${index}`} betOrParlay={betOrParlay}
-                                                                       moneyline={league.moneyline}/>)
+            {betsAndParlays && betsAndParlays.map((betOrParlay: BetOrParlay, index) =>
+                <TransactionRow key={`tr-${index}`} betOrParlay={betOrParlay} moneyline={league.moneyline}/>)
             }
             </tbody>
         </Table>

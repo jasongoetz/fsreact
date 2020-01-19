@@ -21,10 +21,6 @@ export interface Props {
 export interface State {
 }
 
-const sidebarOuterStyle = {
-    //display: "none"
-};
-
 class GamesPage extends Component<Props, State> {
 
     async componentDidMount() {
@@ -41,7 +37,7 @@ class GamesPage extends Component<Props, State> {
                     <PageHeader>Games</PageHeader>
                     {this.props.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
                 </Col>
-                <Col md={4} style={sidebarOuterStyle}>
+                <Col md={4}>
                     <BetSlip></BetSlip>
                 </Col>
             </Row>

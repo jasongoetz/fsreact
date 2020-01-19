@@ -1,5 +1,4 @@
-import {Component} from "react";
-import React from "react";
+import React, {FC} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {getRandomImageUrl} from "../theme/imageRotate";
 import {Colors} from "../theme/theme";
@@ -37,32 +36,24 @@ export interface Props {
     headline?: string;
 }
 
-class ImagePage extends Component<Props> {
-
-    render() {
-        return (
-            <Container>
-                {!!this.props.headline &&
-                    <Row style={headlineStyle}>
-                        <Col
-                            sm={{offset: 1, size: 10}}
-                            md={{offset: 2, size: 8}}
-                            lg={{offset: 3, size: 6}}
-                        >
-                            <h1>{this.props.headline}</h1>
-                        </Col>
-                    </Row>
-                }
-                {this.props.children}
-                <div className="signin-page" style={backgroundImageStyle}>
-                </div>
-                <div className="signin-page-overlay" style={backgroundImageOverlay}>
-                </div>
-            </Container>
-        );
-    }
-
-}
+const ImagePage: FC<Props> = ({headline, children}) => (
+    <Container>
+        {!!headline &&
+            <Row style={headlineStyle}>
+                <Col
+                    sm={{offset: 1, size: 10}}
+                    md={{offset: 2, size: 8}}
+                    lg={{offset: 3, size: 6}}
+                >
+                    <h1>{headline}</h1>
+                </Col>
+            </Row>
+        }
+        {children}
+        <div className="signin-page" style={backgroundImageStyle}/>
+        <div className="signin-page-overlay" style={backgroundImageOverlay}/>
+    </Container>
+);
 
 export default ImagePage;
 

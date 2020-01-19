@@ -8,10 +8,12 @@ import bettableReducer from "../bettables/bettableReducer";
 import transactionsReducer from "../transactions/transactionsReducer";
 import betReducer from "../bets/betReducer";
 import cartReducer from "../cart/cartReducer";
+import errorReducer, {ErrorState} from "../error/errorReducer";
 
 export interface State {
     auth: AuthState;
     gambler: GamblerState;
+    error: ErrorState;
 }
 
 const rootReducer = combineReducers({
@@ -23,6 +25,7 @@ const rootReducer = combineReducers({
     bettable: bettableReducer,
     league: leagueReducer,
     transactions: transactionsReducer,
+    error: errorReducer,
 });
 
 export default rootReducer;
