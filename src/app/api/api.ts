@@ -46,6 +46,23 @@ export const getUserContext: any = async (userId): Promise<string> => {
     return data;
 };
 
+export const updateUser = async (userId, user) => {
+    await put({
+        path: `/api/users/${userId}`,
+        body: JSON.stringify(user)
+    });
+};
+
+export const updateUserPass = async (userId, password) => {
+    await put({
+        path: `/api/users/${userId}/password`,
+        body: JSON.stringify({
+            password: password,
+            confirmation: password,
+        })
+    });
+};
+
 export const postInvite: any = async (leagueId: number, email: string) => {
     const response = await post({
         path: `/api/leagues/${leagueId}/invites`,
@@ -118,7 +135,6 @@ export const editCartAmount: any = async (gamblerId: number, cartId: number, amo
         path: `/api/gamblers/${gamblerId}/cart/${cartId}`,
         body: JSON.stringify({amount: amount})
     });
-    return;
 };
 
 export const removeFromCart: any = async (gamblerId: number, cartId: number) => {
@@ -133,7 +149,6 @@ export const toggleParlayOnGamblerBetCart: any = async (gamblerId, active: boole
         path: `/api/gamblers/${gamblerId}/cart/parlay`,
         body: JSON.stringify({active: active})
     });
-    return;
 };
 
 export const editParlayAmount: any = async (gamblerId: number, amount: number) => {
@@ -141,7 +156,6 @@ export const editParlayAmount: any = async (gamblerId: number, amount: number) =
         path: `/api/gamblers/${gamblerId}/cart/parlay`,
         body: JSON.stringify({amount: amount})
     });
-    return;
 };
 
 export const validateBets: any = async (gamblerId: number) => {
