@@ -18,6 +18,8 @@ import LeagueBetList from "./components/LeagueBetList";
 import ConfirmationPage from "./components/ConfirmationPage";
 import LeagueManagement from "./components/LeagueManagement";
 import ErrorPanel from "./components/error/ErrorPanel";
+import ProfilePage from "./components/ProfilePage";
+import PasswordPage from "./components/PasswordPage";
 
 export interface State {
     showMobileMenu: boolean
@@ -65,6 +67,8 @@ class App extends Component {
                             <PrivateRoute exact path="/transaction/show/:gamblerId" component={this.AccountPage}/>
                             <PrivateRoute exact path="/league/settings" component={this.LeagueManagePage} />
                             <PrivateRoute exact path="/confirmation" component={this.ConfirmationPage} />
+                            <PrivateRoute exact path="/profile" component={this.ProfileManagePage} />
+                            <PrivateRoute exact path="/user/password" component={this.PasswordManagePage} />
                             <Route component={this.Page404} />
                         </Switch>
                     </div>
@@ -109,6 +113,18 @@ class App extends Component {
 
     AccountPage = ({match}) => {
         return <AccountPage gamblerId={match.params.gamblerId}/>
+    };
+
+    ProfileManagePage = () => {
+        return <ImagePage>
+            <ProfilePage />
+        </ImagePage>;
+    };
+
+    PasswordManagePage = () => {
+        return <ImagePage>
+            <PasswordPage />
+        </ImagePage>;
     };
 
     Page404 = () => {

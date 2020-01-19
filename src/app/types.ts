@@ -1,11 +1,15 @@
 import {Bettable} from "./bettables/bettableReducer";
 
-export interface User {
-    id: number;
-    createdAt: string;
+export interface UserProfile {
     firstName: string;
     lastName: string;
     email: string;
+    notifyprocessedbets: boolean;
+}
+
+export interface User extends UserProfile {
+    id: number;
+    createdAt: string;
 }
 
 export type Sport = 'CFB' | 'NFL' | 'NBA';

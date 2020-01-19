@@ -2,18 +2,15 @@ import React, {useState} from 'react';
 import {Button, Col, Container, FormFeedback, FormGroup, Input, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
 import {LeagueContext} from "../league/leagueReducer";
-import {FSButton, FSInput} from "./FSComponents";
+import {FSButton} from "./FSComponents";
 import {useDispatch} from "react-redux";
 import {inviteUser, uninviteUser} from "../league/leagueActions";
+import {isEmailValid} from "../../util/EmailUtil";
+import {FSInput} from "./FSForm";
 
 interface Props {
     league: LeagueContext;
 }
-
-const isEmailValid = email => {
-    const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regexp.test(email);
-};
 
 const gamblerHasEmail = (email: string, league: LeagueContext) => league.gamblers.some(gambler => gambler.user.email === email);
 

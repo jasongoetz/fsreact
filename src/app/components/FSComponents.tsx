@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import {Button, Input} from "reactstrap";
+import {Button} from "reactstrap";
 
 export const FSButton = styled(Button)`
     && {
@@ -11,14 +11,7 @@ export const FSButton = styled(Button)`
     }
 `;
 
-export const FSInput = styled(Input)`
-    && {
-        border-radius: 0;
-    }
-`;
-
-export const FSWideButton = styled(FSButton)`
-    && {
-        width: 100%;
-    }
-`;
+export const FSWideButton = styled(FSButton)({
+    width: '100%',
+    textTransform: 'uppercase' as 'uppercase',
+});

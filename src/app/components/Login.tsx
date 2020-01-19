@@ -1,12 +1,13 @@
-import {Component} from "react";
 import React from "react";
-import {FormGroup, Button, Input, Container, Row, Col} from "reactstrap";
-import {FSForm, FSInput} from "./FSForm";
+import {FormGroup, Row, Col, FormFeedback} from "reactstrap";
+import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {authenticate} from "../auth/authActions";
-import { connect } from 'react-redux';
-import {Redirect, RouteComponentProps} from "react-router";
+import {connect, useDispatch} from 'react-redux';
+import {RouteComponentProps} from "react-router";
 import {Credentials} from "../auth/authModels";
-import {FSButton, FSWideButton} from "./FSComponents";
+import {FSWideButton} from "./FSComponents";
+import {useFormik} from "formik";
+import * as yup from "yup";
 
 const formSigninStyle = {
     paddingBottom: "15px"
@@ -16,98 +17,83 @@ export interface Props extends RouteComponentProps {
     authenticate: (user: Credentials) => void;
 }
 
-export interface State {
-    email: string
-    password: string
-    redirectToReferrer: boolean
+interface LoginValues {
+    email: string;
+    password: string;
 }
 
-class Login extends Component<Props, State> {
+const Login: React.FC<Props> = () => {
+    const dispatch = useDispatch();
 
-    state = {
-        email: "",
-        password: "",
-        redirectToReferrer: false,
-    };
+    const loginSchema = yup.object().shape({
+        email: yup.string()
+            .email('Your account username is a valid email')
+            .required('Your email username is required'),
+        password: yup.string()
+            .required('Please enter your password'),
+    });
 
-    private _isMounted: boolean = false;
-
-    componentDidMount(): void {
-        this._isMounted = true;
-    }
-
-    componentWillUnmount(): void {
-        this._isMounted = false;
-    }
-
-    //Override
-    setState(state: any) {
-        if (this._isMounted) {
-            super.setState(state);
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        validationSchema: loginSchema,
+        onSubmit: async (values, actions) => {
+            submitLogin(values.email, values.password);
+            actions.setSubmitting(false);
         }
-    }
+    });
 
-    render() {
-        let { from } = this.props.location.state || { from: { pathname: "/" } };
-        let { redirectToReferrer } = this.state;
-
-        if (redirectToReferrer) return <Redirect to={from} />;
-
-        return (
-            <Row>
-                <Col
-                    xs={{offset: 1, size: 10}}
-                    sm={{offset: 2, size: 8}}
-                    md={{offset: 3, size: 6}}
-                    lg={{offset: 4, size: 4}}
-                >
-                    <FSForm onSubmit={this.submitLogin} style={formSigninStyle}>
-                        <FormGroup>
-                            <FSInput
-                                autoFocus
-                                type="email"
-                                placeholder="Email"
-                                value={this.state.email}
-                                onChange={(event: any) => this.setState({email: event.target.value})}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <FSInput
-                                type="password"
-                                placeholder="Password"
-                                value={this.state.password}
-                                onChange={(event: any) => this.setState({password: event.target.value})}
-                            />
-                        </FormGroup>
-                        <FSWideButton color="primary" size="lg">SIGN IN</FSWideButton>
-                        {/*<div className="register-invite">New to Fake Stacks? <a href="/register">Sign up.</a></div>*/}
-                    </FSForm>
-                </Col>
-            </Row>
-        );
-    }
-
-    submitLogin = async (e: any) => {
-        e.preventDefault();
+    const submitLogin = async (email: string, password: string) => {
         try {
-            const {email, password} = this.state;
-            await this.props.authenticate({email, password});
-
-            this.setState({ redirectToReferrer: true });
+            await dispatch(authenticate({email, password}));
         } catch (err) {
-            alert("Nope. You'll get an error message here normally" + err.message);
+            formik.setErrors({password: 'Your email or password is incorrect'});
         }
     };
-}
 
-const mapDispatchToProps = {
-    authenticate,
+    return (
+        <Row>
+            <Col
+                xs={{offset: 1, size: 10}}
+                sm={{offset: 2, size: 8}}
+                md={{offset: 3, size: 6}}
+                lg={{offset: 4, size: 4}}
+            >
+                <FSForm style={formSigninStyle} onSubmit={formik.handleSubmit}>
+                    <FormGroup>
+                        <FSInput
+                            autoFocus
+                            name="email"
+                            type="email"
+                            placeholder="Email"
+                            invalid={!!formik.errors.email}
+                            onChange={formik.handleChange}
+                            value={formik.values.email}
+                        />
+                        <FSFormFeedback>{formik.errors.email}</FSFormFeedback>
+                    </FormGroup>
+                    <FormGroup>
+                        <FSInput
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            invalid={!!formik.errors.password}
+                            onChange={formik.handleChange}
+                            value={formik.values.password}
+                        />
+                        <FSFormFeedback>{formik.errors.password}</FSFormFeedback>
+                    </FormGroup>
+                    <FSWideButton color="primary" size="lg">SIGN IN</FSWideButton>
+                    {/*<div className="register-invite">New to Fake Stacks? <a href="/register">Sign up.</a></div>*/}
+                </FSForm>
+            </Col>
+        </Row>
+    );
 };
 
-export default connect(
-    undefined,
-    mapDispatchToProps,
-)(Login);
+export default Login;
 
 
 
