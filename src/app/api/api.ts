@@ -46,6 +46,25 @@ export const getUserContext: any = async (userId): Promise<string> => {
     return data;
 };
 
+export const postInvite: any = async (leagueId: number, email: string) => {
+    const response = await post({
+        path: `/api/leagues/${leagueId}/invites`,
+        body: JSON.stringify({ email })
+    });
+
+    if (response.status === 201) {
+        let data = await response.json();
+        return data;
+    }
+};
+
+export const revokeInvite: any = async (leagueId: number, inviteId: number) => {
+    await deLete({
+        path: `/api/leagues/${leagueId}/invites/${inviteId}`,
+    });
+    return;
+};
+
 export const getTransactionsForGambler: any = async (gamblerId): Promise<string> => {
     const response = await get({
         path: `/api/gamblers/${gamblerId}/transactions`,
