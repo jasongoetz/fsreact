@@ -29,25 +29,25 @@ export class GameRow extends Component<{ bettable: any }> {
 
     render() {
         return <Row style={gameRowStyle}>
-            <Col md={4} style={gameTimeStyle}>
+            <Col md={4} sm={12} style={gameTimeStyle}>
                 {moment(this.props.bettable.gameTime).format("dddd, MMM Do, h:mma z")}
             </Col>
-            <Col md={8}>
+            <Col md={8} sm={12}>
                 <Row style={teamRowStyle}>
-                    <Col xs={4} style={teamNameStyle}>{this.props.bettable.team1}</Col>
-                    <Col xs={4}>
+                    <Col style={teamNameStyle}>{this.props.bettable.team1}</Col>
+                    <Col style={{width: '70px', padding: '5px'}}>
                         <TeamBettableButton bettable={this.props.bettable} team={1}/>
                     </Col>
-                    <Col xs={4}>
+                    <Col style={{width: '70px', padding: '5px'}}>
                         <OverUnderBettableButton bettable={this.props.bettable} overunder='OVER'/>
                     </Col>
                 </Row>
                 <Row style={teamRowStyle}>
-                    <Col xs={4} style={teamNameStyle}>{this.props.bettable.team2}</Col>
-                    <Col xs={4}>
+                    <Col style={teamNameStyle}>{this.props.bettable.team2}</Col>
+                    <Col style={{width: '70px', padding: '5px'}}>
                         <TeamBettableButton bettable={this.props.bettable} team={2}/>
                     </Col>
-                    <Col xs={4}>
+                    <Col style={{width: '70px', padding: '5px'}}>
                         <OverUnderBettableButton bettable={this.props.bettable} overunder='UNDER'/>
                     </Col>
                 </Row>

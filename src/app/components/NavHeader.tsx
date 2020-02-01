@@ -1,6 +1,7 @@
 import {Component} from "react";
 import React from "react";
 import {
+    Badge,
     Collapse, Container, DropdownItem, DropdownMenu,
     DropdownToggle,
     Nav,
@@ -19,20 +20,30 @@ import {getGamblerWithAccount} from "../gambler/gamblerSelector";
 import {getLeague} from "../league/leagueSelector";
 import {isLoggedIn} from "../auth/authSelector";
 import {GamblerInfo, League} from "../types";
+import {getCartBets} from "../cart/cartSelector";
+import {CartBet} from "../cart/cartReducer";
+import MediaQuery from "react-responsive";
+import styled from "@emotion/styled";
+import BetSlip from "./BetSlip";
 
-export interface Props {
+interface Props {
     league: League;
     gambler: GamblerInfo;
     loggedIn: boolean;
+    cartBets: CartBet[];
     toggleMobileMenu: () => void;
     toggleBetSlip: () => void;
     handleLogout: () => void;
 }
 
+interface State {
+    mobileBetSlipOpen: boolean;
+}
+
 const navbarStyle = {
     backgroundColor: Colors.lightGray,
-    paddingLeft: "0.5rem",
-    paddingRight: "0.5rem",
+    // paddingLeft: "0.5rem",
+    // paddingRight: "0.5rem",
 };
 
 const navbarContainerStyle = {
@@ -60,14 +71,43 @@ const betSlipButtonStyle = {
     paddingRight: "5px"
 };
 
-class NavHeader extends Component<Props> {
+const badgeContainerStyle = {
+    position: 'relative' as 'relative',
+};
+
+const betSlipBadgeStyle = {
+    padding: '3px 4px 4px 4px',
+    fontSize: '10px',
+    lineHeight: '.8',
+    backgroundColor: '#D16565',
+    position: 'absolute' as 'absolute',
+    top: '-3px',
+    right: '-5px',
+};
+
+const BetSlipCollapse = styled(Collapse)({
+    width: '100%',
+    zIndex: 4,
+    background: 'white',
+    overflow: 'scroll',
+    position: 'absolute',
+    maxHeight: 'calc(100vh - 50px)',
+    top: '50px',
+    left: '0px',
+});
+
+class NavHeader extends Component<Props, State> {
+
+    state = {
+        mobileBetSlipOpen: false,
+    };
 
     toggleMenu = () => {
         this.props.toggleMobileMenu();
     };
 
     toggleBetSlip = () => {
-        this.props.toggleBetSlip();
+        this.setState({mobileBetSlipOpen: !this.state.mobileBetSlipOpen});
     };
 
     handleLogout = (e) => {
@@ -77,7 +117,7 @@ class NavHeader extends Component<Props> {
 
     render() {
         return (
-            <Navbar style={navbarStyle} fixed="top" light expand="md">
+            <Navbar style={navbarStyle} fixed="top" light expand="sm">
                 <Container style={navbarContainerStyle}>
                     <NavbarToggler style={menuButtonStyle} onClick={this.toggleMenu}/>
                     <Collapse className="w-100" navbar>
@@ -87,9 +127,19 @@ class NavHeader extends Component<Props> {
                     <NavbarBrand style={brandStyle} href="/" className="fixedTop" mx="auto">FAKE STACKS</NavbarBrand>
 
                     <NavbarToggler style={betSlipButtonStyle} onClick={this.toggleBetSlip}>
-                        <span className="badge bet-slip-badge"></span>
-                        <img src="/images/bets-menu.svg"/>
+                        <span style={badgeContainerStyle}>
+                            <Badge style={betSlipBadgeStyle} pill>{this.props.cartBets.length}</Badge>
+                            <img src="/images/bets-menu.svg"/>
+                        </span>
                     </NavbarToggler>
+
+                    {this.props.loggedIn &&
+                        <MediaQuery maxWidth={576}>
+                            <BetSlipCollapse isOpen={this.state.mobileBetSlipOpen}>
+                                <BetSlip/>
+                            </BetSlipCollapse>
+                        </MediaQuery>
+                    }
 
                     <Collapse className="w-100 justify-content-end" navbar>
                         {this.props.loggedIn && !!this.props.gambler && this.getRightNavBar()}
@@ -153,6 +203,7 @@ const mapStateToProps = (state) => {
         loggedIn: isLoggedIn(state),
         league: getLeague(state),
         gambler: getGamblerWithAccount(state, state.gambler.id),
+        cartBets: getCartBets(state),
     };
 };
 

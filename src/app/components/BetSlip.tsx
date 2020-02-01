@@ -25,8 +25,7 @@ import {getButtonMessage} from "../../util/BetUtil";
 
 const containerStyle = {
     borderRadius: "0px",
-    marginTop: "20px",
-    minWidth: "400px",
+    //marginTop: "20px",
     backgroundColor: "#ececec",
 };
 

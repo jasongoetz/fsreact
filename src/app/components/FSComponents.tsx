@@ -7,7 +7,7 @@ export const FSButton = styled(Button)`
         color: #fff;
         background-color: #428bca;
         border-color: #357ebd;
-        border-radius: 0;
+        border-radius: 2px;
     }
 `;
 

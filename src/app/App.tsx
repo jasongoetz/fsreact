@@ -20,6 +20,7 @@ import LeagueManagement from "./components/LeagueManagement";
 import ErrorPanel from "./components/error/ErrorPanel";
 import ProfilePage from "./components/ProfilePage";
 import PasswordPage from "./components/PasswordPage";
+import MediaQuery from "react-responsive";
 
 export interface State {
     showMobileMenu: boolean

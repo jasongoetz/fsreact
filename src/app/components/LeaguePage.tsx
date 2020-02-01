@@ -60,19 +60,19 @@ class LeaguePage extends Component<Props, State> {
 
             <Container style={homePageStyle}>
                 <Row>
-                    <Col style={homePagePanelStyle} xs={{size: 12}} sm={{size: 4}}>
+                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}} lg={{size: 4, offset: 0}}>
                         <HomePagePanel title="The Rules" linkUrl="/games" action="START BETTING">
                             <Rules/>
                         </HomePagePanel>
                     </Col>
 
-                    <Col style={homePagePanelStyle} xs={{size: 12}} sm={{size: 4}}>
+                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}} lg={{size: 4, offset: 0}}>
                         <HomePagePanel title="Leaderboard" linkUrl="/standings" action="SEE THE STANDINGS">
                             <MiniStandings/>
                         </HomePagePanel>
                     </Col>
 
-                    <Col style={homePagePanelStyle} xs={{size: 12}} sm={{size: 4}}>
+                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}} lg={{size: 4, offset: 0}}>
                         <HomePagePanel title="Pending Big Bets" linkUrl="/bets" action="SEE ALL BETS">
                             <MiniBets/>
                         </HomePagePanel>

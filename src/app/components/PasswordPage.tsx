@@ -9,7 +9,6 @@ import {FSWideButton} from "./FSComponents";
 import {FSFormFeedback} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import {Redirect} from "react-router";
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 const PasswordPage: React.FC<RouteComponentProps> = ({history}) => {

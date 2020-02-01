@@ -10,6 +10,7 @@ import {PageHeader} from "./PageHeader";
 import {League} from "../types";
 import {Bettable} from "../bettables/bettableReducer";
 import BetSlip from "./BetSlip";
+import MediaQuery from "react-responsive";
 
 export interface Props {
     loadUserContext: () => void;
@@ -38,12 +39,13 @@ class GamesPage extends Component<Props, State> {
                     {this.props.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
                 </Col>
                 <Col md={4}>
-                    <BetSlip></BetSlip>
+                    <MediaQuery minWidth={576}>
+                        <BetSlip></BetSlip>
+                    </MediaQuery>
                 </Col>
             </Row>
         </Container>
     }
-
 }
 
 

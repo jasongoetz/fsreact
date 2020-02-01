@@ -22,6 +22,7 @@ const token = localStorage.getItem('token') || sessionStorage.getItem('token') |
 
 if (token) {
     sessionStorage.setItem('token', token);
+    localStorage.setItem('token', token);
 }
 
 const tokenValid = isTokenValid(token);

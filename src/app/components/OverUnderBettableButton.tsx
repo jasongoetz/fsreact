@@ -34,7 +34,7 @@ class OverUnderBettableButton extends Component<Props, State> {
         if (!this.props.bettable.ouoff) {
             let disabled = this.bettableInCart(this.props.bettable.id, this.props.overunder);
             let overUnderName = this.props.overunder === 'OVER' ? "Over " : "Under ";
-            return <FSWideButton disabled={disabled}
+            return <FSWideButton className="hidden-xs hidden-sm" disabled={disabled}
                              onClick={this.betClick}>{overUnderName} {this.props.bettable.overunder}</FSWideButton>;
         } else {
             return <FSWideButton disabled={true}>O/U OFF</FSWideButton>;
