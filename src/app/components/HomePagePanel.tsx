@@ -1,7 +1,6 @@
-import {Component} from "react";
 import React from "react";
 import {Link} from "react-router-dom";
-import {FSButton, FSWideButton} from "./FSComponents";
+import {FSWideButton} from "./FSComponents";
 
 export interface State {
 }
@@ -33,22 +32,19 @@ const panelActionRowStyle = {
     marginBottom: "10px"
 };
 
-class HomePagePanel extends Component<Props, State> {
-    render() {
-        return <div style={innerHomePagePanelStyle}>
-            <h3 style={homePagePanelHeading}>{this.props.title}</h3>
-            <div style={homePagePanelContentStyle}>
-                <div style={homePagePanelContentInnerStyle}>
-                    {this.props.children}
-                </div>
+const HomePagePanel: React.FC<Props> = ({children, title, linkUrl, action}) =>
+    <div style={innerHomePagePanelStyle}>
+        <h3 style={homePagePanelHeading}>{title}</h3>
+        <div style={homePagePanelContentStyle}>
+            <div style={homePagePanelContentInnerStyle}>
+                {children}
             </div>
-            <div style={panelActionRowStyle}>
-                <Link to={this.props.linkUrl}>
-                    <FSWideButton color="primary" size="lg">{this.props.action}</FSWideButton>
-                </Link>
-            </div>
-        </div>;
-    }
-}
+        </div>
+        <div style={panelActionRowStyle}>
+            <Link to={linkUrl}>
+                <FSWideButton color="primary" size="lg">{action}</FSWideButton>
+            </Link>
+        </div>
+    </div>;
 
 export default HomePagePanel;

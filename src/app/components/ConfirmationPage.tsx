@@ -8,6 +8,8 @@ import {FSButton} from "./FSComponents";
 import {getButtonMessage} from "../../util/BetUtil";
 import { useHistory } from "react-router-dom";
 import {confirmBets} from "../cart/cartActions";
+import {GamblerConsumer} from "../gambler/gamblerContext";
+import {getGambler} from "../gambler/gamblerSelector";
 
 const totalTallyStyle = {
     marginTop: '20px',
@@ -47,9 +49,13 @@ const ConfirmationPage: React.FC = () => {
                 )}
             </ListGroup>
             <div style={totalTallyStyle}>
-                <FSButton onClick={() => dispatch(confirmBets())}>
-                    {getButtonMessage('Confirm', potentialBets.length, totalAmount, parlayActive)}
-                </FSButton>
+                <GamblerConsumer select={[getGambler]}>
+                    {gambler =>
+                        <FSButton onClick={() => dispatch(confirmBets(gambler.id))}>
+                            {getButtonMessage('Confirm', potentialBets.length, totalAmount, parlayActive)}
+                        </FSButton>
+                    }
+                </GamblerConsumer>
             </div>
         </Col>
     </Container>;

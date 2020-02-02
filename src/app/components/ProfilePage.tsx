@@ -1,38 +1,27 @@
-import React, {useEffect, useState} from 'react';
-import {Col, Container, FormFeedback, FormGroup, Label, Row} from "reactstrap";
-import {loadUserContext, updateUserProfile} from "../user/userActions";
-import {useDispatch, useSelector} from "react-redux";
-import {getUser} from "../user/userSelector";
+import React from 'react';
+import {Col, Container, FormGroup, Label, Row} from "reactstrap";
+import {updateUserProfile} from "../user/userActions";
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {User} from "../types";
 import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import {authenticate} from "../auth/authActions";
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-const ProfilePage: React.FC<RouteComponentProps> = ({history}) => {
+interface Props extends RouteComponentProps {
+    user: User;
+}
 
-    const user: User = useSelector(state => getUser(state));
-    const dispatch = useDispatch();
+const ProfilePage: React.FC<Props> = ({history, user}) => {
 
-    useEffect(() => {
-        const loadContext = async () => {
-            if (!user.id) {
-                await dispatch(loadUserContext());
-            }
-        };
-        loadContext();
-    }, []);
-
-    const updateProfile = async (values, actions) => {
+    const updateProfile = async (values) => {
         try {
-            await dispatch(updateUserProfile({
+            await updateUserProfile(user.id,{
                 firstName: values.firstName,
                 lastName: values.lastName,
                 email: values.email,
                 notifyprocessedbets: values.notifyprocessedbets,
-            }));
+            });
 
             history.push('/');
         } catch (err) {

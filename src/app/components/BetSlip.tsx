@@ -1,8 +1,11 @@
-import React, {Component} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Col,
-    Container, Input, InputGroup,
-    ListGroup, ListGroupItem,
+    Container,
+    Input,
+    InputGroup,
+    ListGroup,
+    ListGroupItem,
     Nav,
     NavItem,
     NavLink,
@@ -10,18 +13,16 @@ import {
     TabContent,
     TabPane
 } from "reactstrap";
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import {Gambler, League} from "../types";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getCart} from "../cart/cartSelector";
-import {loadCart, toggleParlay, editCartBet, removeCartBet, editCartParlay} from "../cart/cartActions";
-import {getLeague} from "../league/leagueSelector";
-import {loadUserContext} from "../user/userActions";
+import {editCartBet, editCartParlay, loadCart, removeCartBet, toggleParlay} from "../cart/cartActions";
 import PotentialBetCard from "./PotentialBetCard";
 import {validateBets} from "../api/api";
 import {getGambler} from "../gambler/gamblerSelector";
 import {FSButton} from "./FSComponents";
 import {getButtonMessage} from "../../util/BetUtil";
+import {GamblerConsumer} from "../gambler/gamblerContext";
+import { useHistory } from "react-router-dom";
 
 const containerStyle = {
     borderRadius: "0px",
@@ -108,160 +109,26 @@ const errorRowStyle = {
     padding: "5px 2px",
 };
 
-export interface Props extends RouteComponentProps {
-    loadUserContext: () => void;
-    league: League;
-    loadCart: () => void;
-    editCartBet: (cartId, amount) => void;
-    removeCartBet: (cartId) => void;
-    toggleParlay: (boolean) => void;
-    editCartParlay: (amount) => void;
-    cart: any;
-    gambler: Gambler;
+interface Props {
+    gamblerId: number;
 }
 
-export interface State {
-    errors: string[];
-}
+const BetSlip: React.FC<Props> = ({gamblerId}) => {
 
-class BetSlip extends Component<Props, State> {
+    const [errors, setErrors] = useState([]);
 
-    state = {
-        errors: [],
-    };
+    const history = useHistory();
+    const dispatch = useDispatch();
 
-    async componentDidMount() {
-        if (!this.props.league.id) {
-            await this.props.loadUserContext();
+    useEffect(() => {
+        if (gamblerId) {
+            dispatch(loadCart(gamblerId));
         }
-        await this.props.loadCart();
-    }
+    }, [gamblerId]);
 
-    toggleParlay(activeParlay: boolean) {
-        this.props.toggleParlay(activeParlay);
-    }
+    const cart = useSelector(getCart);
 
-    render() {
-        let parlay = this.props.cart.parlay || {};
-        let potentialBets = this.props.cart.bets;
-        let insufficientBets = potentialBets.length < 2;
-        let betParlayTabActive = !!parlay.active && !insufficientBets;
-        let totalAmount = potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
-
-        return <Container style={containerStyle}>
-            <Row style={panelHeadingStyle}>
-                <div style={panelTitleStyle}>
-                    BET SLIP
-                </div>
-            </Row>
-            <Nav pills>
-                <NavItem>
-                    <NavLink style={this.tabLinkStyle(!betParlayTabActive)} href="#bet-straight" active={!betParlayTabActive} onClick={() => this.toggleParlay(false)}>Straight</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={this.tabLinkStyle(betParlayTabActive)} href="#bet-parlay" active={betParlayTabActive} onClick={() => this.toggleParlay(true)} disabled={insufficientBets}>Parlay</NavLink>
-                </NavItem>
-            </Nav>
-            <TabContent activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
-
-                <TabPane tabId="bet-straight">
-                    <Row style={{color: "#777574"}} hidden={(potentialBets.length > 0)}>
-                        <Col sm={12}>Add games to your bet slip</Col>
-                    </Row>
-                    <ListGroup>
-                        {potentialBets.map(bet =>
-                            <PotentialBetCard
-                                key={bet.id}
-                                cartId={bet.id}
-                                bet={bet}
-                                partOfParlay={false}
-                                onClose={this.props.removeCartBet}
-                                onEdit={this.props.editCartBet}
-                            />
-                        )}
-                    </ListGroup>
-                    <ListGroup hidden={(potentialBets.length == 0)}>
-                        {this.state.errors.length > 0 &&
-                            <ListGroupItem style={errorPanelStyle}>
-                                {this.state.errors.map(error =>
-                                    <div style={errorRowStyle}>{error}</div>
-                                )}
-                            </ListGroupItem>
-                        }
-                        <ListGroupItem style={totalTallyStyle}>
-                            <FSButton onClick={this.confirmBets}>
-                                {getButtonMessage('Review', potentialBets.length, totalAmount, !betParlayTabActive)}
-                            </FSButton>
-                        </ListGroupItem>
-                    </ListGroup>
-                </TabPane>
-
-                <TabPane tabId="bet-parlay">
-                    <Row style={{color: "#777574"}} hidden={(potentialBets.length > 1)}>
-                        <Col sm="12">Parlays only apply to more than one bet</Col>
-                    </Row>
-                    <ListGroup>
-                        {potentialBets.map(bet =>
-                            <PotentialBetCard
-                                key={bet.id}
-                                cartId={bet.id}
-                                bet={bet}
-                                partOfParlay={true}
-                                onClose={this.props.removeCartBet}
-                                onEdit={this.props.editCartBet}
-                            />
-                        )}
-                    </ListGroup>
-                    <ListGroup>
-                        <ListGroupItem style={parlayWagerLineStyle}>
-                            <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                                <div>
-                                    <InputGroup>
-                                        <span style={inputGroupAddOn}>$</span>
-                                        <Input type="number" min="0" step="1" style={wagerAmountStyle} className="form-control" id="amount" onChange={(e) => this.props.editCartParlay(parseInt(e.target.value))} value={parlay.amount || 0} />
-                                    </InputGroup>
-                                </div>
-                                <div>
-                                    <span style={wagerAmountLabelStyle}>Wager: </span>
-                                </div>
-                            </div>
-                        </ListGroupItem>
-                        <ListGroupItem style={parlayWagerLineStyle}>
-                            <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                                <div>
-                                    <InputGroup>
-                                        <span style={disabledGroupAddOn}>$</span>
-                                        <Input readOnly disabled type="number" min="0" step="1" style={wagerWinningsStyle} className="form-control" value={Math.pow(2, potentialBets.length) * (parlay.amount || 0)} />
-                                    </InputGroup>
-                                </div>
-                                <div>
-                                    <span style={wagerAmountLabelStyle}>Potential Winnings: </span>
-                                </div>
-                            </div>
-                        </ListGroupItem>
-                    </ListGroup>
-                    <ListGroup>
-                        {this.state.errors.length > 0 &&
-                                <ListGroupItem style={errorPanelStyle}>
-                                    {this.state.errors.map(error =>
-                                        <div style={errorRowStyle}>{error}</div>
-                                    )}
-                                </ListGroupItem>
-                        }
-                        <ListGroupItem style={totalTallyStyle}>
-                            <FSButton onClick={this.confirmBets}>
-                                {getButtonMessage('Review', potentialBets.length, parlay.amount, betParlayTabActive)}
-                            </FSButton>
-                        </ListGroupItem>
-                    </ListGroup>
-                </TabPane>
-            </TabContent>
-
-
-        </Container>;
-    }
-
-    tabLinkStyle = (active: boolean) => {
+    const tabLinkStyle = (active: boolean) => {
         const style = {
             borderRadius: "0px",
             padding: "5px 10px"
@@ -273,35 +140,143 @@ class BetSlip extends Component<Props, State> {
         return active ? {...style, ...activeStyles} : style;
     };
 
-    confirmBets = async () => {
-        const errors = await validateBets(this.props.gambler.id);
+    const confirmBets = async (gamblerId) => {
+        const errors = await validateBets(gamblerId);
         if (errors.length > 0) {
-            this.setState({errors: errors});
-        }
-        else {
-            this.props.history.push('/confirmation');
+            setErrors(errors);
+        } else {
+            history.push('/confirmation');
         }
     };
-}
 
-const mapStateToProps = (state: State) => {
-    return {
-        league: getLeague(state),
-        cart: getCart(state),
-        gambler: getGambler(state),
-    };
+    let parlay = cart.parlay || {};
+    let potentialBets = cart.bets;
+    let insufficientBets = potentialBets.length < 2;
+    let betParlayTabActive = !!parlay.active && !insufficientBets;
+    let totalAmount = potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
+
+    return <GamblerConsumer select={[getGambler]}>
+        {gambler =>
+            <Container style={containerStyle}>
+                <Row style={panelHeadingStyle}>
+                    <div style={panelTitleStyle}>
+                        BET SLIP
+                    </div>
+                </Row>
+                <Nav pills>
+                    <NavItem>
+                        <NavLink style={tabLinkStyle(!betParlayTabActive)} href="#bet-straight"
+                                 active={!betParlayTabActive}
+                                 onClick={() => dispatch(toggleParlay(gambler.id,false))}>Straight</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink style={tabLinkStyle(betParlayTabActive)} href="#bet-parlay"
+                                 active={betParlayTabActive} onClick={() => dispatch(toggleParlay(gambler.id, true))}
+                                 disabled={insufficientBets}>Parlay</NavLink>
+                    </NavItem>
+                </Nav>
+                <TabContent activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
+
+                    <TabPane tabId="bet-straight">
+                        <Row style={{color: "#777574"}} hidden={(potentialBets.length > 0)}>
+                            <Col sm={12}>Add games to your bet slip</Col>
+                        </Row>
+                        <ListGroup>
+                            {potentialBets.map(bet =>
+                                <PotentialBetCard
+                                    key={bet.id}
+                                    cartId={bet.id}
+                                    bet={bet}
+                                    partOfParlay={false}
+                                    onClose={(cartId) => dispatch(removeCartBet(gamblerId, cartId))}
+                                    onEdit={(cartId, amount) => dispatch(editCartBet(gamblerId, cartId, amount))}
+                                />
+                            )}
+                        </ListGroup>
+                        <ListGroup hidden={(potentialBets.length == 0)}>
+                            {errors.length > 0 &&
+                                <ListGroupItem style={errorPanelStyle}>
+                                    {errors.map(error =>
+                                        <div style={errorRowStyle}>{error}</div>
+                                    )}
+                                </ListGroupItem>
+                            }
+                            <ListGroupItem style={totalTallyStyle}>
+                                <FSButton onClick={confirmBets}>
+                                    {getButtonMessage('Review', potentialBets.length, totalAmount, !betParlayTabActive)}
+                                </FSButton>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </TabPane>
+
+                    <TabPane tabId="bet-parlay">
+                        <Row style={{color: "#777574"}} hidden={(potentialBets.length > 1)}>
+                            <Col sm="12">Parlays only apply to more than one bet</Col>
+                        </Row>
+                        <ListGroup>
+                            {potentialBets.map(bet =>
+                                <PotentialBetCard
+                                    key={bet.id}
+                                    cartId={bet.id}
+                                    bet={bet}
+                                    partOfParlay={true}
+                                    onClose={(cartId) => dispatch(removeCartBet(gamblerId, cartId))}
+                                    onEdit={(cartId, amount) => dispatch(editCartBet(gamblerId, cartId, amount))}
+                                />
+                            )}
+                        </ListGroup>
+                        <ListGroup>
+                            <ListGroupItem style={parlayWagerLineStyle}>
+                                <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                                    <div>
+                                        <InputGroup>
+                                            <span style={inputGroupAddOn}>$</span>
+                                            <Input type="number" min="0" step="1" style={wagerAmountStyle}
+                                                   className="form-control" id="amount"
+                                                   onChange={(e) => dispatch(editCartParlay(gamblerId, parseInt(e.target.value)))}
+                                                   value={parlay.amount || 0}/>
+                                        </InputGroup>
+                                    </div>
+                                    <div>
+                                        <span style={wagerAmountLabelStyle}>Wager: </span>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                            <ListGroupItem style={parlayWagerLineStyle}>
+                                <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                                    <div>
+                                        <InputGroup>
+                                            <span style={disabledGroupAddOn}>$</span>
+                                            <Input readOnly disabled type="number" min="0" step="1"
+                                                   style={wagerWinningsStyle} className="form-control"
+                                                   value={Math.pow(2, potentialBets.length) * (parlay.amount || 0)}/>
+                                        </InputGroup>
+                                    </div>
+                                    <div>
+                                        <span style={wagerAmountLabelStyle}>Potential Winnings: </span>
+                                    </div>
+                                </div>
+                            </ListGroupItem>
+                        </ListGroup>
+                        <ListGroup>
+                            {errors.length > 0 &&
+                                <ListGroupItem style={errorPanelStyle}>
+                                    {errors.map(error =>
+                                        <div style={errorRowStyle}>{error}</div>
+                                    )}
+                                </ListGroupItem>
+                            }
+                            <ListGroupItem style={totalTallyStyle}>
+                                <FSButton onClick={() => confirmBets(gambler.id)}>
+                                    {getButtonMessage('Review', potentialBets.length, parlay.amount, betParlayTabActive)}
+                                </FSButton>
+                            </ListGroupItem>
+                        </ListGroup>
+                    </TabPane>
+                </TabContent>
+
+
+            </Container>}</GamblerConsumer>;
 };
 
-const mapDispatchToProps = {
-    loadUserContext,
-    loadCart,
-    editCartBet,
-    removeCartBet,
-    toggleParlay,
-    editCartParlay,
-};
-
-export default withRouter(connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(BetSlip));
+export default BetSlip;

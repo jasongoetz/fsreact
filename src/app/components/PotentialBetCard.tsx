@@ -60,7 +60,7 @@ const closeStyle = {
     opacity: 0.5,
 };
 
-export interface Props {
+interface Props {
     cartId: number;
     bet: Bet;
     partOfParlay: boolean;
@@ -68,35 +68,9 @@ export interface Props {
     onEdit: (cartId: number, amount: number) => void;
 }
 
-export interface State {
-}
+const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, cartId}) => {
 
-class PotentialBetCard extends Component<Props, State> {
-
-    async componentDidMount() {
-    }
-
-    render() {
-        const bet = this.props.bet;
-        return <ListGroupItem style={potentialBetStyle}>
-            <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-                <div style={{display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '10px'}}>
-                    <div style={betChoiceStyle}>
-                        <strong>{getBetSummary(bet)}</strong>
-                        <Button style={closeStyle} close onClick={() => this.props.onClose(this.props.cartId)}>
-                            <span>&times;</span>
-                        </Button>
-                    </div>
-                    <div>{getGameSummary(bet)}</div>
-                    <div>{moment(bet.bettable.gameTime).format("dddd, MMM Do, h:mma z")}</div>
-                </div>
-                {!this.props.partOfParlay && this.getWagerFields(bet)
-                }
-            </div>
-        </ListGroupItem>
-    }
-
-    private getWagerFields(bet) {
+    const getWagerFields = (bet) => {
         return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '10px'}}>
             <span style={wagerAmountLabelStyle}>Wager:</span>
             <InputGroup style={{width: '30%'}}>
@@ -105,7 +79,7 @@ class PotentialBetCard extends Component<Props, State> {
                     type="number"
                     style={betAmountStyle}
                     value={bet.amount}
-                    onChange={(e) => this.props.onEdit(this.props.cartId, parseInt(e.target.value))}
+                    onChange={(e) => onEdit(cartId, parseInt(e.target.value))}
                 />
             </InputGroup>
             <span style={wagerAmountLabelStyle}>Win:</span>
@@ -115,7 +89,25 @@ class PotentialBetCard extends Component<Props, State> {
                        value={2 * (bet.amount || 0)}/>
             </InputGroup>
         </div>;
-    }
-}
+    };
+
+    return <ListGroupItem style={potentialBetStyle}>
+        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '10px'}}>
+                <div style={betChoiceStyle}>
+                    <strong>{getBetSummary(bet)}</strong>
+                    <Button style={closeStyle} close onClick={() => onClose(cartId)}>
+                        <span>&times;</span>
+                    </Button>
+                </div>
+                <div>{getGameSummary(bet)}</div>
+                <div>{moment(bet.bettable.gameTime).format("dddd, MMM Do, h:mma z")}</div>
+            </div>
+            {!partOfParlay && getWagerFields(bet)
+            }
+        </div>
+    </ListGroupItem>
+
+};
 
 export default PotentialBetCard;

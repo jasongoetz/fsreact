@@ -1,10 +1,10 @@
 import React from 'react';
 import {Col, Container, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
-import {LeagueContext} from "../league/leagueReducer";
+import {LeagueInfo} from "../league/leagueContext";
 
 interface Props {
-    league: LeagueContext;
+    league: LeagueInfo;
 }
 
 const LeagueMembers: React.FC<Props> = ({league}) => {

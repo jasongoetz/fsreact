@@ -1,33 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {Col, Container, FormFeedback, FormGroup, Label, Row} from "reactstrap";
-import {loadUserContext, updateUserPassword, updateUserProfile} from "../user/userActions";
-import {useDispatch, useSelector} from "react-redux";
-import {getUser} from "../user/userSelector";
-import {FSForm, FSInput} from "./FSForm";
-import {User} from "../types";
+import React from 'react';
+import {Col, Container, FormGroup, Row} from "reactstrap";
+import {updateUserPassword} from "../user/userActions";
+import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {FSWideButton} from "./FSComponents";
-import {FSFormFeedback} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-const PasswordPage: React.FC<RouteComponentProps> = ({history}) => {
+interface Props extends RouteComponentProps {
+    userId: number;
+}
 
-    const user: User = useSelector(state => getUser(state));
-    const dispatch = useDispatch();
+const PasswordPage: React.FC<Props> = ({history, userId}) => {
 
-    useEffect(() => {
-        const loadContext = async () => {
-            if (!user.id) {
-                await dispatch(loadUserContext());
-            }
-        };
-        loadContext();
-    }, []);
-
-    const updatePassword = async (values, actions) => {
+    const updatePassword = async (values) => {
         try {
-            await dispatch(updateUserPassword(values.password));
+            await updateUserPassword(userId, values.password);
             history.push('/');
         } catch (err) {
             formik.setErrors({confirmation: 'Your password could not be updated'});

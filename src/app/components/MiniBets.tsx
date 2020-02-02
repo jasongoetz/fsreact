@@ -1,7 +1,7 @@
 import React from "react";
-import {Bet, FullLeague, Sport} from "../types";
+import {Bet, Sport} from "../types";
 import {getLeague} from "../league/leagueSelector";
-import {useSelector} from "react-redux";
+import {LeagueConsumer} from "../league/leagueContext";
 
 const pendingBetPanelStyle = {
     borderRadius: "0px",
@@ -42,23 +42,23 @@ const getBetSummary = (bet: Bet) => {
 };
 
 const MiniBets = () => {
-    const league: FullLeague = useSelector(state => getLeague(state));
-
     return (
         <div style={pendingBetPanelStyle}>
-            {league.topBets.bets.map(bet => {
-                return <div key={`top-bet-card-${bet.id}`} style={pendingMiniBetCardStyle}>
-                    <div style={betHeadlineStyle}>
-                        ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}
+            <LeagueConsumer select={[getLeague]}>
+                {league => league.topBets.bets.map(bet => {
+                    return <div key={`top-bet-card-${bet.id}`} style={pendingMiniBetCardStyle}>
+                        <div style={betHeadlineStyle}>
+                            ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}
+                        </div>
+                        <div>
+                            {getBetSummary(bet)}
+                        </div>
+                        <div>
+                            {shortenTeamName(bet.bettable.team1, league.sport)} @ {shortenTeamName(bet.bettable.team2, league.sport)}
+                        </div>
                     </div>
-                    <div>
-                        {getBetSummary(bet)}
-                    </div>
-                    <div>
-                        {shortenTeamName(bet.bettable.team1, league.sport)} @ {shortenTeamName(bet.bettable.team2, league.sport)}
-                    </div>
-                </div>
-            })}
+                })}
+            </LeagueConsumer>
         </div>
     );
 };

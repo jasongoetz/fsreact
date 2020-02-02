@@ -1,67 +1,37 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {loadUserContext} from "../user/userActions";
-import {getLeague} from "../league/leagueSelector";
+import React from "react";
+import {useSelector} from "react-redux";
 import {Col, Container, Row} from "reactstrap";
-import {loadGames} from "../bettables/bettableActions";
 import {getBettables} from "../bettables/bettableSelector";
 import {GameRow} from "./GameRow";
 import {PageHeader} from "./PageHeader";
-import {League} from "../types";
-import {Bettable} from "../bettables/bettableReducer";
 import BetSlip from "./BetSlip";
 import MediaQuery from "react-responsive";
-
-export interface Props {
-    loadUserContext: () => void;
-    loadGames: () => void;
-    league: League;
-    bettables: Bettable[];
-}
+import {GamblerConsumer} from "../gambler/gamblerContext";
+import {getGambler} from "../gambler/gamblerSelector";
 
 export interface State {
 }
 
-class GamesPage extends Component<Props, State> {
+const GamesPage: React.FC = () => {
+    const bettables = useSelector(getBettables);
 
-    async componentDidMount() {
-        if (!this.props.league.id) {
-            await this.props.loadUserContext();
-        }
-        await this.props.loadGames();
-    }
-
-    render() {
-        return <Container>
-            <Row>
-                <Col md={8}>
-                    <PageHeader>Games</PageHeader>
-                    {this.props.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
-                </Col>
-                <Col md={4}>
-                    <MediaQuery minWidth={576}>
-                        <BetSlip></BetSlip>
-                    </MediaQuery>
-                </Col>
-            </Row>
-        </Container>
-    }
-}
-
-
-const mapStateToProps = (state: State) => {
-    return {
-        league: getLeague(state),
-        bettables: getBettables(state),
-    };
+    return <Container>
+        <Row>
+            <Col md={8}>
+                <PageHeader>Games</PageHeader>
+                {bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
+            </Col>
+            <Col md={4}>
+                <MediaQuery minWidth={576}>
+                    <GamblerConsumer select={[getGambler]}>
+                        {gambler =>
+                            <BetSlip gamblerId={gambler.id}/>
+                        }
+                    </GamblerConsumer>
+                </MediaQuery>
+            </Col>
+        </Row>
+    </Container>
 };
 
-const mapDispatchToProps = {
-    loadUserContext,
-    loadGames,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(GamesPage);
+export default GamesPage;

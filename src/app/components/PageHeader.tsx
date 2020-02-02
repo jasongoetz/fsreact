@@ -1,12 +1,8 @@
-import React, {Component} from "react";
+import React from "react";
 
 const pageHeaderStyle = {
     marginTop: "20px",
     fontSize: "1.25rem"
 };
 
-export class PageHeader extends Component {
-    render() {
-        return <div style={pageHeaderStyle}>{this.props.children}</div>;
-    }
-}
+export const PageHeader = props => <div style={pageHeaderStyle}>{props.children}</div>;

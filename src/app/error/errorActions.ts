@@ -1,27 +1,26 @@
-
-export const HTTP_404_ERROR = 'HTTP_404_ERROR';
-export const HTTP_500_ERROR = 'HTTP_500_ERROR';
-export const HTTP_OTHER_ERROR = 'HTTP_OTHER_ERROR';
+import {ErrorContext, mutate} from "./errorContext";
 
 const execute404Handler = (error) => {
-    return {
-        type: HTTP_404_ERROR,
-        props: {error}
-    }
+    mutate((draft: ErrorContext) => {
+       draft.statusCode = 404;
+       draft.isError = true;
+    });
 };
 
 const execute500Handler = (error) => {
-    return {
-        type: HTTP_500_ERROR,
-        props: {error}
-    }
+    mutate((draft: ErrorContext) => {
+        draft.statusCode = 500;
+        draft.isError = true;
+        draft.errorMessage = error.message;
+    });
 };
 
 const executeOtherErrorHandler = (error) => {
-    return {
-        type: HTTP_OTHER_ERROR,
-        props: {error}
-    }
+    mutate((draft: ErrorContext) => {
+        draft.statusCode = 500;
+        draft.isError = true;
+        draft.errorMessage = error.message;
+    });
 };
 
 export const handleHTTPError = (error) => {

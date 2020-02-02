@@ -2,7 +2,6 @@ import React from "react";
 import {FormGroup, Row, Col, FormFeedback} from "reactstrap";
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {authenticate} from "../auth/authActions";
-import {connect, useDispatch} from 'react-redux';
 import {RouteComponentProps} from "react-router";
 import {Credentials} from "../auth/authModels";
 import {FSWideButton} from "./FSComponents";
@@ -23,7 +22,6 @@ interface LoginValues {
 }
 
 const Login: React.FC<Props> = () => {
-    const dispatch = useDispatch();
 
     const loginSchema = yup.object().shape({
         email: yup.string()
@@ -47,7 +45,7 @@ const Login: React.FC<Props> = () => {
 
     const submitLogin = async (email: string, password: string) => {
         try {
-            await dispatch(authenticate({email, password}));
+            await authenticate({email, password});
         } catch (err) {
             formik.setErrors({password: 'Your email or password is incorrect'});
         }

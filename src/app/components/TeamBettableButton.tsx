@@ -1,68 +1,52 @@
-import React, {Component} from "react";
-import {FSButton, FSWideButton} from "./FSComponents";
-import {State} from "./GamesPage";
+import React from "react";
+import {FSWideButton} from "./FSComponents";
 import {Bettable} from "../bettables/bettableReducer";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getCartBets} from "../cart/cartSelector";
-import {CartBet} from "../cart/cartReducer";
 import {addBetToCart} from "../cart/cartActions";
 
 interface Props {
-    addBetToCart: (any) => void;
-    cartBets: CartBet[];
+    gamblerId: number;
     bettable: Bettable;
     team: number; //TODO: Replace this with an enum
 }
 
-class TeamBettableButton extends Component<Props, State> {
+const TeamBettableButton: React.FC<Props> = ({gamblerId, bettable, team}) => {
+    const dispatch = useDispatch();
+    const cartBets = useSelector(getCartBets);
 
-    bettableInCart = (bettableId: number, sideId: string) => {
-        let cartBet = this.props.cartBets
+    const bettableInCart = (bettableId: number, sideId: string) => {
+        let cartBet = cartBets
             .find(cartBet => cartBet.bettable.id === bettableId && cartBet.sideId === sideId);
         return !!cartBet;
     };
 
-    betClick = () => {
+    const getSpread = () => {
+        let spreadPropName = team == 1 ? 'team1Spread' : 'team2Spread';
+        return bettable[spreadPropName];
+    };
+
+    const getSideId = () => {
+        let sideIdName = team == 1 ? 'sideId1' : 'sideId2';
+        return bettable[sideIdName];
+    };
+
+    const betClick = () => {
         let bet = {
-            bettableId: this.props.bettable.id,
-            sideId: this.getSideId()
+            bettableId: bettable.id,
+            sideId: getSideId()
         };
-        this.props.addBetToCart(bet);
+        dispatch(addBetToCart(gamblerId, bet));
     };
 
-    render() {
-        if (!this.props.bettable.off) {
-            let spread = this.getSpread();
-            let sideId = this.getSideId();
-            let disabled = this.bettableInCart(this.props.bettable.id, sideId);
-            return <FSWideButton disabled={disabled} onClick={this.betClick}>{spread}</FSWideButton>;
-        } else {
-            return <FSWideButton disabled={true}>OFF</FSWideButton>;
-        }
+    if (!bettable.off) {
+        let spread = getSpread();
+        let sideId = getSideId();
+        let disabled = bettableInCart(bettable.id, sideId);
+        return <FSWideButton disabled={disabled} onClick={betClick}>{spread}</FSWideButton>;
+    } else {
+        return <FSWideButton disabled={true}>OFF</FSWideButton>;
     }
-
-    getSpread = () => {
-        let spreadPropName = this.props.team == 1 ? 'team1Spread' : 'team2Spread';
-        return this.props.bettable[spreadPropName];
-    };
-
-    getSideId = () => {
-        let sideIdName = this.props.team == 1 ? 'sideId1' : 'sideId2';
-        return this.props.bettable[sideIdName];
-    };
-}
-
-const mapStateToProps = (state: State) => {
-    return {
-        cartBets: getCartBets(state),
-    };
 };
 
-const mapDispatchToProps = {
-    addBetToCart,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(TeamBettableButton);
+export default TeamBettableButton;

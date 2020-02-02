@@ -4,7 +4,7 @@ import {Credentials} from "../auth/authModels";
 import {Bet} from "../types";
 
 export interface Token {
-    userId: number;
+    id: number;
     issueDate: number;
 }
 

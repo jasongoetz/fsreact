@@ -1,20 +1,20 @@
 import React, {useState} from 'react';
-import {Button, Col, Container, FormFeedback, FormGroup, Input, Row, Table} from "reactstrap";
+import {Button, Col, Container, FormFeedback, FormGroup, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
-import {LeagueContext} from "../league/leagueReducer";
 import {FSButton} from "./FSComponents";
 import {useDispatch} from "react-redux";
 import {inviteUser, uninviteUser} from "../league/leagueActions";
 import {isEmailValid} from "../../util/EmailUtil";
 import {FSInput} from "./FSForm";
+import {LeagueContext, LeagueInfo} from "../league/leagueContext";
 
 interface Props {
-    league: LeagueContext;
+    league: LeagueInfo
 }
 
-const gamblerHasEmail = (email: string, league: LeagueContext) => league.gamblers.some(gambler => gambler.user.email === email);
+const gamblerHasEmail = (email: string, league: LeagueInfo) => league.gamblers.some(gambler => gambler.user.email === email);
 
-const existingInviteHasEmail = (email: string, league: LeagueContext) => league.invites.some(invite => invite.email === email);
+const existingInviteHasEmail = (email: string, league: LeagueInfo) => league.invites.some(invite => invite.email === email);
 
 const LeagueInvites: React.FC<Props> = ({league}) => {
 
@@ -42,7 +42,7 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
                                 {invite.email}
                             </td>
                             <td>
-                                <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => dispatch(uninviteUser(league.id, invite.id))}>
+                                <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => uninviteUser(league.id, invite.id)}>
                                     Revoke Invite
                                 </Button>
                             </td>

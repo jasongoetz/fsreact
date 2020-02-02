@@ -1,8 +1,10 @@
-import {Component} from "react";
-import React from "react";
+import React, {Component} from "react";
 import {
     Badge,
-    Collapse, Container, DropdownItem, DropdownMenu,
+    Collapse,
+    Container,
+    DropdownItem,
+    DropdownMenu,
     DropdownToggle,
     Nav,
     Navbar,
@@ -15,25 +17,23 @@ import {
 import {Colors} from "../theme/theme";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import {logout} from "../auth/authActions";
-import {getGamblerWithAccount} from "../gambler/gamblerSelector";
 import {getLeague} from "../league/leagueSelector";
-import {isLoggedIn} from "../auth/authSelector";
-import {GamblerInfo, League} from "../types";
+import {Gambler, GamblerInfo, League} from "../types";
 import {getCartBets} from "../cart/cartSelector";
 import {CartBet} from "../cart/cartReducer";
 import MediaQuery from "react-responsive";
 import styled from "@emotion/styled";
 import BetSlip from "./BetSlip";
+import {AuthConsumer} from "../auth/authContext";
+import {isLoggedIn} from "../auth/authSelectors";
+import {logout} from "../auth/authActions";
+import {LeagueConsumer} from "../league/leagueContext";
+import {GamblerConsumer} from "../gambler/gamblerContext";
 
 interface Props {
-    league: League;
-    gambler: GamblerInfo;
-    loggedIn: boolean;
     cartBets: CartBet[];
     toggleMobileMenu: () => void;
     toggleBetSlip: () => void;
-    handleLogout: () => void;
 }
 
 interface State {
@@ -112,57 +112,71 @@ class NavHeader extends Component<Props, State> {
 
     handleLogout = (e) => {
         e.preventDefault();
-        this.props.handleLogout();
+        logout();
     };
 
     render() {
         return (
-            <Navbar style={navbarStyle} fixed="top" light expand="sm">
-                <Container style={navbarContainerStyle}>
-                    <NavbarToggler style={menuButtonStyle} onClick={this.toggleMenu}/>
-                    <Collapse className="w-100" navbar>
-                        {this.props.loggedIn && this.getLeftNavBar()}
-                    </Collapse>
+            <AuthConsumer select={[isLoggedIn]}>
+                {authenticated =>
+                    <Navbar style={navbarStyle} fixed="top" light expand="sm">
+                        <Container style={navbarContainerStyle}>
+                            <LeagueConsumer select={[getLeague]}>
+                                {league =>
+                                    <GamblerConsumer select={[(context) => league.gamblers.find(g => g.id == context.gambler.id)]}>
+                                        {gambler =>
+                                            <>
+                                                <NavbarToggler style={menuButtonStyle} onClick={this.toggleMenu}/>
+                                                <Collapse className="w-100" navbar>
+                                                    {authenticated && this.getLeftNavBar(league, gambler)}
+                                                </Collapse>
 
-                    <NavbarBrand style={brandStyle} href="/" className="fixedTop" mx="auto">FAKE STACKS</NavbarBrand>
+                                                <NavbarBrand style={brandStyle} href="/" className="fixedTop" mx="auto">FAKE STACKS</NavbarBrand>
 
-                    <NavbarToggler style={betSlipButtonStyle} onClick={this.toggleBetSlip}>
-                        <span style={badgeContainerStyle}>
-                            <Badge style={betSlipBadgeStyle} pill>{this.props.cartBets.length}</Badge>
-                            <img src="/images/bets-menu.svg"/>
-                        </span>
-                    </NavbarToggler>
+                                                <NavbarToggler style={betSlipButtonStyle} onClick={this.toggleBetSlip}>
+                                                    <span style={badgeContainerStyle}>
+                                                    <Badge style={betSlipBadgeStyle} pill>{this.props.cartBets.length}</Badge>
+                                                    <img src="/images/bets-menu.svg"/>
+                                                    </span>
+                                                </NavbarToggler>
 
-                    {this.props.loggedIn &&
-                        <MediaQuery maxWidth={576}>
-                            <BetSlipCollapse isOpen={this.state.mobileBetSlipOpen}>
-                                <BetSlip/>
-                            </BetSlipCollapse>
-                        </MediaQuery>
-                    }
+                                                {authenticated && gambler &&
+                                                    <MediaQuery maxWidth={576}>
+                                                        <BetSlipCollapse isOpen={this.state.mobileBetSlipOpen}>
+                                                            <BetSlip gamblerId={gambler.id} />
+                                                        </BetSlipCollapse>
+                                                    </MediaQuery>
+                                                }
 
-                    <Collapse className="w-100 justify-content-end" navbar>
-                        {this.props.loggedIn && !!this.props.gambler && this.getRightNavBar()}
-                    </Collapse>
-                </Container>
-            </Navbar>
+                                                <Collapse className="w-100 justify-content-end" navbar>
+                                                    {authenticated && !!gambler && this.getRightNavBar(gambler)}
+                                                </Collapse>
+                                            </>
+                                        }
+                                    </GamblerConsumer>
+                                }
+                            </LeagueConsumer>
+                        </Container>
+                    </Navbar>
+                }
+            </AuthConsumer>
         );
     }
 
-    getLeftNavBar =  () => {
+    getLeftNavBar = (league: League, gambler?: Gambler) => {
         return <Nav className="justify-content-left" navbar>
             <NavItem>{this.navLink("GAMES", "/games")}</NavItem>
             <NavItem>{this.navLink("STANDINGS", "/standings")}</NavItem>
             <NavItem>{this.navLink("BETS", "/bets")}</NavItem>
-            {this.isAdmin() && <NavItem>{this.navLink("MANAGE", "/league/settings")}</NavItem>}
+            {this.isAdmin(league, gambler) && <NavItem>{this.navLink("MANAGE", "/league/settings")}</NavItem>}
         </Nav>;
     };
 
-    getRightNavBar = () => {
+    getRightNavBar = (gambler: GamblerInfo) => {
         return <Nav className="justify-content-end" navbar>
             <UncontrolledDropdown>
                 <DropdownToggle style={navbarLinkStyle} nav>
-                    {this.props.gambler.user.firstName.toUpperCase()} {this.props.gambler.user.lastName.toUpperCase()}
+                    {gambler.user.firstName.toUpperCase()} {gambler.user.lastName.toUpperCase()}
                 </DropdownToggle>
                 <DropdownMenu right>
                     <DropdownItem>
@@ -174,7 +188,7 @@ class NavHeader extends Component<Props, State> {
                 </DropdownMenu>
             </UncontrolledDropdown>
             <NavItem>
-                {this.navLink(`$${this.getGamblerAccountBalance().toFixed(2)}`, "/account")}
+                {this.navLink(`$${this.getGamblerAccountBalance(gambler).toFixed(2)}`, "/account")}
             </NavItem>
             <NavItem>
                 {this.navLink("SIGN OUT", "/logout", this.handleLogout)}
@@ -182,38 +196,27 @@ class NavHeader extends Component<Props, State> {
         </Nav>;
     };
 
-    private getGamblerAccountBalance() {
-        if (this.props.gambler) {
-            return this.props.gambler.money - this.props.gambler.pending;
-        }
-        return 0;
-    }
+    getGamblerAccountBalance = (gambler: GamblerInfo) => {
+        return gambler.money - gambler.pending;
+    };
 
     navLink = (label: string, path: string, onClick?: (e) => void) => {
         return <NavLink style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
     };
 
-    isAdmin = () => {
-        return !!this.props.gambler && this.props.league.admin === this.props.gambler.user.id;
+    isAdmin = (league: League, gambler?: Gambler) => {
+        return !!gambler && league.admin === gambler.user.id;
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        loggedIn: isLoggedIn(state),
-        league: getLeague(state),
-        gambler: getGamblerWithAccount(state, state.gambler.id),
         cartBets: getCartBets(state),
     };
 };
 
-const mapDispatchToProps = {
-    handleLogout: logout,
-};
-
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
 )(NavHeader);
 
 

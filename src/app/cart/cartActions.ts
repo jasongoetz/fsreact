@@ -1,7 +1,6 @@
 import {State} from "../App";
 import { ThunkAction } from 'redux-thunk';
 import {AnyAction} from "redux";
-import {getGambler} from "../gambler/gamblerSelector";
 import {
     getGamblerBetCart,
     createCartBet,
@@ -20,11 +19,9 @@ export const CART_REMOVE_SUCCESS = "CART_REMOVE_SUCCESS";
 export const CART_LOAD_FAILURE = "CART_LOAD_FAILURE";
 export const CART_CONFIRM_SUCCESS = "CART_CONFIRM_SUCCESS";
 
-export const loadCart = (): ThunkAction<void, State, void, AnyAction> => {
-    return async (dispatch, getState) => {
-        const gambler = getGambler(getState());
-        const cart = await getGamblerBetCart(gambler.id);
-
+export const loadCart = (gamblerId: number): ThunkAction<void, State, void, AnyAction> => {
+    return async (dispatch) => {
+        const cart = await getGamblerBetCart(gamblerId);
         dispatch({
             type: CART_LOAD_SUCCESS,
             data: cart
@@ -32,10 +29,9 @@ export const loadCart = (): ThunkAction<void, State, void, AnyAction> => {
     };
 };
 
-export const addBetToCart = (bet): ThunkAction<void, State, void, AnyAction> => {
-    return async (dispatch, getState) => {
-        const gambler = getGambler(getState());
-        const cartBet = await createCartBet(gambler.id, bet);
+export const addBetToCart = (gamblerId: number, bet): ThunkAction<void, State, void, AnyAction> => {
+    return async (dispatch) => {
+        const cartBet = await createCartBet(gamblerId, bet);
 
         if (cartBet) {
             dispatch({
@@ -46,13 +42,12 @@ export const addBetToCart = (bet): ThunkAction<void, State, void, AnyAction> => 
     };
 };
 
-export const editCartBet = (cartId: number, amount: number): ThunkAction<void, State, void, AnyAction> => {
-    return async (dispatch, getState) => {
+export const editCartBet = (gamblerId: number, cartId: number, amount: number): ThunkAction<void, State, void, AnyAction> => {
+    return async (dispatch) => {
         if (isNaN(amount)) {
             return;
         }
-        const gambler = getGambler(getState());
-        await editCartAmount(gambler.id, cartId, amount);
+        await editCartAmount(gamblerId, cartId, amount);
 
         dispatch({
             type: CART_EDIT_BET_SUCCESS,
@@ -61,10 +56,9 @@ export const editCartBet = (cartId: number, amount: number): ThunkAction<void, S
     };
 };
 
-export const removeCartBet = (cartId: number): ThunkAction<void, State, void, AnyAction> => {
-    return async (dispatch, getState) => {
-        const gambler = getGambler(getState());
-        await removeFromCart(gambler.id, cartId);
+export const removeCartBet = (gamblerId: number, cartId: number): ThunkAction<void, State, void, AnyAction> => {
+    return async (dispatch) => {
+        await removeFromCart(gamblerId, cartId);
 
         dispatch({
             type: CART_REMOVE_SUCCESS,
@@ -73,10 +67,9 @@ export const removeCartBet = (cartId: number): ThunkAction<void, State, void, An
     };
 };
 
-export const toggleParlay = (active: boolean): ThunkAction<void, State, void, AnyAction> => {
-    return async (dispatch, getState) => {
-        const gambler = getGambler(getState());
-        await toggleParlayOnGamblerBetCart(gambler.id, active);
+export const toggleParlay = (gamblerId: number, active: boolean): ThunkAction<void, State, void, AnyAction> => {
+    return async (dispatch) => {
+        await toggleParlayOnGamblerBetCart(gamblerId, active);
 
         dispatch({
             type: CART_PARLAY_TOGGLE_SUCCESS,
@@ -85,13 +78,12 @@ export const toggleParlay = (active: boolean): ThunkAction<void, State, void, An
     };
 };
 
-export const editCartParlay = (amount: number): ThunkAction<void, State, void, AnyAction> => {
-    return async (dispatch, getState) => {
+export const editCartParlay = (gamblerId: number, amount: number): ThunkAction<void, State, void, AnyAction> => {
+    return async (dispatch) => {
         if (isNaN(amount)) {
             return;
         }
-        const gambler = getGambler(getState());
-        await editParlayAmount(gambler.id, amount);
+        await editParlayAmount(gamblerId, amount);
 
         dispatch({
             type: CART_PARLAY_EDIT_SUCCESS,
@@ -100,10 +92,9 @@ export const editCartParlay = (amount: number): ThunkAction<void, State, void, A
     };
 };
 
-export const confirmBets = (): ThunkAction<void, State, void, AnyAction> => {
-    return async (dispatch, getState) => {
-        const gambler = getGambler(getState());
-        await makeBets(gambler.id);
+export const confirmBets = (gamblerId: number): ThunkAction<void, State, void, AnyAction> => {
+    return async (dispatch) => {
+        await makeBets(gamblerId);
 
         dispatch({
             type: CART_CONFIRM_SUCCESS,

@@ -64,7 +64,7 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
     };
 
     const handleLogout = async () => {
-        await dispatch(logout());
+        await logout();
         closeMenu();
     };
 
