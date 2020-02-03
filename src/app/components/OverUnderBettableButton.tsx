@@ -1,23 +1,17 @@
-import React, {Component, useEffect} from "react";
-import {FSButton, FSWideButton} from "./FSComponents";
-import {State} from "./GamesPage";
-import {Bettable} from "../bettables/bettableReducer";
-import {getCartBets} from "../cart/cartSelector";
-import {connect, useDispatch, useSelector} from "react-redux";
-import {CartBet} from "../cart/cartReducer";
-import {OverUnder} from "../bets/betReducer";
+import React from "react";
+import {FSWideButton} from "./FSComponents";
+import {OverUnder} from "../bets/betContext";
 import {addBetToCart} from "../cart/cartActions";
+import {Bettable, CartBet} from "../types";
 
 interface Props {
     gamblerId: number;
     bettable: Bettable;
     overunder: OverUnder;
+    cartBets: CartBet[];
 }
 
-const OverUnderBettableButton: React.FC<Props> = ({bettable, overunder, gamblerId}) => {
-
-    const dispatch = useDispatch();
-    const cartBets = useSelector(getCartBets);
+const OverUnderBettableButton: React.FC<Props> = ({bettable, overunder, gamblerId, cartBets}) => {
 
     const bettableInCart = (bettableId: number, overunder: OverUnder) => {
         let cartBet = cartBets
@@ -27,7 +21,7 @@ const OverUnderBettableButton: React.FC<Props> = ({bettable, overunder, gamblerI
 
     const betClick = () => {
         let bet = {bettableId: bettable.id, overunder: overunder};
-        dispatch(addBetToCart(gamblerId, bet));
+        addBetToCart(gamblerId, bet);
     };
 
     if (!bettable.ouoff) {

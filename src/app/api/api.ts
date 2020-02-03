@@ -171,9 +171,6 @@ export const makeBets: any = async (gamblerId: number) => {
     const response = await get({
         path: `/api/gamblers/${gamblerId}/cart/confirm`
     });
-
-    let data = await response.json();
-    return data;
 };
 
 

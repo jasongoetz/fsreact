@@ -12,7 +12,7 @@ const formSigninStyle = {
     paddingBottom: "15px"
 };
 
-export interface Props extends RouteComponentProps {
+interface Props extends RouteComponentProps {
     authenticate: (user: Credentials) => void;
 }
 

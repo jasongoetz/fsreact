@@ -3,7 +3,6 @@ import {Button, Nav, NavItem, NavLink} from "reactstrap";
 import {Colors} from "../theme/theme";
 import styled from "@emotion/styled";
 import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
 import {logout} from "../auth/authActions";
 
 const MobileMenuOverlay = styled.div({
@@ -46,18 +45,13 @@ const accountBalanceStyle = {
     width: "100%",
 };
 
-export interface State {
-}
-
-export interface Props {
+interface Props {
     isAdmin: boolean;
     gamblerMoney: number;
     closeMenu: () => void;
 }
 
 const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
-
-    const dispatch = useDispatch();
 
     const navLink = (label: string, path: string, onClick?: (e) => void) => {
         return <NavItem><NavLink style={navLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink></NavItem>;

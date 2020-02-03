@@ -2,10 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {FSWideButton} from "./FSComponents";
 
-export interface State {
-}
-
-export interface Props {
+interface Props {
     title: string;
     linkUrl: string;
     action: string;

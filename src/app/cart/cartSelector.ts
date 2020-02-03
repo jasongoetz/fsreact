@@ -1,2 +1,2 @@
-export const getCart = state => state.cart;
-export const getCartBets = state => state.cart.bets;
+export const getCart = context => context;
+export const getCartBets = context => context.bets;

@@ -32,7 +32,7 @@ const headlineStyle = {
     color: Colors.white,
 };
 
-export interface Props {
+interface Props {
     headline?: string;
 }
 

@@ -1,4 +1,4 @@
-import {Bettable} from "./bettables/bettableReducer";
+import {OverUnder} from "./bets/betContext";
 
 export interface UserProfile {
     firstName: string;
@@ -46,6 +46,21 @@ export interface League {
     admin: number
 }
 
+export type Bettable = {
+    id: number;
+    gameKey: string;
+    gameTime: string;
+    sideId1: string;
+    sideId2: string;
+    team1: string;
+    team2: string;
+    team1Spread: string;
+    team2Spread: string;
+    overunder: string;
+    ouoff: boolean;
+    off: boolean;
+};
+
 export interface Bet {
     id: number,
     time: string,
@@ -74,4 +89,20 @@ export interface BetOrParlay {
 export interface FullLeague extends League {
     gamblers: GamblerInfo[],
     topBets: any;
+}
+
+export interface CartBet {
+    id: number;
+    gambler: number;
+    bettable: Bettable;
+    amount: number;
+    sideId: string;
+    overunder: OverUnder;
+    line: string;
+}
+
+export interface CartParlay {
+    id: number;
+    active: boolean;
+    amount: number;
 }

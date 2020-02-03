@@ -1,1 +1,1 @@
-export const getBettables = state => state.bettable.bettables;
+export const getBettables = context => context.bettables;

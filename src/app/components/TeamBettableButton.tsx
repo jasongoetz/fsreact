@@ -1,19 +1,16 @@
 import React from "react";
 import {FSWideButton} from "./FSComponents";
-import {Bettable} from "../bettables/bettableReducer";
-import {useDispatch, useSelector} from "react-redux";
-import {getCartBets} from "../cart/cartSelector";
 import {addBetToCart} from "../cart/cartActions";
+import {Bettable, CartBet} from "../types";
 
 interface Props {
     gamblerId: number;
     bettable: Bettable;
     team: number; //TODO: Replace this with an enum
+    cartBets: CartBet[];
 }
 
-const TeamBettableButton: React.FC<Props> = ({gamblerId, bettable, team}) => {
-    const dispatch = useDispatch();
-    const cartBets = useSelector(getCartBets);
+const TeamBettableButton: React.FC<Props> = ({gamblerId, bettable, team, cartBets}) => {
 
     const bettableInCart = (bettableId: number, sideId: string) => {
         let cartBet = cartBets
@@ -36,7 +33,7 @@ const TeamBettableButton: React.FC<Props> = ({gamblerId, bettable, team}) => {
             bettableId: bettable.id,
             sideId: getSideId()
         };
-        dispatch(addBetToCart(gamblerId, bet));
+        addBetToCart(gamblerId, bet);
     };
 
     if (!bettable.off) {

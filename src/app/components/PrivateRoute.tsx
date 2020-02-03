@@ -1,9 +1,7 @@
 import {Redirect, Route} from "react-router-dom";
 import React from "react";
-import {connect} from "react-redux";
-import {State} from "../reducers/root";
 import ErrorPanel from "./error/ErrorPanel";
-import {AuthConsumer, AuthContext} from "../auth/authContext";
+import {AuthConsumer} from "../auth/authContext";
 import {isLoggedIn} from "../auth/authSelectors";
 import {ErrorConsumer, ErrorContext} from "../error/errorContext";
 

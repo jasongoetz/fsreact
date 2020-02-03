@@ -2,11 +2,10 @@ import React, {useState} from 'react';
 import {Button, Col, Container, FormFeedback, FormGroup, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
 import {FSButton} from "./FSComponents";
-import {useDispatch} from "react-redux";
 import {inviteUser, uninviteUser} from "../league/leagueActions";
 import {isEmailValid} from "../../util/EmailUtil";
 import {FSInput} from "./FSForm";
-import {LeagueContext, LeagueInfo} from "../league/leagueContext";
+import {LeagueInfo} from "../league/leagueContext";
 
 interface Props {
     league: LeagueInfo
@@ -17,8 +16,6 @@ const gamblerHasEmail = (email: string, league: LeagueInfo) => league.gamblers.s
 const existingInviteHasEmail = (email: string, league: LeagueInfo) => league.invites.some(invite => invite.email === email);
 
 const LeagueInvites: React.FC<Props> = ({league}) => {
-
-    const dispatch = useDispatch();
 
     const [inviteError, setInviteError] = useState<string | undefined>(undefined);
     const [inviteEmail, setInviteEmail] = useState('');
@@ -84,7 +81,7 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
                                         setEmailValid(false);
                                         return;
                                     }
-                                    dispatch(inviteUser(inviteEmail, league));
+                                    inviteUser(inviteEmail, league);
                                     setInviteEmail('');
                                 }}
                             >
