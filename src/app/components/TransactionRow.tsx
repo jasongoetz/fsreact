@@ -33,9 +33,9 @@ const getRowColor = (betOrParlay: BetOrParlay) => {
 const getDescription = (betOrParlay: any) => {
     if (betOrParlay.type === 'parlay') {
         return `${betOrParlay.value.bets.length} Bet Parlay:`
-    } else if (betOrParlay.value.sideId == betOrParlay.value.bettable.sideId1) {
+    } else if (betOrParlay.value.sideId === betOrParlay.value.bettable.sideId1) {
         return `${betOrParlay.value.bettable.team1} ${betOrParlay.value.line} @ ${betOrParlay.value.bettable.team2}`
-    } else if (betOrParlay.value.sideId == betOrParlay.value.bettable.sideId2) {
+    } else if (betOrParlay.value.sideId === betOrParlay.value.bettable.sideId2) {
         return `${betOrParlay.value.bettable.team2} ${betOrParlay.value.line} vs ${betOrParlay.value.bettable.team1}`
     } else {
         return `${betOrParlay.value.overunder === 'OVER' ? " Over" : " Under"} ${betOrParlay.value.line} (${betOrParlay.value.bettable.team2} vs ${betOrParlay.value.bettable.team1})`
@@ -43,9 +43,9 @@ const getDescription = (betOrParlay: any) => {
 };
 
 const getBetDescription = (bet: any) => {
-    if (bet.sideId == bet.bettable.sideId1) {
+    if (bet.sideId === bet.bettable.sideId1) {
         return `${bet.bettable.team1} ${bet.line} @ ${bet.bettable.team2}`
-    } else if (bet.sideId == bet.bettable.sideId2) {
+    } else if (bet.sideId === bet.bettable.sideId2) {
         return `${bet.bettable.team2} ${bet.line} vs ${bet.bettable.team1}`
     } else {
         return `${bet.overunder === 'OVER' ? " Over" : " Under"} ${bet.line} (${bet.bettable.team2} vs ${bet.bettable.team1})`

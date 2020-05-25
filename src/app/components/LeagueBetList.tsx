@@ -1,16 +1,16 @@
 import React, {useEffect} from "react";
 import {Container, Row} from "reactstrap";
 import PendingBetCard from "./PendingBetCard";
-import {loadBets} from "../bets/betActions";
-import {getBetsAndParlaysByGambler} from "../bets/betSelector";
 import {PageHeader} from "./PageHeader";
-import {BetConsumer} from "../bets/betContext";
+import {useGlobalStores} from "../context/global_context";
+import {observer} from "mobx-react";
+import {loadBets} from "../bets/bet.actions";
 
-interface Props {
-    leagueId: number;
-}
+const LeagueBetList: React.FC = observer(() => {
 
-const LeagueBetList: React.FC<Props> = ({leagueId }) => {
+    const {betStore, leagueStore} = useGlobalStores();
+    const league = leagueStore.league!;
+    const leagueId = league?.id;
 
     useEffect(() => {
         if (!!leagueId) {
@@ -18,27 +18,23 @@ const LeagueBetList: React.FC<Props> = ({leagueId }) => {
         }
     }, [leagueId]);
 
+    const betsAndParlaysByGambler = betStore.betsAndParlaysByGambler;
     return <Container>
         <PageHeader>Pending Bets</PageHeader>
-        <BetConsumer select={[getBetsAndParlaysByGambler]}>
-            {betsAndParlaysByGambler => {
-                let gamblerIds = Object.keys(betsAndParlaysByGambler);
-                return <Row>
-                    {gamblerIds.map(gamblerId => {
-                        let bets = betsAndParlaysByGambler[gamblerId].bets;
-                        let parlays = betsAndParlaysByGambler[gamblerId].parlays;
-                        let betCards = bets.map(bet => {
-                            return <PendingBetCard key={bet.id} gambler={bet.gambler} bet={bet} isParlay={false}/>
-                        });
-                        let parlayCards = parlays.map(parlay => {
-                            return <PendingBetCard key={parlay.id} gambler={parlay.gambler} bet={parlay} isParlay={true}/>
-                        });
-                        return betCards.concat(parlayCards);
-                    })}
-                </Row>
-            }}
-        </BetConsumer>
+        <Row>
+            {Object.keys(betsAndParlaysByGambler).map(gamblerId => {
+                let bets = betsAndParlaysByGambler[gamblerId].bets;
+                let parlays = betsAndParlaysByGambler[gamblerId].parlays;
+                let betCards = bets.map(bet => {
+                    return <PendingBetCard key={bet.id} gambler={bet.gambler} bet={bet} isParlay={false}/>
+                });
+                let parlayCards = parlays.map(parlay => {
+                    return <PendingBetCard key={parlay.id} gambler={parlay.gambler} bet={parlay} isParlay={true}/>
+                });
+                return betCards.concat(parlayCards);
+            })}
+        </Row>
     </Container>;
-};
+});
 
 export default LeagueBetList;

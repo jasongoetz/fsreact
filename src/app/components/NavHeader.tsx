@@ -16,19 +16,13 @@ import {
 } from "reactstrap";
 import {Colors} from "../theme/theme";
 import {Link} from "react-router-dom";
-import {getLeague} from "../league/leagueSelector";
 import {Gambler, GamblerInfo, League} from "../types";
 import MediaQuery from "react-responsive";
 import styled from "@emotion/styled";
 import BetSlip from "./BetSlip";
-import {AuthConsumer} from "../auth/authContext";
-import {isLoggedIn} from "../auth/authSelectors";
-import {logout} from "../auth/authActions";
-import {LeagueConsumer} from "../league/leagueContext";
-import {GamblerConsumer} from "../gambler/gamblerContext";
-import {getCartBets} from "../cart/cartSelector";
-import {CartConsumer} from "../cart/cartContext";
-
+import {logout} from "../auth/auth.actions";
+import {useGlobalStores} from "../context/global_context";
+import {observer} from "mobx-react";
 
 const navbarStyle = {
     backgroundColor: Colors.lightGray,
@@ -88,12 +82,14 @@ interface Props {
     toggleMobileMenu: () => void;
 }
 
-const NavHeader: FC<Props> = ({toggleMobileMenu}) => {
+const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
-    const [mobileBetSlipOpen, setMobileMetSlipOpen] = useState(false);
+    const [mobileBetSlipOpen, setMobileBetSlipOpen] = useState(false);
+
+    const {authStore, cartStore, gamblerStore, leagueStore} = useGlobalStores();
 
     const toggleBetSlip = () => {
-        setMobileMetSlipOpen(!mobileBetSlipOpen);
+        setMobileBetSlipOpen(!mobileBetSlipOpen);
     };
 
     const handleLogout = (e) => {
@@ -146,59 +142,42 @@ const NavHeader: FC<Props> = ({toggleMobileMenu}) => {
         </Nav>;
     };
 
+    const gambler = leagueStore.gamblers.find(g => g.id === gamblerStore.gambler.id)
+    const authenticated = authStore.authenticated;
+
     return (
-        <AuthConsumer select={[isLoggedIn]}>
-            {authenticated =>
-                <Navbar style={navbarStyle} fixed="top" light expand="sm">
-                    <Container style={navbarContainerStyle}>
-                        <LeagueConsumer select={[getLeague]}>
-                            {league =>
-                                <GamblerConsumer
-                                    select={[(context) => league.gamblers.find(g => g.id == context.gambler.id)]}>
-                                    {gambler =>
-                                        <>
-                                            <NavbarToggler style={menuButtonStyle} onClick={toggleMobileMenu}/>
-                                            <Collapse className="w-100" navbar>
-                                                {authenticated && getLeftNavBar(league, gambler)}
-                                            </Collapse>
+        <Navbar style={navbarStyle} fixed="top" light expand="sm">
+            <Container style={navbarContainerStyle}>
+                <NavbarToggler style={menuButtonStyle} onClick={toggleMobileMenu}/>
+                <Collapse className="w-100" navbar>
+                    {authenticated && getLeftNavBar(leagueStore.league!, gambler)}
+                </Collapse>
 
-                                            <NavbarBrand style={brandStyle} href="/" className="fixedTop" mx="auto">FAKE
-                                                STACKS</NavbarBrand>
+                <NavbarBrand style={brandStyle} href="/" className="fixedTop" mx="auto">FAKE STACKS</NavbarBrand>
 
-                                            <CartConsumer select={[getCartBets]}>
-                                                {cartBets =>
-                                                    <NavbarToggler style={betSlipButtonStyle}>
-                                                        <span style={badgeContainerStyle}>
-                                                        <Badge style={betSlipBadgeStyle}
-                                                               pill>{cartBets.length}</Badge>
-                                                        <img src="/images/bets-menu.svg" alt="Bets Menu"/>
-                                                        </span>
-                                                    </NavbarToggler>
-                                                }
-                                            </CartConsumer>
+                <NavbarToggler style={betSlipButtonStyle}>
+                                    <span style={badgeContainerStyle}>
+                                    <Badge style={betSlipBadgeStyle}
+                                           pill>{cartStore.bets.length}</Badge>
+                                    <img src="/images/bets-menu.svg" alt="Bets Menu" onClick={toggleBetSlip}/>
+                                    </span>
+                </NavbarToggler>
 
-                                            {authenticated && gambler &&
-                                                <MediaQuery maxWidth={576}>
-                                                    <BetSlipCollapse isOpen={mobileBetSlipOpen}>
-                                                        <BetSlip gamblerId={gambler.id}/>
-                                                    </BetSlipCollapse>
-                                                </MediaQuery>
-                                            }
+                {authenticated && gambler &&
+                <MediaQuery maxWidth={576}>
+                    <BetSlipCollapse isOpen={mobileBetSlipOpen}>
+                        <BetSlip gamblerId={gambler.id}/>
+                    </BetSlipCollapse>
+                </MediaQuery>
+                }
 
-                                            <Collapse className="w-100 justify-content-end" navbar>
-                                                {authenticated && !!gambler && getRightNavBar(gambler)}
-                                            </Collapse>
-                                        </>
-                                    }
-                                </GamblerConsumer>
-                            }
-                        </LeagueConsumer>
-                    </Container>
-                </Navbar>
-            }
-        </AuthConsumer>
+                <Collapse className="w-100 justify-content-end" navbar>
+                    {authenticated && !!gambler && getRightNavBar(gambler)}
+                </Collapse>
+            </Container>
+        </Navbar>
     );
-};
+});
 
 export default NavHeader;
 

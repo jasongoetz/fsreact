@@ -1,27 +1,28 @@
 import React from "react";
 import {FSWideButton} from "./FSComponents";
-import {OverUnder} from "../bets/betContext";
-import {addBetToCart} from "../cart/cartActions";
-import {Bettable, CartBet} from "../types";
+import {Bettable, OverUnder} from "../types";
+import {useGlobalStores} from "../context/global_context";
+import {addBetToCart} from "../cart/cart.actions";
+import {observer} from "mobx-react";
 
 interface Props {
-    gamblerId: number;
     bettable: Bettable;
     overunder: OverUnder;
-    cartBets: CartBet[];
 }
 
-const OverUnderBettableButton: React.FC<Props> = ({bettable, overunder, gamblerId, cartBets}) => {
+const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overunder}) => {
+
+    const { cartStore } = useGlobalStores();
 
     const bettableInCart = (bettableId: number, overunder: OverUnder) => {
-        let cartBet = cartBets
+        let cartBet = cartStore.bets
             .find(cartBet => cartBet.bettable.id === bettableId && cartBet.overunder === overunder);
         return !!cartBet;
     };
 
     const betClick = () => {
         let bet = {bettableId: bettable.id, overunder: overunder};
-        addBetToCart(gamblerId, bet);
+        addBetToCart(bet);
     };
 
     if (!bettable.ouoff) {
@@ -33,6 +34,6 @@ const OverUnderBettableButton: React.FC<Props> = ({bettable, overunder, gamblerI
         return <FSWideButton disabled={true}>O/U OFF</FSWideButton>;
     }
 
-};
+});
 
 export default OverUnderBettableButton;

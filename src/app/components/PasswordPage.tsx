@@ -1,11 +1,11 @@
 import React from 'react';
 import {Col, Container, FormGroup, Row} from "reactstrap";
-import {updateUserPassword} from "../user/userActions";
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {updateUserPassword} from "../user/user.actions";
 
 interface Props extends RouteComponentProps {
     userId: number;

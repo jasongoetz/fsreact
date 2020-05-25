@@ -1,12 +1,13 @@
 import React from "react";
-import {FormGroup, Row, Col, FormFeedback} from "reactstrap";
+import {Col, FormGroup, Row} from "reactstrap";
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
-import {authenticate} from "../auth/authActions";
+import {authenticate} from "../auth/auth.actions";
 import {RouteComponentProps} from "react-router";
-import {Credentials} from "../auth/authModels";
 import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
+import {Link} from "react-router-dom";
+import {Credentials} from "../types";
 
 const formSigninStyle = {
     paddingBottom: "15px"
@@ -84,7 +85,7 @@ const Login: React.FC<Props> = () => {
                         <FSFormFeedback>{formik.errors.password}</FSFormFeedback>
                     </FormGroup>
                     <FSWideButton color="primary" size="lg">SIGN IN</FSWideButton>
-                    {/*<div className="register-invite">New to Fake Stacks? <a href="/register">Sign up.</a></div>*/}
+                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link to="/register">Sign up.</Link></div>
                 </FSForm>
             </Col>
         </Row>

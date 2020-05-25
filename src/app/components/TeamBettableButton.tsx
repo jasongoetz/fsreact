@@ -1,30 +1,32 @@
 import React from "react";
 import {FSWideButton} from "./FSComponents";
-import {addBetToCart} from "../cart/cartActions";
-import {Bettable, CartBet} from "../types";
+import {Bettable} from "../types";
+import {useGlobalStores} from "../context/global_context";
+import {addBetToCart} from "../cart/cart.actions";
+import {observer} from "mobx-react";
 
 interface Props {
-    gamblerId: number;
     bettable: Bettable;
     team: number; //TODO: Replace this with an enum
-    cartBets: CartBet[];
 }
 
-const TeamBettableButton: React.FC<Props> = ({gamblerId, bettable, team, cartBets}) => {
+const TeamBettableButton: React.FC<Props> = observer(({bettable, team}) => {
+
+    const { cartStore } = useGlobalStores();
 
     const bettableInCart = (bettableId: number, sideId: string) => {
-        let cartBet = cartBets
+        let cartBet = cartStore.bets
             .find(cartBet => cartBet.bettable.id === bettableId && cartBet.sideId === sideId);
         return !!cartBet;
     };
 
     const getSpread = () => {
-        let spreadPropName = team == 1 ? 'team1Spread' : 'team2Spread';
+        let spreadPropName = team === 1 ? 'team1Spread' : 'team2Spread';
         return bettable[spreadPropName];
     };
 
     const getSideId = () => {
-        let sideIdName = team == 1 ? 'sideId1' : 'sideId2';
+        let sideIdName = team === 1 ? 'sideId1' : 'sideId2';
         return bettable[sideIdName];
     };
 
@@ -33,7 +35,7 @@ const TeamBettableButton: React.FC<Props> = ({gamblerId, bettable, team, cartBet
             bettableId: bettable.id,
             sideId: getSideId()
         };
-        addBetToCart(gamblerId, bet);
+        addBetToCart(bet);
     };
 
     if (!bettable.off) {
@@ -44,6 +46,6 @@ const TeamBettableButton: React.FC<Props> = ({gamblerId, bettable, team, cartBet
     } else {
         return <FSWideButton disabled={true}>OFF</FSWideButton>;
     }
-};
+});
 
 export default TeamBettableButton;

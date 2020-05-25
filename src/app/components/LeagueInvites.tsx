@@ -2,20 +2,22 @@ import React, {useState} from 'react';
 import {Button, Col, Container, FormFeedback, FormGroup, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
 import {FSButton} from "./FSComponents";
-import {inviteUser, uninviteUser} from "../league/leagueActions";
 import {isEmailValid} from "../../util/EmailUtil";
 import {FSInput} from "./FSForm";
-import {LeagueInfo} from "../league/leagueContext";
+import {GamblerInfo, LeagueInvite} from "../types";
+import {inviteUser, uninviteUser} from "../league/league.actions";
 
 interface Props {
-    league: LeagueInfo
+    leagueId: number;
+    gamblers: GamblerInfo[];
+    invites: LeagueInvite[];
 }
 
-const gamblerHasEmail = (email: string, league: LeagueInfo) => league.gamblers.some(gambler => gambler.user.email === email);
+const gamblerHasEmail = (email: string, gamblers: GamblerInfo[]) => gamblers.some(gambler => gambler.user.email === email);
 
-const existingInviteHasEmail = (email: string, league: LeagueInfo) => league.invites.some(invite => invite.email === email);
+const existingInviteHasEmail = (email: string, invites: LeagueInvite[]) => invites.some(invite => invite.email === email);
 
-const LeagueInvites: React.FC<Props> = ({league}) => {
+const LeagueInvites: React.FC<Props> = ({leagueId, gamblers, invites}) => {
 
     const [inviteError, setInviteError] = useState<string | undefined>(undefined);
     const [inviteEmail, setInviteEmail] = useState('');
@@ -33,13 +35,13 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {league.invites.map(invite =>
+                    {invites.map(invite =>
                         <tr key={`invite_${invite.id}`}>
                             <td>
                                 {invite.email}
                             </td>
                             <td>
-                                <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => uninviteUser(league.id, invite.id)}>
+                                <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => uninviteUser(invite.id)}>
                                     Revoke Invite
                                 </Button>
                             </td>
@@ -71,17 +73,17 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
                                 type="submit"
                                 style={{padding: '3px 15px'}}
                                 onClick={() => {
-                                    if (gamblerHasEmail(inviteEmail, league)) {
+                                    if (gamblerHasEmail(inviteEmail, gamblers)) {
                                         setInviteError('Existing league member has this email');
                                         setEmailValid(false);
                                         return;
                                     }
-                                    else if (existingInviteHasEmail(inviteEmail, league)) {
+                                    else if (existingInviteHasEmail(inviteEmail, invites)) {
                                         setInviteError('Existing invite has this email');
                                         setEmailValid(false);
                                         return;
                                     }
-                                    inviteUser(inviteEmail, league);
+                                    inviteUser(inviteEmail);
                                     setInviteEmail('');
                                 }}
                             >

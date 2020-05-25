@@ -1,7 +1,16 @@
 import React from "react";
-import {Form, FormFeedback, Input} from "reactstrap";
+import {Col, Form, FormFeedback, Input} from "reactstrap";
 import styled from "@emotion/styled";
 import {Colors} from "../theme/theme";
+
+export const FSLabelColumn = styled(Col)`
+    && {
+        padding-top: 7px;
+        margin-bottom: 0;
+        text-align: right;
+        font-weight: bold;
+    }
+`;
 
 export const FSInput = styled(Input)`
     && {

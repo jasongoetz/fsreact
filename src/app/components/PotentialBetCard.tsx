@@ -1,7 +1,6 @@
-import React, {Component} from "react";
-import {Button, Col, Input, InputGroup, ListGroupItem, Row} from "reactstrap";
-import {Bet, GamblerInfo, Parlay} from "../types";
-import {Link} from "react-router-dom";
+import React from "react";
+import {Button, Input, InputGroup, ListGroupItem} from "reactstrap";
+import {CartBet} from "../types";
 import moment from "moment";
 import {getBetSummary, getGameSummary} from "../../util/BetUtil";
 
@@ -62,7 +61,7 @@ const closeStyle = {
 
 interface Props {
     cartId: number;
-    bet: Bet;
+    bet: CartBet;
     partOfParlay: boolean;
     onClose: (cartId: number) => void;
     onEdit: (cartId: number, amount: number) => void;

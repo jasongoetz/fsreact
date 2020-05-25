@@ -1,13 +1,14 @@
 import React from 'react';
 import {Col, Container, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
-import {LeagueInfo} from "../league/leagueContext";
+import {GamblerInfo} from "../types";
 
 interface Props {
-    league: LeagueInfo;
+    adminId: number;
+    gamblers: GamblerInfo[];
 }
 
-const LeagueMembers: React.FC<Props> = ({league}) => {
+const LeagueMembers: React.FC<Props> = ({adminId, gamblers}) => {
 
     return (
         <Container>
@@ -21,12 +22,12 @@ const LeagueMembers: React.FC<Props> = ({league}) => {
                         </tr>
                         </thead>
                         <tbody>
-                        {league.gamblers.map(gambler => gambler.user)
+                        {gamblers.map(gambler => gambler.user)
                             .sort((u1, u2) => u1.lastName < u2.lastName ? -1 : 1)
                             .map(user =>
                                 <tr key={`member_${user.id}`}>
                                     <td>
-                                        {user.firstName} {user.lastName} {(league.admin === user.id) && "(League Admin)"}
+                                        {user.firstName} {user.lastName} {(adminId === user.id) && "(League Admin)"}
                                     </td>
                                     <td></td>
                                 </tr>

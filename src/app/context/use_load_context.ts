@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
-import {loadUserContext} from "../user/userActions";
+import {loadUserContext} from "../user/user.actions";
 
 export const useLoadContext = (userId: number) => {
     const [loading, setLoading] = useState(false);
@@ -10,12 +10,12 @@ export const useLoadContext = (userId: number) => {
             await loadUserContext(userId);
             setLoading(false);
         },
-        [loadUserContext, setLoading],
+        [setLoading],
     );
 
     useEffect(() => {
         loadContext(userId);
-    }, []);
+    }, [userId, loadContext]);
 
     return { loading, loadContext };
 };

@@ -1,7 +1,6 @@
 import React from "react";
-import {Bet, Sport} from "../types";
-import {getLeague} from "../league/leagueSelector";
-import {LeagueConsumer} from "../league/leagueContext";
+import {FullBet, Sport} from "../types";
+import {useGlobalStores} from "../context/global_context";
 
 const pendingBetPanelStyle = {
     borderRadius: "0px",
@@ -22,7 +21,7 @@ const betHeadlineStyle = {
 };
 
 const shortenTeamName = (teamName: string, sport: Sport) => {
-    if (sport == "NFL") {
+    if (sport === "NFL") {
         const lastIndex = teamName.lastIndexOf(" ");
         return teamName.substring(0, lastIndex);
     }
@@ -31,10 +30,10 @@ const shortenTeamName = (teamName: string, sport: Sport) => {
     }
 };
 
-const getBetSummary = (bet: Bet) => {
-    if (bet.sideId == bet.bettable.sideId1) {
+const getBetSummary = (bet: FullBet) => {
+    if (bet.sideId === bet.bettable.sideId1) {
         return `${bet.bettable.team1} ${bet.line}`;
-    } else if (bet.sideId == bet.bettable.sideId2) {
+    } else if (bet.sideId === bet.bettable.sideId2) {
         return `${bet.bettable.team2} ${bet.line}`;
     } else {
         return `${bet.overunder === 'OVER' ? "Over" : "Under"} ${bet.line}`;
@@ -42,23 +41,24 @@ const getBetSummary = (bet: Bet) => {
 };
 
 const MiniBets = () => {
+    const { leagueStore } = useGlobalStores();
+    const league = leagueStore.league!;
+
     return (
         <div style={pendingBetPanelStyle}>
-            <LeagueConsumer select={[getLeague]}>
-                {league => league.topBets.bets.map(bet => {
-                    return <div key={`top-bet-card-${bet.id}`} style={pendingMiniBetCardStyle}>
-                        <div style={betHeadlineStyle}>
-                            ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}
-                        </div>
-                        <div>
-                            {getBetSummary(bet)}
-                        </div>
-                        <div>
-                            {shortenTeamName(bet.bettable.team1, league.sport)} @ {shortenTeamName(bet.bettable.team2, league.sport)}
-                        </div>
+            {leagueStore.topBets.bets.map(bet => {
+                return <div key={`top-bet-card-${bet.id}`} style={pendingMiniBetCardStyle}>
+                    <div style={betHeadlineStyle}>
+                        ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}
                     </div>
-                })}
-            </LeagueConsumer>
+                    <div>
+                        {getBetSummary(bet)}
+                    </div>
+                    <div>
+                        {shortenTeamName(bet.bettable.team1, league.sport)} @ {shortenTeamName(bet.bettable.team2, league.sport)}
+                    </div>
+                </div>
+            })}
         </div>
     );
 };

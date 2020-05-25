@@ -1,12 +1,12 @@
 import React from 'react';
 import {Col, Container, FormGroup, Label, Row} from "reactstrap";
-import {updateUserProfile} from "../user/userActions";
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {User} from "../types";
 import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {updateUserProfile} from "../user/user.actions";
 
 interface Props extends RouteComponentProps {
     user: User;

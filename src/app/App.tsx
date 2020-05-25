@@ -6,8 +6,8 @@ import MobileMenu from "./components/MobileMenu";
 import {Fonts} from "./theme/theme";
 import ImagePage from "./components/ImagePage";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute";
-import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
+import PrivateLeagueRoute from "./components/routing/PrivateLeagueRoute";
+import UnauthenticatedRoute from "./components/routing/UnauthenticatedRoute";
 import LeaguePage from "./components/LeaguePage";
 import GamesPage from "./components/GamesPage";
 import Standings from "./components/Standings";
@@ -18,19 +18,11 @@ import LeagueManagement from "./components/LeagueManagement";
 import ErrorPanel from "./components/error/ErrorPanel";
 import ProfilePage from "./components/ProfilePage";
 import PasswordPage from "./components/PasswordPage";
-import {getUserId} from "./auth/authSelectors";
-import {AuthConsumer, AuthProvider} from "./auth/authContext";
-import {getUser} from "./user/userSelector";
-import {UserConsumer, UserProvider} from './user/userContext';
-import {GamblerConsumer, GamblerProvider} from "./gambler/gamblerContext";
-import {LeagueConsumer, LeagueProvider} from "./league/leagueContext";
-import {getLeague} from "./league/leagueSelector";
 import UserContext from "./components/UserContext";
-import {getGambler} from "./gambler/gamblerSelector";
-import {BetProvider} from './bets/betContext';
-import {BettableProvider} from './bettables/bettableContext';
-import {CartProvider} from "./cart/cartContext";
-import {TransactionsProvider} from "./transactions/transactionsContext";
+import Registration from "./components/Registration";
+import PrivateUnaffiliatedRoute from "./components/routing/PrivateUnaffiliatedRoute";
+import CreateLeagueForm from "./components/CreateLeagueForm";
+import {useGlobalStores} from "./context/global_context";
 
 const appStyle = {
     fontFamily: Fonts.mainSite
@@ -58,13 +50,29 @@ const App: FC = () => {
         )
     };
 
+    const RegistrationPage = (navProps) => {
+        return (
+            <ImagePage headline={"WELCOME TO FAKE STACKS."}>
+                <Registration {...navProps}/>
+            </ImagePage>
+        )
+    };
+
+    const NewLeaguePage = (navProps) => {
+        return (
+            <ImagePage headline={"CREATE YOUR LEAGUE."}>
+                <CreateLeagueForm {...navProps}/>
+            </ImagePage>
+        )
+    };
+
+    const JoinLeaguePage = (navProps) => {
+        return <div>JOIN A LEAGUE TODAY</div>;
+    };
+
     const GamePage = () => {
         return <UserContext>
-            <LeagueConsumer select={[getLeague]}>
-                {league => {
-                    return <GamesPage sport={league.sport}/>
-                }}
-            </LeagueConsumer>
+            <GamesPage/>
         </UserContext>
     };
 
@@ -76,15 +84,13 @@ const App: FC = () => {
 
     const BetsPage = () => {
         return <UserContext>
-            <LeagueConsumer select={[getLeague]}>
-                {league => <LeagueBetList leagueId={league.id}/>}
-            </LeagueConsumer>
+            <LeagueBetList/>
         </UserContext>
     };
 
     const LeagueManagePage = () => {
         return <UserContext>
-            <LeagueManagement/>}
+            <LeagueManagement/>
         </UserContext>;
     };
 
@@ -94,34 +100,26 @@ const App: FC = () => {
 
     const UserAccountPage = ({match}) => {
         return <UserContext>
-            <GamblerConsumer select={[getGambler]}>
-                {gambler => {
-                    const gamblerId = parseInt(match.params.gamblerId) || gambler.id;
-                    return <LeagueConsumer
-                        select={[(context => context.league.gamblers.find(gambler => gambler.id === gamblerId))]}>
-                        {gamblerInfo =>
-                            !!gamblerInfo ? <AccountPage gambler={gamblerInfo}/> : <div></div>
-                        }
-                    </LeagueConsumer>
-                }}
-            </GamblerConsumer>
+            <AccountPage providedGamblerId={match.params.gamblerId}/>
         </UserContext>;
     };
 
     const ProfileManagePage = () => {
-        return <ImagePage>
-            <UserConsumer select={[getUser]}>
-                {user => <ProfilePage user={user}/>}
-            </UserConsumer>;
-        </ImagePage>;
+        const {userStore} = useGlobalStores();
+        if (userStore.user) {
+            return <ImagePage>
+                <ProfilePage user={userStore.user}/>
+            </ImagePage>;
+        }
     };
 
     const PasswordManagePage = () => {
-        return <ImagePage>
-            <AuthConsumer select={[getUserId]}>
-                {userId => <PasswordPage userId={userId}/>}
-            </AuthConsumer>
-        </ImagePage>;
+        const {authStore} = useGlobalStores();
+        if (authStore.userId) {
+            return <ImagePage>
+                <PasswordPage userId={authStore.userId}/>
+            </ImagePage>;
+        }
     };
 
     const Page404 = () => {
@@ -129,55 +127,37 @@ const App: FC = () => {
     };
 
     return (
-        <TransactionsProvider>
-            <AuthProvider>
-                <UserProvider>
-                    <GamblerProvider>
-                        <LeagueProvider>
-                            <BetProvider>
-                                <BettableProvider>
-                                    <CartProvider>
-                                        <Router>
-                                            <div style={appStyle} className="App">
-                                                <NavHeader
-                                                    toggleMobileMenu={toggleMobileMenu}
-                                                />
+        <Router>
+            <div style={appStyle} className="App">
+                <NavHeader
+                    toggleMobileMenu={toggleMobileMenu}
+                />
 
-                                                {showMobileMenu && <MobileMenu
-                                                    isAdmin={true}
-                                                    gamblerMoney={0}
-                                                    closeMenu={toggleMobileMenu}
-                                                />}
+                {showMobileMenu && <MobileMenu
+                    isAdmin={true}
+                    gamblerMoney={0}
+                    closeMenu={toggleMobileMenu}
+                />}
 
-                                                <Switch>
-                                                    <UnauthenticatedRoute exact path="/login" component={LoginPage}
-                                                                          redirectTo="/"/>
-                                                    <PrivateRoute exact path="/" component={HomePage}/>
-                                                    <PrivateRoute exact path="/games" component={GamePage}/>
-                                                    <PrivateRoute exact path="/standings" component={StandingsPage}/>
-                                                    <PrivateRoute exact path="/bets" component={BetsPage}/>
-                                                    <PrivateRoute exact path="/account" component={UserAccountPage}/>
-                                                    <PrivateRoute exact path="/transaction/show/:gamblerId"
-                                                                  component={UserAccountPage}/>
-                                                    <PrivateRoute exact path="/league/settings"
-                                                                  component={LeagueManagePage}/>
-                                                    <PrivateRoute exact path="/confirmation"
-                                                                  component={BetConfirmationPage}/>
-                                                    <PrivateRoute exact path="/profile" component={ProfileManagePage}/>
-                                                    <PrivateRoute exact path="/user/password"
-                                                                  component={PasswordManagePage}/>
-                                                    <Route component={Page404}/>
-                                                </Switch>
-                                            </div>
-                                        </Router>
-                                    </CartProvider>
-                                </BettableProvider>
-                            </BetProvider>
-                        </LeagueProvider>
-                    </GamblerProvider>
-                </UserProvider>
-            </AuthProvider>
-        </TransactionsProvider>
+                <Switch>
+                    <UnauthenticatedRoute exact path="/login" component={LoginPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/register" component={RegistrationPage} redirectTo="/"/>
+                    <PrivateLeagueRoute exact path="/" component={HomePage}/>
+                    <PrivateUnaffiliatedRoute exact path="/league/join" component={JoinLeaguePage}/>
+                    <PrivateUnaffiliatedRoute exact path="/league/new" component={NewLeaguePage}/>
+                    <PrivateLeagueRoute exact path="/games" component={GamePage}/>
+                    <PrivateLeagueRoute exact path="/standings" component={StandingsPage}/>
+                    <PrivateLeagueRoute exact path="/bets" component={BetsPage}/>
+                    <PrivateLeagueRoute exact path="/account" component={UserAccountPage}/>
+                    <PrivateLeagueRoute exact path="/transaction/show/:gamblerId" component={UserAccountPage}/>
+                    <PrivateLeagueRoute exact path="/league/settings" component={LeagueManagePage}/>
+                    <PrivateLeagueRoute exact path="/confirmation" component={BetConfirmationPage}/>
+                    <PrivateLeagueRoute exact path="/profile" component={ProfileManagePage}/>
+                    <PrivateLeagueRoute exact path="/user/password" component={PasswordManagePage}/>
+                    <Route component={Page404}/>
+                </Switch>
+            </div>
+        </Router>
     );
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import {ListGroupItem} from "reactstrap";
-import {Bet} from "../types";
+import {CartBet} from "../types";
 import moment from "moment";
 import {getBetSummary, getGameSummary} from "../../util/BetUtil";
 
@@ -18,7 +18,7 @@ const betChoiceStyle = {
 };
 
 interface Props {
-    bet: Bet;
+    bet: CartBet;
     partOfParlay: boolean;
 }
 

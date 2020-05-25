@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import {Token} from "../auth/authContext";
+import {Token} from "./auth.store";
 
 export const decodeToken = (token: string) => jwtDecode<Token>(token);
 

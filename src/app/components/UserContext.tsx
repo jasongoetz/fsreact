@@ -1,18 +1,15 @@
-import {AuthConsumer} from "../auth/authContext";
-import {getUserId, isLoggedIn} from "../auth/authSelectors";
 import React from "react";
 import UserContextContainer from "./UserContextContainer";
+import {useGlobalStores} from "../context/global_context";
+import {observer} from "mobx-react";
 
-const UserContext: React.FC = ({children}) => {
-    return <AuthConsumer select={[isLoggedIn, getUserId]}>
-        {(authenticated, userId) => {
-            return !!authenticated ?
-                <UserContextContainer userId={userId}>
-                    {children}
-                </UserContextContainer>
-            : {children}
-        }}
-    </AuthConsumer>;
-};
+const UserContext: React.FC = observer(({children}) => {
+    const { authStore } = useGlobalStores();
+    return !!authStore.authenticated && authStore.userId ?
+        <UserContextContainer userId={authStore.userId}>
+            {children}
+        </UserContextContainer>
+    : <>{children}</>
+});
 
 export default UserContext;

@@ -39,9 +39,9 @@ const PendingBetCard: React.FC<Props> = ({gambler, bet, isParlay}) => {
             let parlay = bet as Parlay;
             return `${parlay.bets.length} Bet Parlay`;
         }
-        if (bet.sideId == bet.bettable.sideId1) {
+        if (bet.sideId === bet.bettable.sideId1) {
             return `${bet.bettable.team1} ${bet.line}`;
-        } else if (bet.sideId == bet.bettable.sideId2) {
+        } else if (bet.sideId === bet.bettable.sideId2) {
             return `${bet.bettable.team2} ${bet.line}`;
         } else {
             return `${(bet.overunder === 'OVER' ? "Over" : "Under")} ${bet.line}`;

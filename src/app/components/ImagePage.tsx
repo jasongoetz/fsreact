@@ -43,9 +43,8 @@ const ImagePage: FC<Props> = ({headline, children}) => (
                 <Col
                     sm={{offset: 1, size: 10}}
                     md={{offset: 2, size: 8}}
-                    lg={{offset: 3, size: 6}}
                 >
-                    <h1>{headline}</h1>
+                    <h1 style={{textAlign: 'center'}}>{headline}</h1>
                 </Col>
             </Row>
         }

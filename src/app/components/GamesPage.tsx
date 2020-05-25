@@ -1,47 +1,41 @@
 import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
-import {getBettables} from "../bettables/bettableSelector";
 import {PageHeader} from "./PageHeader";
 import BetSlip from "./BetSlip";
 import MediaQuery from "react-responsive";
-import {GamblerConsumer} from "../gambler/gamblerContext";
-import {getGambler} from "../gambler/gamblerSelector";
 import GameRow from "./GameRow";
-import {BettableConsumer} from "../bettables/bettableContext";
-import {Sport} from "../types";
-import {loadGames} from "../bettables/bettableActions";
+import {observer} from "mobx-react";
+import {useGlobalStores} from "../context/global_context";
+import {loadGames} from "../bettables/bettable.actions";
 
 interface Props {
-    sport: Sport;
 }
 
-const GamesPage: React.FC<Props> = ({sport}) => {
+const GamesPage: React.FC<Props> = observer(() => {
+
+    const {bettableStore, leagueStore, gamblerStore} = useGlobalStores();
+
     useEffect(() => {
-        loadGames(sport);
-    }, [sport]);
+        if (leagueStore.league) {
+            loadGames(leagueStore.league.sport);
+        }
+    }, [leagueStore.league]);
+
     return (
-        <BettableConsumer select={[getBettables]}>
-            {bettables =>
-                <Container>
-                    <Row>
-                        <Col md={8}>
-                            <PageHeader>Games</PageHeader>
-                            {bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
-                        </Col>
-                        <Col md={4}>
-                            <MediaQuery minWidth={576}>
-                                <GamblerConsumer select={[getGambler]}>
-                                    {gambler =>
-                                        <BetSlip gamblerId={gambler.id}/>
-                                    }
-                                </GamblerConsumer>
-                            </MediaQuery>
-                        </Col>
-                    </Row>
-                </Container>
-            }
-        </BettableConsumer>
+        <Container>
+            <Row>
+                <Col md={8}>
+                    <PageHeader>Games</PageHeader>
+                    {bettableStore.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
+                </Col>
+                <Col md={4}>
+                    <MediaQuery minWidth={576}>
+                        <BetSlip gamblerId={gamblerStore.gambler.id}/>
+                    </MediaQuery>
+                </Col>
+            </Row>
+        </Container>
     );
-};
+});
 
 export default GamesPage;

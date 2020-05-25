@@ -1,4 +1,3 @@
-import {OverUnder} from "./bets/betContext";
 
 export interface UserProfile {
     firstName: string;
@@ -10,6 +9,14 @@ export interface UserProfile {
 export interface User extends UserProfile {
     id: number;
     createdAt: string;
+}
+
+export interface UserRegistrationInfo {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    token?: string;
 }
 
 export type Sport = 'CFB' | 'NFL' | 'NBA';
@@ -61,7 +68,22 @@ export type Bettable = {
     off: boolean;
 };
 
-export interface Bet {
+export type OverUnder = 'OVER' | 'UNDER';
+export type Outcome = 'WIN' | 'LOSS' | 'PUSH';
+
+export type Bet = {
+    gambler: number;
+    bettable: Bettable;
+    time: string
+    amount: number;
+    sideId: string;
+    overunder: OverUnder;
+    line: string;
+    outcome: Outcome;
+    complete: boolean;
+};
+
+export interface FullBet {
     id: number,
     time: string,
     amount: number,
@@ -86,11 +108,6 @@ export interface BetOrParlay {
     tally: number;
 }
 
-export interface FullLeague extends League {
-    gamblers: GamblerInfo[],
-    topBets: any;
-}
-
 export interface CartBet {
     id: number;
     gambler: number;
@@ -102,7 +119,33 @@ export interface CartBet {
 }
 
 export interface CartParlay {
-    id: number;
     active: boolean;
     amount: number;
+}
+
+export const Sports = {
+    CFB: {key: "CFB", value: 0, name: "College Football"},
+    NFL: {key: "NFL", value: 1, name: "NFL"},
+    NBA: {key: "NBA", value: 2, name: "NBA"}
+};
+
+export interface LeagueInvite {
+    id: number;
+    email: string;
+    user: number;
+    league: number;
+}
+
+export interface LeagueInfo {
+    name: string;
+    sport: string;
+    startingAccount: number;
+    weeklyBetCountMax: number;
+    weeklyBetAccountRatio: number;
+}
+
+export interface Credentials {
+    email: string;
+    password: string;
+    token?: string;
 }

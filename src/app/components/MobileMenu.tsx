@@ -3,7 +3,7 @@ import {Button, Nav, NavItem, NavLink} from "reactstrap";
 import {Colors} from "../theme/theme";
 import styled from "@emotion/styled";
 import {Link} from "react-router-dom";
-import {logout} from "../auth/authActions";
+import {logout} from "../auth/auth.actions";
 
 const MobileMenuOverlay = styled.div({
     width: "100%",

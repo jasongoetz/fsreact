@@ -1,7 +1,6 @@
 
 import {post, get, deLete, put} from './fetch';
-import {Credentials} from "../auth/authModels";
-import {Bet} from "../types";
+import {Bet, Credentials, UserRegistrationInfo} from "../types";
 
 export interface Token {
     id: number;
@@ -31,6 +30,16 @@ export const login: any = async ({
     const response = await post({
         path: `/api/auth`,
         body: JSON.stringify({ email, password, token }),
+    });
+
+    let data = await response.json();
+    return data;
+};
+
+export const registerUser: any = async (user: UserRegistrationInfo) => {
+    const response = await post({
+        path: `/api/users`,
+        body: JSON.stringify(user),
     });
 
     let data = await response.json();
@@ -168,7 +177,7 @@ export const validateBets: any = async (gamblerId: number) => {
 };
 
 export const makeBets: any = async (gamblerId: number) => {
-    const response = await get({
+    await get({
         path: `/api/gamblers/${gamblerId}/cart/confirm`
     });
 };
