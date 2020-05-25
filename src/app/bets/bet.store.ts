@@ -1,10 +1,15 @@
 import {action, observable} from "mobx";
+import {Bet, Parlay} from "../types";
+
+export interface GamblerBets {
+    [gamblerId: number]: {bets: Bet[], parlays: Parlay[]}
+}
 
 class BetStore {
-    @observable betsAndParlaysByGambler: any = {} //TODO: Fix 'any' type
+    @observable betsAndParlaysByGambler: GamblerBets = {}
 
     @action
-    saveBets = async (bets) => {
+    saveBets = async (bets: GamblerBets) => {
         this.betsAndParlaysByGambler = bets
     };
 }

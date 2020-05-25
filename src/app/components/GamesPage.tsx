@@ -30,7 +30,7 @@ const GamesPage: React.FC<Props> = observer(() => {
                 </Col>
                 <Col md={4}>
                     <MediaQuery minWidth={576}>
-                        <BetSlip gamblerId={gamblerStore.gambler.id}/>
+                        <BetSlip gamblerId={gamblerStore.gambler?.id}/>
                     </MediaQuery>
                 </Col>
             </Row>

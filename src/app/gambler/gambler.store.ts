@@ -2,7 +2,7 @@ import {action, observable} from "mobx";
 import {Gambler} from "../types";
 
 class GamblerStore {
-    @observable gambler?: any = {};
+    @observable gambler?: Gambler;
 
     @action
     saveGambler = (gambler: Gambler) => {

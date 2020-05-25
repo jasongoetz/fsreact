@@ -5,9 +5,11 @@ import {useGlobalStores} from "../context/global_context";
 import {addBetToCart} from "../cart/cart.actions";
 import {observer} from "mobx-react";
 
+export type Team = 'TEAM1' | 'TEAM2';
+
 interface Props {
     bettable: Bettable;
-    team: number; //TODO: Replace this with an enum
+    team: Team;
 }
 
 const TeamBettableButton: React.FC<Props> = observer(({bettable, team}) => {
@@ -21,12 +23,12 @@ const TeamBettableButton: React.FC<Props> = observer(({bettable, team}) => {
     };
 
     const getSpread = () => {
-        let spreadPropName = team === 1 ? 'team1Spread' : 'team2Spread';
+        let spreadPropName = team === 'TEAM1' ? 'team1Spread' : 'team2Spread';
         return bettable[spreadPropName];
     };
 
     const getSideId = () => {
-        let sideIdName = team === 1 ? 'sideId1' : 'sideId2';
+        let sideIdName = team === 'TEAM1' ? 'sideId1' : 'sideId2';
         return bettable[sideIdName];
     };
 

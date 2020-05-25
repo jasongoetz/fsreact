@@ -10,7 +10,7 @@ import {
 import {cartStore} from "./cart.store";
 import {gamblerStore} from "../gambler/gambler.store";
 
-const getGamblerId = () => gamblerStore.gambler.id;
+const getGamblerId = (): number => gamblerStore.gambler!.id;
 
 export const loadCart = async () => {
     const cart = await getGamblerBetCart(getGamblerId());

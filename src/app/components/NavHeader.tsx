@@ -142,7 +142,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
         </Nav>;
     };
 
-    const gambler = leagueStore.gamblers.find(g => g.id === gamblerStore.gambler.id)
+    const gambler = leagueStore.gamblers.find(g => g.id === gamblerStore.gambler?.id)
     const authenticated = authStore.authenticated;
 
     return (

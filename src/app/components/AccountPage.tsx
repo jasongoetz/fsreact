@@ -4,7 +4,7 @@ import {PageHeader} from "./PageHeader";
 import {loadTransactions} from "../transactions/transaction.actions";
 import moment from 'moment';
 import {TransactionRow} from "./TransactionRow";
-import {BetOrParlay} from "../types";
+import {BetOrParlayWrapper} from "../types";
 import {useGlobalStores} from "../context/global_context";
 import {observer} from "mobx-react";
 
@@ -25,7 +25,7 @@ const userStatsStyle = {
 const AccountPage: React.FC<Props> = observer(({providedGamblerId}) => {
 
     const { gamblerStore, leagueStore, transactionsStore } = useGlobalStores();
-    const gamblerId = providedGamblerId ? parseInt(providedGamblerId) : gamblerStore.gambler.id;
+    const gamblerId = providedGamblerId ? parseInt(providedGamblerId) : gamblerStore.gambler?.id;
 
     useEffect(() => {
         if (gamblerId) {
@@ -35,7 +35,7 @@ const AccountPage: React.FC<Props> = observer(({providedGamblerId}) => {
 
 
     const gambler = leagueStore.gamblers.find(gambler => gambler.id === gamblerId)
-    if (!leagueStore.league || !gambler) {
+    if (!leagueStore.league || !gamblerId || !gambler) {
         return <div></div>;
     }
     const leagueInfo = leagueStore.league;
@@ -66,7 +66,7 @@ const AccountPage: React.FC<Props> = observer(({providedGamblerId}) => {
                 <td>{leagueInfo.startingAccount.toFixed(2)}</td>
                 <td>{leagueInfo.startingAccount.toFixed(2)}</td>
             </tr>
-            {betsAndParlays && betsAndParlays.map((betOrParlay: BetOrParlay, index) =>
+            {betsAndParlays && betsAndParlays.map((betOrParlay: BetOrParlayWrapper, index) =>
                 <TransactionRow key={`tr-${index}`} betOrParlay={betOrParlay} moneyline={leagueInfo.moneyline}/>)
             }
             </tbody>

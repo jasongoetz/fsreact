@@ -7,9 +7,8 @@ import * as yup from "yup";
 import {FSWideButton} from "./FSComponents";
 import {register} from "../auth/auth.actions";
 
-
 interface Props extends RouteComponentProps {
-    invite: any;
+    invite: any; //FIXME
 }
 
 const formSigninHeading = {

@@ -108,12 +108,12 @@ const errorRowStyle = {
 };
 
 interface Props {
-    gamblerId: number;
+    gamblerId?: number;
 }
 
 const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
 
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState<string[]>([]);
 
     const history = useHistory();
 
@@ -146,10 +146,14 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
         }
     };
 
-    const parlay: any = cartStore.parlay || {};
+    if (!gamblerId) {
+        return <div></div>;
+    }
+
+    const parlay = cartStore.parlay;
     const potentialBets = cartStore.bets;
     const insufficientBets = potentialBets.length < 2;
-    const betParlayTabActive = !!parlay.active && !insufficientBets;
+    const betParlayTabActive = !!parlay?.active && !insufficientBets;
     const totalAmount = potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
     return (<Container style={containerStyle}>
         <Row style={panelHeadingStyle}>
@@ -228,7 +232,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                                     <Input type="number" min="0" step="1" style={wagerAmountStyle}
                                            className="form-control" id="amount"
                                            onChange={(e) => editCartParlay(parseInt(e.target.value))}
-                                           value={parlay.amount || 0}/>
+                                           value={parlay?.amount || 0}/>
                                 </InputGroup>
                             </div>
                             <div>
@@ -243,7 +247,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                                     <span style={disabledGroupAddOn}>$</span>
                                     <Input readOnly disabled type="number" min="0" step="1"
                                            style={wagerWinningsStyle} className="form-control"
-                                           value={Math.pow(2, potentialBets.length) * (parlay.amount || 0)}/>
+                                           value={Math.pow(2, potentialBets.length) * (parlay?.amount || 0)}/>
                                 </InputGroup>
                             </div>
                             <div>
@@ -262,7 +266,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                     }
                     <ListGroupItem style={totalTallyStyle}>
                         <FSButton onClick={() => confirmBets(gamblerId)}>
-                            {getButtonMessage('Review', potentialBets.length, parlay.amount, betParlayTabActive)}
+                            {getButtonMessage('Review', potentialBets.length, parlay?.amount || 0, betParlayTabActive)}
                         </FSButton>
                     </ListGroupItem>
                 </ListGroup>

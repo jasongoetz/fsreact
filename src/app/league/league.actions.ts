@@ -3,7 +3,7 @@ import {handleHTTPError} from "../error/error.actions";
 import {leagueStore} from "./league.store";
 import {LeagueInfo} from "../types";
 
-const getLeagueId = () => leagueStore.league?.id;
+const getLeagueId = (): number => leagueStore.league!.id;
 
 export const inviteUser = async (email: string) => {
     try {

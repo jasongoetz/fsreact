@@ -95,16 +95,18 @@ export interface FullBet {
     archived: boolean,
     gambler: Gambler,
     bettable: Bettable,
-    parlay: any,
+    parlay?: Parlay,
 }
 
 export interface Parlay extends Bet {
     bets: Bet[]
 }
 
-export interface BetOrParlay {
+type BetOrParlay = Bet | Parlay;
+
+export interface BetOrParlayWrapper {
     type: string;
-    value: any;
+    value: BetOrParlay;
     tally: number;
 }
 

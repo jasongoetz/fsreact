@@ -21,7 +21,6 @@ const ConfirmationPage: React.FC = () => {
 
     const { cartStore } = useGlobalStores();
 
-    //TODO: This will need to catch and show errors eventually
     const confirm = async () => {
         await confirmBets();
         history.push('/account');
@@ -30,10 +29,10 @@ const ConfirmationPage: React.FC = () => {
     if (cartStore.bets.length === 0) {
         history.push('/games');
     }
-    const parlay: any = cartStore.parlay || {};
+    const parlay = cartStore.parlay;
     const potentialBets = cartStore.bets;
     const insufficientBets = potentialBets.length < 2;
-    const parlayActive = !!parlay.active && !insufficientBets;
+    const parlayActive = !!parlay?.active && !insufficientBets;
     const totalAmount = potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
     return <Container>
         <PageHeader>Bet Confirmation</PageHeader>

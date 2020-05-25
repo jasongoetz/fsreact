@@ -10,7 +10,7 @@ import {createLeague} from "../league/league.actions";
 
 
 interface Props extends RouteComponentProps {
-    invite: any;
+    invite: any; //FIXME
 }
 
 const formSigninHeading = {

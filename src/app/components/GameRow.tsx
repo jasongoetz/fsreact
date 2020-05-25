@@ -40,7 +40,7 @@ const GameRow: FC<Props> = ({bettable}) => {
                 <TeamRow>
                     <TeamNameCol>{bettable.team1}</TeamNameCol>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <TeamBettableButton bettable={bettable} team={1} />
+                        <TeamBettableButton bettable={bettable} team={'TEAM1'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
                         <OverUnderBettableButton bettable={bettable} overunder='OVER' />
@@ -49,7 +49,7 @@ const GameRow: FC<Props> = ({bettable}) => {
                 <TeamRow>
                     <TeamNameCol>{bettable.team2}</TeamNameCol>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <TeamBettableButton bettable={bettable} team={2} />
+                        <TeamBettableButton bettable={bettable} team={'TEAM2'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
                         <OverUnderBettableButton bettable={bettable} overunder='UNDER' />
