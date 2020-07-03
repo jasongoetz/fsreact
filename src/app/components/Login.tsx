@@ -1,13 +1,14 @@
 import React from "react";
 import {Col, FormGroup, Row} from "reactstrap";
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
-import {authenticate} from "../auth/auth.actions";
+import {authenticate, oAuthAuthenticate} from "../auth/auth.actions";
 import {RouteComponentProps} from "react-router";
 import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {Link} from "react-router-dom";
 import {Credentials} from "../types";
+import {useGoogleLogin} from 'react-google-login';
 
 const formSigninStyle = {
     paddingBottom: "15px"
@@ -52,6 +53,27 @@ const Login: React.FC<Props> = () => {
         }
     };
 
+    const onSignIn = async (response: any) => {
+        try {
+            const profile = response.getBasicProfile();
+            await oAuthAuthenticate(profile.getEmail(), response.tokenId);
+        } catch (err) {
+            formik.setErrors({password: 'This email does not exist'}); //TODO: This should lead to registration
+        }
+
+    }
+
+    const onSignInFail = async (response) => {
+        console.log("SIGN IN FAILED!!!");
+    }
+
+    const { signIn } = useGoogleLogin({
+        onSuccess: onSignIn,
+        onFailure: onSignInFail,
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID!, //TODO: Should require this env
+        isSignedIn: true,
+    })
+
     return (
         <Row>
             <Col
@@ -86,6 +108,7 @@ const Login: React.FC<Props> = () => {
                     </FormGroup>
                     <FSWideButton color="primary" size="lg">SIGN IN</FSWideButton>
                     <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link to="/register">Sign up.</Link></div>
+                    <button onClick={signIn}>Sign in with Google</button>
                 </FSForm>
             </Col>
         </Row>

@@ -43,6 +43,17 @@ export const login = async ({email, password, token}: Credentials): Promise<any>
 };
 
 //TODO: Fix return type
+export const loginWithGoogle = async ({email, token}): Promise<any> => {
+    const response = await post({
+        path: `/api/google-auth`,
+        body: JSON.stringify({ email, token }),
+    });
+
+    let data = await response.json();
+    return data;
+};
+
+//TODO: Fix return type
 export const registerUser = async (user: UserRegistrationInfo): Promise<any> => {
     const response = await post({
         path: `/api/users`,

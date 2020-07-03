@@ -4,6 +4,7 @@ import {Colors} from "../theme/theme";
 import styled from "@emotion/styled";
 import {Link} from "react-router-dom";
 import {logout} from "../auth/auth.actions";
+import {useGoogleLogout} from "react-google-login";
 
 const MobileMenuOverlay = styled.div({
     width: "100%",
@@ -57,7 +58,12 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
         return <NavItem><NavLink style={navLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink></NavItem>;
     };
 
+    const { signOut } = useGoogleLogout({
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '', //TODO: require this variable on startup
+    })
+
     const handleLogout = async () => {
+        await signOut();
         await logout();
         closeMenu();
     };

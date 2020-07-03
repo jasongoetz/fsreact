@@ -23,6 +23,7 @@ import BetSlip from "./BetSlip";
 import {logout} from "../auth/auth.actions";
 import {useGlobalStores} from "../context/global_context";
 import {observer} from "mobx-react";
+import {useGoogleLogout} from "react-google-login";
 
 const navbarStyle = {
     backgroundColor: Colors.lightGray,
@@ -92,9 +93,14 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
         setMobileBetSlipOpen(!mobileBetSlipOpen);
     };
 
-    const handleLogout = (e) => {
+    const { signOut } = useGoogleLogout({
+        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '', //TODO: require this variable on startup
+    })
+
+    const handleLogout = async (e) => {
         e.preventDefault();
-        logout();
+        await signOut();
+        await logout();
     };
 
     const getGamblerAccountBalance = (gambler: GamblerInfo) => {

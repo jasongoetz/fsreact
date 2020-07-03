@@ -1,9 +1,9 @@
-import {login, registerUser, Token} from "../api/api";
+import {login, loginWithGoogle, registerUser, Token} from "../api/api";
 import jwtDecode from 'jwt-decode';
 import {Credentials, UserRegistrationInfo} from "../types";
 import {authStore} from "./auth.store";
 
-export const logout = () => {
+export const logout = async () => {
     authStore.clear();
 };
 
@@ -20,12 +20,16 @@ const storeToken = (authToken?: string) => {
 };
 
 export const authenticate = async (credentials: Credentials) => {
-    let { email, password, token } = credentials;
-    const auth = await login({ email, password, token });
+    const auth = await login(credentials);
     const authToken = auth.token;
 
     storeToken(authToken);
 };
+
+export const oAuthAuthenticate = async (email: string, token: string) => {
+    const auth = await loginWithGoogle({ email, token });
+    storeToken(auth.token);
+}
 
 export const register = async (userInfo: UserRegistrationInfo) => {
     const auth = await registerUser(userInfo);
