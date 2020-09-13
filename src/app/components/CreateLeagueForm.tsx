@@ -8,8 +8,8 @@ import {FSWideButton} from "./FSComponents";
 import {Sports} from "../types";
 import {createLeague} from "../league/league.actions";
 
-
 interface Props extends RouteComponentProps {
+    userId: number;
     invite: any; //FIXME
 }
 
@@ -19,11 +19,11 @@ const formSigninHeading = {
     marginTop: '0px',
 };
 
-const CreateLeagueForm: React.FC<Props> = ({invite, history}) => {
+const CreateLeagueForm: React.FC<Props> = ({invite, userId, history}) => {
 
     const registerLeague = async (values) => {
         try {
-            await createLeague(values);
+            await createLeague(userId, values);
             history.push('/');
         } catch (err) {
             formik.setErrors({weeklyBetAccountRatio: 'Your league could not be created'});

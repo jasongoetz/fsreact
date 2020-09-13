@@ -1,7 +1,7 @@
-import {postInvite, revokeInvite} from "../api/api";
+import {postInvite, registerLeague, registerUser, revokeInvite} from "../api/api";
 import {handleHTTPError} from "../error/error.actions";
 import {leagueStore} from "./league.store";
-import {LeagueInfo} from "../types";
+import {LeagueInfo, UserRegistrationInfo} from "../types";
 
 const getLeagueId = (): number => leagueStore.league!.id;
 
@@ -23,7 +23,7 @@ export const uninviteUser = async (inviteId: number) => {
     }
 };
 
-export const createLeague = async (leagueInfo: LeagueInfo) => {
-    alert("LEAGUE: " + JSON.stringify(leagueInfo));
+export const createLeague = async (userId: number, leagueInfo: LeagueInfo) => {
+    const league = await registerLeague(userId, leagueInfo);
     leagueStore.createLeague(leagueInfo);
 };

@@ -5,7 +5,7 @@ import {
     BetOrParlayWrapper,
     Bettable,
     CartBet, CartParlay,
-    Credentials,
+    Credentials, League, LeagueInfo,
     LeagueInvite,
     UserRegistrationInfo
 } from "../types";
@@ -58,6 +58,16 @@ export const registerUser = async (user: UserRegistrationInfo): Promise<any> => 
     const response = await post({
         path: `/api/users`,
         body: JSON.stringify(user),
+    });
+
+    let data = await response.json();
+    return data;
+};
+
+export const registerLeague = async (userId: number, leagueInfo: LeagueInfo): Promise<League> => {
+    const response = await post({
+        path: `/api/leagues`,
+        body: JSON.stringify({...leagueInfo, weeklyBetAccountRatio: leagueInfo.weeklyBetAccountRatio / 100, admin: userId}),
     });
 
     let data = await response.json();
