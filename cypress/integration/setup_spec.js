@@ -25,7 +25,7 @@ describe('Set Up', () => {
     })
 
     it('logs out', function () {
-        cy.visit('/logout');
+        cy.get('#sign-out').click();
         cy.url().should('include', '/login');
     })
 
@@ -41,9 +41,6 @@ describe('Set Up', () => {
 
         // we should be redirected to /dashboard
         cy.url().should('include', '/')
-
-        // our auth cookie should be present
-        //cy.getCookie('your-session-cookie').should('exist')
 
         // UI should reflect this user being logged in
         cy.get('a.nav-link').should('contain', 'JASON')

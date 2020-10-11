@@ -29,11 +29,6 @@ class LeagueStore {
         this.invites = this.invites.filter((invite: LeagueInvite) => invite.id !== inviteId);
     };
 
-    @action
-    createLeague = (leagueInfo: LeagueInfo) => {
-        //no-op
-    };
-
 }
 
 export const leagueStore = new LeagueStore();

@@ -1,12 +1,13 @@
 import React from "react";
 import {Col, FormGroup, Label, Row} from "reactstrap";
-import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {RouteComponentProps, withRouter, useHistory} from 'react-router-dom';
 import {FSForm, FSFormFeedback, FSInput, FSLabelColumn} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {FSWideButton} from "./FSComponents";
 import {Sports} from "../types";
 import {createLeague} from "../league/league.actions";
+import {loadUserContext} from "../user/user.actions";
 
 interface Props extends RouteComponentProps {
     userId: number;
@@ -19,11 +20,14 @@ const formSigninHeading = {
     marginTop: '0px',
 };
 
-const CreateLeagueForm: React.FC<Props> = ({invite, userId, history}) => {
+const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
+
+    const history = useHistory();
 
     const registerLeague = async (values) => {
         try {
             await createLeague(userId, values);
+            await loadUserContext(userId);
             history.push('/');
         } catch (err) {
             formik.setErrors({weeklyBetAccountRatio: 'Your league could not be created'});
@@ -58,15 +62,15 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId, history}) => {
 
     return (
         <Row>
-            <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}}>
-                <FSForm onSubmit={formik.handleSubmit}>
+            <Col xs={{size: 12, offset: 0}} sm={{size: 10, offset: 1}} md={{size: 8, offset: 2}} lg={{size: 6, offset: 3}}>
+                <FSForm id="create-league" onSubmit={formik.handleSubmit}>
                     {invite && <h3 style={formSigninHeading}>Welcome. Finish registering an account to join.</h3>}
                     <FormGroup>
                         <Row>
-                            <FSLabelColumn sm={6}>
+                            <FSLabelColumn xs={5} sm={6}>
                                 <Label for="leagueName">League Name:</Label>
                             </FSLabelColumn>
-                            <Col sm={6}>
+                            <Col xs={7} sm={6}>
                                 <FSInput
                                     placeholder="League Name"
                                     invalid={!!formik.errors.name}
@@ -82,13 +86,13 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId, history}) => {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <FSLabelColumn sm={6}>
+                            <FSLabelColumn xs={5} sm={6}>
                                 <Label for="leagueSport">Sport:</Label>
                             </FSLabelColumn>
-                            <Col sm={6}>
+                            <Col xs={7} sm={6}>
                                 <FSInput type="select" id="leagueSport" name="sport">
                                     {Object.keys(Sports).map(
-                                        sportKey => <option value={sportKey}>{Sports[sportKey].name}</option>
+                                        sportKey => <option key={`sport-${sportKey}`} value={sportKey}>{Sports[sportKey].name}</option>
                                     )}
                                 </FSInput>
                             </Col>
@@ -97,14 +101,14 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId, history}) => {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <FSLabelColumn sm={6}>
+                            <FSLabelColumn xs={5} sm={6}>
                                 <Label for="startingAccount">Starting Account Balance:</Label>
                             </FSLabelColumn>
-                            <Col sm={6}>
-                                <FSInput type="select" id="startingAccount" name="startingAccount">
+                            <Col xs={7} sm={6}>
+                                <FSInput type="select" id="startingAccount" name="startingAccount" defaultValue="500">
                                     <option value="100">$100</option>
                                     <option value="250">$250</option>
-                                    <option value="500" selected>$500</option>
+                                    <option value="500">$500</option>
                                     <option value="1000">$1000</option>
                                 </FSInput>
                             </Col>
@@ -113,15 +117,15 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId, history}) => {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <FSLabelColumn sm={6}>
+                            <FSLabelColumn xs={5} sm={6}>
                                 <Label for="weeklyBetCountMax">Weekly Bet Count Max:</Label>
                             </FSLabelColumn>
-                            <Col sm={6}>
-                                <FSInput type="select" id="weeklyBetCountMax" name="weeklyBetCountMax">
+                            <Col xs={7} sm={6}>
+                                <FSInput type="select" id="weeklyBetCountMax" name="weeklyBetCountMax" defaultValue="6">
                                     <option value="3">3</option>
                                     <option value="4">4</option>
                                     <option value="5">5</option>
-                                    <option value="6" selected>6</option>
+                                    <option value="6">6</option>
                                     <option value="10">10</option>
                                 </FSInput>
                             </Col>
@@ -130,22 +134,22 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId, history}) => {
                     </FormGroup>
                     <FormGroup>
                         <Row>
-                            <FSLabelColumn sm={6}>
+                            <FSLabelColumn xs={5} sm={6}>
                                 <Label for="weeklyBetAccountRatio">Weekly Bet Account Ratio:</Label>
                             </FSLabelColumn>
-                            <Col sm={6}>
-                                <FSInput type="select" id="weeklyBetAccountRatio" name="weeklyBetAccountRatio">
+                            <Col xs={7} sm={6}>
+                                <FSInput type="select" id="weeklyBetAccountRatio" name="weeklyBetAccountRatio" defaultValue="50">
                                     <option value="25">25%</option>
-                                    <option value="50" selected>50%</option>
+                                    <option value="50">50%</option>
                                     <option value="75">75%</option>
                                     <option value="100">100%</option>
                                 </FSInput>
                             </Col>
                         </Row>
-                        <FSFormFeedback>{formik.errors.weeklyBetCountMax}</FSFormFeedback>
+                        <FSFormFeedback>{formik.errors.weeklyBetAccountRatio}</FSFormFeedback>
                     </FormGroup>
 
-                    <FSWideButton color="primary" size="lg">CREATE LEAGUE</FSWideButton>
+                    <FSWideButton type="submit" color="primary" size="lg">CREATE LEAGUE</FSWideButton>
                 </FSForm>
             </Col>
         </Row>

@@ -1,4 +1,3 @@
-import 'mobx-react-lite/batchingForReactDom';
 import React, {FC, useState} from 'react';
 import './App.css';
 import NavHeader from "./components/NavHeader";
@@ -63,9 +62,11 @@ const App: FC = () => {
         const {authStore} = useGlobalStores();
         if (authStore.userId) {
             return (
-                <ImagePage headline={"CREATE YOUR LEAGUE."}>
-                    <CreateLeagueForm userId={authStore.userId} {...navProps}/>
-                </ImagePage>
+                <UserContext>
+                    <ImagePage headline={"CREATE YOUR LEAGUE."}>
+                        <CreateLeagueForm userId={authStore.userId} {...navProps}/>
+                    </ImagePage>
+                </UserContext>
             )
         }
     };

@@ -16,7 +16,7 @@ import {
 } from "reactstrap";
 import {Colors} from "../theme/theme";
 import {Link} from "react-router-dom";
-import {Gambler, GamblerInfo, League} from "../types";
+import {Gambler, GamblerInfo, League, User} from "../types";
 import MediaQuery from "react-responsive";
 import styled from "@emotion/styled";
 import BetSlip from "./BetSlip";
@@ -87,7 +87,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
     const [mobileBetSlipOpen, setMobileBetSlipOpen] = useState(false);
 
-    const {authStore, cartStore, gamblerStore, leagueStore} = useGlobalStores();
+    const {authStore, cartStore, gamblerStore, leagueStore, userStore} = useGlobalStores();
 
     const toggleBetSlip = () => {
         setMobileBetSlipOpen(!mobileBetSlipOpen);
@@ -108,7 +108,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     };
 
     const navLink = (label: string, path: string, onClick?: (e) => void) => {
-        return <NavLink style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
+        return <NavLink id={label.toLowerCase().split(' ').join('-')} style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
     };
 
     const isAdmin = (league: League, gambler?: Gambler) => {
@@ -124,12 +124,14 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
         </Nav>;
     };
 
-    const getRightNavBar = (gambler: GamblerInfo) => {
+    const getRightNavBar = (user?: User, gambler?: GamblerInfo) => {
         return <Nav className="justify-content-end" navbar>
             <UncontrolledDropdown>
-                <DropdownToggle style={navbarLinkStyle} nav>
-                    {gambler.user.firstName.toUpperCase()} {gambler.user.lastName.toUpperCase()}
-                </DropdownToggle>
+                {!!user &&
+                    <DropdownToggle style={navbarLinkStyle} nav>
+                        {user.firstName.toUpperCase()} {user.lastName.toUpperCase()}
+                    </DropdownToggle>
+                }
                 <DropdownMenu right>
                     <DropdownItem>
                         {navLink("EDIT", "/profile")}
@@ -139,9 +141,11 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
                     </DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
-            <NavItem>
-                {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account")}
-            </NavItem>
+            {!!gambler &&
+                <NavItem>
+                    {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account")}
+                </NavItem>
+            }
             <NavItem>
                 {navLink("SIGN OUT", "/logout", handleLogout)}
             </NavItem>
@@ -156,7 +160,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
             <Container style={navbarContainerStyle}>
                 <NavbarToggler style={menuButtonStyle} onClick={toggleMobileMenu}/>
                 <Collapse className="w-100" navbar>
-                    {authenticated && getLeftNavBar(leagueStore.league!, gambler)}
+                    {authenticated && leagueStore.league && getLeftNavBar(leagueStore.league, gambler)}
                 </Collapse>
 
                 <NavbarBrand style={brandStyle} href="/" className="fixedTop" mx="auto">FAKE STACKS</NavbarBrand>
@@ -178,7 +182,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
                 }
 
                 <Collapse className="w-100 justify-content-end" navbar>
-                    {authenticated && !!gambler && getRightNavBar(gambler)}
+                    {authenticated && getRightNavBar(userStore.user, gambler)}
                 </Collapse>
             </Container>
         </Navbar>
