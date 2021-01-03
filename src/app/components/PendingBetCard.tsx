@@ -1,16 +1,13 @@
-import React, {Component} from "react";
+import React from "react";
 import {Col} from "reactstrap";
-import {Bet, GamblerInfo, Parlay} from "../types";
+import {Bet, GamblerInfo, Parlay, Wager} from "../types";
 import {Link} from "react-router-dom";
 import moment from "moment";
 
-export interface Props {
+interface Props {
     gambler: GamblerInfo;
     bet: Bet;
     isParlay: boolean;
-}
-
-export interface State {
 }
 
 const betCardStyle = {
@@ -35,60 +32,54 @@ const betCardContentStyle = {
     borderTop: "0px"
 };
 
-class PendingBetCard extends Component<Props, State> {
+const PendingBetCard: React.FC<Props> = ({gambler, bet, isParlay}) => {
 
-    async componentDidMount() {
-    }
-
-    getBetHeadline = (bet: Bet, isParlay: boolean) => {
+    const getBetHeadline = (wager: Wager, isParlay: boolean) => {
         if (isParlay) {
-            let parlay = bet as Parlay;
+            const parlay = wager as Parlay;
             return `${parlay.bets.length} Bet Parlay`;
         }
-        if (bet.sideId == bet.bettable.sideId1) {
-            return `${bet.bettable.team1} ${bet.line}`;
-        } else if (bet.sideId == bet.bettable.sideId2) {
-            return `${bet.bettable.team2} ${bet.line}`;
-        } else {
-            return `${(bet.overunder === 'OVER' ? "Over" : "Under")} ${bet.line}`;
+        else {
+            const bet  = wager as Bet;
+            if (bet.sideId === bet.bettable.sideId1) {
+                return `${bet.bettable.team1} ${bet.line}`;
+            } else if (bet.sideId === bet.bettable.sideId2) {
+                return `${bet.bettable.team2} ${bet.line}`;
+            } else {
+                return `${(bet.overunder === 'OVER' ? "Over" : "Under")} ${bet.line}`;
+            }
         }
     };
 
-    getWager = (bet: Bet, isParlay: boolean) => {
+    const getWager = (wager: Wager, isParlay: boolean) => {
         if (isParlay) {
-            let parlay: Parlay = bet as Parlay;
+            const parlay = wager as Parlay;
             return `$${parlay.amount} (to win $${parlay.amount * Math.pow(2, parlay.bets.length)})`
         }
         else {
-            return `$${bet.amount}`;
+            return `$${wager.amount}`;
         }
     };
 
-    render() {
-        let bet = this.props.bet;
-        let isParlay = this.props.isParlay;
-        let gambler = this.props.gambler;
-        return <Col lg={4} sm={6} xs={12} style={betCardStyle}>
-            <div style={titleBarStyle}>
-                <div style={wagerStyle}>{this.getWager(bet, isParlay)}</div>
-                <div>{gambler.user.firstName} {gambler.user.lastName}</div>
+    return <Col lg={4} sm={6} xs={12} style={betCardStyle}>
+        <div style={titleBarStyle}>
+            <div style={wagerStyle}>{getWager(bet, isParlay)}</div>
+            <div>{gambler.user.firstName} {gambler.user.lastName}</div>
+        </div>
+        <div style={betCardContentStyle}>
+            <div style={{fontWeight: "bold"}}>
+                {getBetHeadline(bet, isParlay)}
             </div>
-            <div style={betCardContentStyle}>
-                <div style={{fontWeight: "bold"}}>
-                    {this.getBetHeadline(bet, isParlay)}
-                </div>
-                <div>
-                    {isParlay && <Link to={`/transaction/show/${gambler.id}`}>View Details</Link>}
-                    {!isParlay && `${bet.bettable.team1} @ ${bet.bettable.team2}`}
-                </div>
-                <div>
-                    {!isParlay && moment(bet.bettable.gameTime).format("dddd, MMM Do, h:mma z")}
-                    {isParlay && <span>&nbsp;</span>}
-                </div>
+            <div>
+                {isParlay && <Link to={`/transaction/show/${gambler.id}`}>View Details</Link>}
+                {!isParlay && `${bet.bettable.team1} @ ${bet.bettable.team2}`}
             </div>
-        </Col>
-    }
+            <div>
+                {!isParlay && moment(bet.bettable.gameTime).format("dddd, MMM Do, h:mma z")}
+                {isParlay && <span>&nbsp;</span>}
+            </div>
+        </div>
+    </Col>
 }
-
 
 export default PendingBetCard;

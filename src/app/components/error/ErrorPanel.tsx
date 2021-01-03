@@ -23,6 +23,11 @@ const pStyle = {
     color: '#001c20',
 };
 
+const boldPStyle = {
+    ...pStyle,
+    fontWeight: 'bold' as 'bold',
+}
+
 const explanationStyle = {
     marginTop: '20px',
     border: '2px solid #ececec',
@@ -35,7 +40,7 @@ const UnknownError = ({errorMessage}) => <>
     <h1 style={h1Style}>Something is wrong with fake stacks!</h1>
     <p style={pStyle}>Something is going wrong here.</p>
     <p style={pStyle}>Let your admin know there's something up with your Fake Stacks and your faithful admin will jump into action immediately.</p>
-    {!!errorMessage && <p style={pStyle}>{errorMessage}</p>}
+    {!!errorMessage && <p style={boldPStyle}>{errorMessage}</p>}
 </>;
 
 const Error404 = () => <>
@@ -44,7 +49,7 @@ const Error404 = () => <>
     <p style={pStyle}>Anyway, the page you were trying to reach doesn't exist.</p>
 </>;
 
-const ErrorPanel: FC<{statusCode: number, errorMessage?: string}> = ({statusCode, errorMessage}) => {
+const ErrorPanel: FC<{statusCode?: number, errorMessage?: string}> = ({statusCode, errorMessage}) => {
     return (
         <Row>
             <Col style={explanationStyle} xs={{offset: 1, size: 10}} md={{offset: 2, size: 8}} lg={{offset: 3, size: 6}}>
@@ -55,7 +60,7 @@ const ErrorPanel: FC<{statusCode: number, errorMessage?: string}> = ({statusCode
                 </p>
                 <div style={logoSmallStyle}>
                     <Link to="/">
-                        <img src="/images/bets-menu.svg"/>
+                        <img src="/images/bets-menu.svg" alt={"Bets Menu"} />
                     </Link>
                 </div>
             </Col>

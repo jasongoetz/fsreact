@@ -1,59 +1,39 @@
-import React, {Component} from "react";
-import {FSButton, FSWideButton} from "./FSComponents";
-import {State} from "./GamesPage";
-import {Bettable} from "../bettables/bettableReducer";
-import {getCartBets} from "../cart/cartSelector";
-import {connect} from "react-redux";
-import {CartBet} from "../cart/cartReducer";
-import {OverUnder} from "../bets/betReducer";
-import {loadUserContext} from "../user/userActions";
-import {loadGames} from "../bettables/bettableActions";
-import {addBetToCart} from "../cart/cartActions";
+import React from "react";
+import {FSWideButton} from "./FSComponents";
+import {Bettable, OverUnder} from "../types";
+import {useGlobalStores} from "../context/global_context";
+import {addBetToCart} from "../cart/cart.actions";
+import {observer} from "mobx-react";
 
 interface Props {
-    addBetToCart: (any) => void;
-    cartBets: CartBet[];
     bettable: Bettable;
     overunder: OverUnder;
 }
 
-class OverUnderBettableButton extends Component<Props, State> {
+const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overunder}) => {
 
-    bettableInCart = (bettableId: number, overunder: OverUnder) => {
-        let cartBet = this.props.cartBets
+    const { cartStore } = useGlobalStores();
+
+    const bettableInCart = (bettableId: number, overunder: OverUnder) => {
+        let cartBet = cartStore.bets
             .find(cartBet => cartBet.bettable.id === bettableId && cartBet.overunder === overunder);
         return !!cartBet;
     };
 
-    betClick = () => {
-        let bet = {bettableId: this.props.bettable.id, overunder: this.props.overunder};
-        this.props.addBetToCart(bet);
+    const betClick = () => {
+        let bet = {bettable: bettable, overunder: overunder};
+        addBetToCart(bet);
     };
 
-    render() {
-        if (!this.props.bettable.ouoff) {
-            let disabled = this.bettableInCart(this.props.bettable.id, this.props.overunder);
-            let overUnderName = this.props.overunder === 'OVER' ? "Over " : "Under ";
-            return <FSWideButton className="hidden-xs hidden-sm" disabled={disabled}
-                             onClick={this.betClick}>{overUnderName} {this.props.bettable.overunder}</FSWideButton>;
-        } else {
-            return <FSWideButton disabled={true}>O/U OFF</FSWideButton>;
-        }
+    if (!bettable.ouoff) {
+        let disabled = bettableInCart(bettable.id, overunder);
+        let overUnderName = overunder === 'OVER' ? "Over " : "Under ";
+        return <FSWideButton className="hidden-xs hidden-sm" disabled={disabled}
+                         onClick={betClick}>{overUnderName} {bettable.overunder}</FSWideButton>;
+    } else {
+        return <FSWideButton disabled={true}>O/U OFF</FSWideButton>;
     }
 
-}
+});
 
-const mapStateToProps = (state: State) => {
-    return {
-        cartBets: getCartBets(state),
-    };
-};
-
-const mapDispatchToProps = {
-    addBetToCart,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(OverUnderBettableButton);
+export default OverUnderBettableButton;

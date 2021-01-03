@@ -1,3 +1,15 @@
+# Fake Stacks Front End
+
+## Running Cypress
+
+You'll need a `cypress.env.json` file at the root level to store your MailSlurp API key. It should look something like this: 
+
+```
+{
+  "MAIL_SLURP_API_KEY": "key-goes-here"
+}
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

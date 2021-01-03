@@ -1,67 +1,41 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {loadUserContext} from "../user/userActions";
-import {getLeague} from "../league/leagueSelector";
+import React, {useEffect} from "react";
 import {Col, Container, Row} from "reactstrap";
-import {loadGames} from "../bettables/bettableActions";
-import {getBettables} from "../bettables/bettableSelector";
-import {GameRow} from "./GameRow";
 import {PageHeader} from "./PageHeader";
-import {League} from "../types";
-import {Bettable} from "../bettables/bettableReducer";
 import BetSlip from "./BetSlip";
 import MediaQuery from "react-responsive";
+import GameRow from "./GameRow";
+import {observer} from "mobx-react";
+import {useGlobalStores} from "../context/global_context";
+import {loadGames} from "../bettables/bettable.actions";
 
-export interface Props {
-    loadUserContext: () => void;
-    loadGames: () => void;
-    league: League;
-    bettables: Bettable[];
+interface Props {
 }
 
-export interface State {
-}
+const GamesPage: React.FC<Props> = observer(() => {
 
-class GamesPage extends Component<Props, State> {
+    const {bettableStore, leagueStore, gamblerStore} = useGlobalStores();
 
-    async componentDidMount() {
-        if (!this.props.league.id) {
-            await this.props.loadUserContext();
+    useEffect(() => {
+        if (leagueStore.league) {
+            loadGames(leagueStore.league.sport);
         }
-        await this.props.loadGames();
-    }
+    }, [leagueStore.league]);
 
-    render() {
-        return <Container>
+    return (
+        <Container>
             <Row>
                 <Col md={8}>
                     <PageHeader>Games</PageHeader>
-                    {this.props.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
+                    {bettableStore.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
                 </Col>
                 <Col md={4}>
-                    <MediaQuery minWidth={576}>
-                        <BetSlip></BetSlip>
+                    <MediaQuery minWidth={415}>
+                        <BetSlip gamblerId={gamblerStore.gambler?.id}/>
                     </MediaQuery>
                 </Col>
             </Row>
         </Container>
-    }
-}
+    );
+});
 
-
-const mapStateToProps = (state: State) => {
-    return {
-        league: getLeague(state),
-        bettables: getBettables(state),
-    };
-};
-
-const mapDispatchToProps = {
-    loadUserContext,
-    loadGames,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(GamesPage);
+export default GamesPage;

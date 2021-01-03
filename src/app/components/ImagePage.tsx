@@ -5,6 +5,7 @@ import {Colors} from "../theme/theme";
 
 const backgroundImageStyle = {
     width: "100%",
+    position: 'absolute' as 'absolute',
     background: getRandomImageUrl(),
     backgroundSize: "cover",
     backgroundPosition: "center center",
@@ -17,6 +18,7 @@ const backgroundImageStyle = {
 
 const backgroundImageOverlay = {
     width: "100%",
+    position: 'absolute' as 'absolute',
     backgroundColor: "black",
     opacity: 0.6,
     zIndex: -3,
@@ -32,7 +34,7 @@ const headlineStyle = {
     color: Colors.white,
 };
 
-export interface Props {
+interface Props {
     headline?: string;
 }
 
@@ -43,15 +45,14 @@ const ImagePage: FC<Props> = ({headline, children}) => (
                 <Col
                     sm={{offset: 1, size: 10}}
                     md={{offset: 2, size: 8}}
-                    lg={{offset: 3, size: 6}}
                 >
-                    <h1>{headline}</h1>
+                    <h1 style={{textAlign: 'center'}}>{headline}</h1>
                 </Col>
             </Row>
         }
         {children}
-        <div className="signin-page" style={backgroundImageStyle}/>
-        <div className="signin-page-overlay" style={backgroundImageOverlay}/>
+        <div style={backgroundImageStyle}/>
+        <div style={backgroundImageOverlay}/>
     </Container>
 );
 

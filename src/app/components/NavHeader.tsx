@@ -1,8 +1,10 @@
-import {Component} from "react";
-import React from "react";
+import React, {FC, useState} from "react";
 import {
     Badge,
-    Collapse, Container, DropdownItem, DropdownMenu,
+    Collapse,
+    Container,
+    DropdownItem,
+    DropdownMenu,
     DropdownToggle,
     Nav,
     Navbar,
@@ -14,36 +16,18 @@ import {
 } from "reactstrap";
 import {Colors} from "../theme/theme";
 import {Link} from "react-router-dom";
-import {connect} from "react-redux";
-import {logout} from "../auth/authActions";
-import {getGamblerWithAccount} from "../gambler/gamblerSelector";
-import {getLeague} from "../league/leagueSelector";
-import {isLoggedIn} from "../auth/authSelector";
-import {GamblerInfo, League} from "../types";
-import {getCartBets} from "../cart/cartSelector";
-import {CartBet} from "../cart/cartReducer";
-import MediaQuery from "react-responsive";
+import {Gambler, GamblerInfo, League, User} from "../types";
+import {useMediaQuery} from "react-responsive";
 import styled from "@emotion/styled";
 import BetSlip from "./BetSlip";
-
-interface Props {
-    league: League;
-    gambler: GamblerInfo;
-    loggedIn: boolean;
-    cartBets: CartBet[];
-    toggleMobileMenu: () => void;
-    toggleBetSlip: () => void;
-    handleLogout: () => void;
-}
-
-interface State {
-    mobileBetSlipOpen: boolean;
-}
+import {logout} from "../auth/auth.actions";
+import {useGlobalStores} from "../context/global_context";
+import {observer} from "mobx-react";
+import {useGoogleLogout} from "react-google-login";
+import {requireEnv} from "../../util/require-env";
 
 const navbarStyle = {
     backgroundColor: Colors.lightGray,
-    // paddingLeft: "0.5rem",
-    // paddingRight: "0.5rem",
 };
 
 const navbarContainerStyle = {
@@ -96,124 +80,117 @@ const BetSlipCollapse = styled(Collapse)({
     left: '0px',
 });
 
-class NavHeader extends Component<Props, State> {
+interface Props {
+    toggleMobileMenu: () => void;
+}
 
-    state = {
-        mobileBetSlipOpen: false,
+const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
+
+    const isMobile = useMediaQuery({ query: '(max-width: 415px)' });
+
+    const [mobileBetSlipOpen, setMobileBetSlipOpen] = useState(false);
+
+    const {authStore, cartStore, gamblerStore, leagueStore, userStore} = useGlobalStores();
+
+    const toggleBetSlip = () => {
+        setMobileBetSlipOpen(!mobileBetSlipOpen);
     };
 
-    toggleMenu = () => {
-        this.props.toggleMobileMenu();
-    };
+    const { signOut } = useGoogleLogout({
+        clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID')
+    })
 
-    toggleBetSlip = () => {
-        this.setState({mobileBetSlipOpen: !this.state.mobileBetSlipOpen});
-    };
-
-    handleLogout = (e) => {
+    const handleLogout = async (e) => {
         e.preventDefault();
-        this.props.handleLogout();
+        await signOut();
+        await logout();
     };
 
-    render() {
-        return (
-            <Navbar style={navbarStyle} fixed="top" light expand="sm">
-                <Container style={navbarContainerStyle}>
-                    <NavbarToggler style={menuButtonStyle} onClick={this.toggleMenu}/>
-                    <Collapse className="w-100" navbar>
-                        {this.props.loggedIn && this.getLeftNavBar()}
-                    </Collapse>
+    const getGamblerAccountBalance = (gambler: GamblerInfo) => {
+        return gambler.money - gambler.pending;
+    };
 
-                    <NavbarBrand style={brandStyle} href="/" className="fixedTop" mx="auto">FAKE STACKS</NavbarBrand>
+    const navLink = (label: string, path: string, onClick?: (e) => void) => {
+        return <NavLink id={label.toLowerCase().split(' ').join('-')} style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
+    };
 
-                    <NavbarToggler style={betSlipButtonStyle} onClick={this.toggleBetSlip}>
-                        <span style={badgeContainerStyle}>
-                            <Badge style={betSlipBadgeStyle} pill>{this.props.cartBets.length}</Badge>
-                            <img src="/images/bets-menu.svg"/>
-                        </span>
-                    </NavbarToggler>
+    const isAdmin = (league: League, gambler?: Gambler) => {
+        return !!gambler && league.admin === gambler.user.id;
+    };
 
-                    {this.props.loggedIn &&
-                        <MediaQuery maxWidth={576}>
-                            <BetSlipCollapse isOpen={this.state.mobileBetSlipOpen}>
-                                <BetSlip/>
-                            </BetSlipCollapse>
-                        </MediaQuery>
-                    }
-
-                    <Collapse className="w-100 justify-content-end" navbar>
-                        {this.props.loggedIn && !!this.props.gambler && this.getRightNavBar()}
-                    </Collapse>
-                </Container>
-            </Navbar>
-        );
-    }
-
-    getLeftNavBar =  () => {
+    const getLeftNavBar = (league: League, gambler?: Gambler) => {
         return <Nav className="justify-content-left" navbar>
-            <NavItem>{this.navLink("GAMES", "/games")}</NavItem>
-            <NavItem>{this.navLink("STANDINGS", "/standings")}</NavItem>
-            <NavItem>{this.navLink("BETS", "/bets")}</NavItem>
-            {this.isAdmin() && <NavItem>{this.navLink("MANAGE", "/league/settings")}</NavItem>}
+            <NavItem>{navLink("GAMES", "/games")}</NavItem>
+            <NavItem>{navLink("STANDINGS", "/standings")}</NavItem>
+            <NavItem>{navLink("BETS", "/bets")}</NavItem>
+            {isAdmin(league, gambler) && <NavItem>{navLink("MANAGE", "/league/settings")}</NavItem>}
         </Nav>;
     };
 
-    getRightNavBar = () => {
+    const getRightNavBar = (user?: User, gambler?: GamblerInfo) => {
         return <Nav className="justify-content-end" navbar>
             <UncontrolledDropdown>
-                <DropdownToggle style={navbarLinkStyle} nav>
-                    {this.props.gambler.user.firstName.toUpperCase()} {this.props.gambler.user.lastName.toUpperCase()}
-                </DropdownToggle>
+                {!!user &&
+                    <DropdownToggle style={navbarLinkStyle} nav>
+                        {user.firstName.toUpperCase()} {user.lastName.toUpperCase()}
+                    </DropdownToggle>
+                }
                 <DropdownMenu right>
                     <DropdownItem>
-                        {this.navLink("EDIT", "/profile")}
+                        {navLink("EDIT", "/profile")}
                     </DropdownItem>
                     <DropdownItem>
-                        {this.navLink("UPDATE PASSWORD", "/user/password")}
+                        {navLink("UPDATE PASSWORD", "/user/password")}
                     </DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
+            {!!gambler &&
+                <NavItem>
+                    {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account")}
+                </NavItem>
+            }
             <NavItem>
-                {this.navLink(`$${this.getGamblerAccountBalance().toFixed(2)}`, "/account")}
-            </NavItem>
-            <NavItem>
-                {this.navLink("SIGN OUT", "/logout", this.handleLogout)}
+                {navLink("SIGN OUT", "/logout", handleLogout)}
             </NavItem>
         </Nav>;
     };
 
-    private getGamblerAccountBalance() {
-        if (this.props.gambler) {
-            return this.props.gambler.money - this.props.gambler.pending;
-        }
-        return 0;
-    }
+    const gambler = leagueStore.gamblers.find(g => g.id === gamblerStore.gambler?.id)
+    const authenticated = authStore.authenticated;
 
-    navLink = (label: string, path: string, onClick?: (e) => void) => {
-        return <NavLink style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
-    };
+    return (
+        <Navbar style={navbarStyle} fixed="top" light expand="md">
+            <Container style={navbarContainerStyle}>
+                <NavbarToggler style={menuButtonStyle} onClick={toggleMobileMenu}/>
+                <Collapse navbar>
+                    {authenticated && leagueStore.league && getLeftNavBar(leagueStore.league, gambler)}
+                </Collapse>
 
-    isAdmin = () => {
-        return !!this.props.gambler && this.props.league.admin === this.props.gambler.user.id;
-    }
-}
+                <NavbarBrand style={brandStyle} href="/" mx="auto">FAKE STACKS</NavbarBrand>
 
-const mapStateToProps = (state) => {
-    return {
-        loggedIn: isLoggedIn(state),
-        league: getLeague(state),
-        gambler: getGamblerWithAccount(state, state.gambler.id),
-        cartBets: getCartBets(state),
-    };
-};
+                <NavbarToggler style={betSlipButtonStyle}>
+                    <span style={badgeContainerStyle}>
+                        <Badge style={betSlipBadgeStyle} pill>
+                            {cartStore.bets.length}
+                        </Badge>
+                        <img src="/images/bets-menu.svg" alt="Bets Menu" onClick={toggleBetSlip}/>
+                    </span>
+                </NavbarToggler>
 
-const mapDispatchToProps = {
-    handleLogout: logout,
-};
+                {authenticated && gambler && isMobile &&
+                    <BetSlipCollapse isOpen={mobileBetSlipOpen}>
+                        <BetSlip gamblerId={gambler.id}/>
+                    </BetSlipCollapse>
+                }
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(NavHeader);
+                <Collapse className="justify-content-end" navbar>
+                    {authenticated && getRightNavBar(userStore.user, gambler)}
+                </Collapse>
+            </Container>
+        </Navbar>
+    );
+});
+
+export default NavHeader;
 
 

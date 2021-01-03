@@ -11,30 +11,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.signin-page {
-  position: absolute;
-}
-
-.signin-page-overlay {
-  position: absolute;
-}
-
-.mobile-menu {
-  position: absolute;
-}
-
-.menu-close {
-  position: absolute;
-}
-
-.menu-account-bottom {
-  position: absolute;
-}
-
-.league-header {
-  position: absolute;
-}
-
 .btn {
   border-radius: 0px;
 }

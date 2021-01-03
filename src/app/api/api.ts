@@ -1,59 +1,90 @@
-
-import {post, get, deLete, put} from './fetch';
-import {Credentials} from "../auth/authModels";
-import {Bet} from "../types";
+import {deLete, get, post, put} from './fetch';
+import {
+    AuthToken,
+    BetOrParlayWrapper,
+    Bettable,
+    CartParlay,
+    Credentials,
+    League,
+    LeagueInvite,
+    LeagueRequest,
+    PotentialBet,
+    UserContext,
+    UserRegistrationInfo
+} from "../types";
+import {GamblerBets} from "../bets/bet.store";
 
 export interface Token {
-    userId: number;
+    id: number;
     issueDate: number;
 }
 
-export class ResponseError extends Error {
-    constructor(message: string, code: string) {
-        super(message);
-        this.name = 'ResponseError';
-        this.code = code;
-    }
-    code: string;
-}
-
-export interface LoginUser {
-    email: string;
-    password: string;
-    token?: string;
-}
-
-export const login: any = async ({
-                                email,
-                                password,
-                                token,
-                            }: Credentials): Promise<string> => {
+export const login = async ({email, password, token}: Credentials): Promise<AuthToken> => {
     const response = await post({
         path: `/api/auth`,
         body: JSON.stringify({ email, password, token }),
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-export const getUserContext: any = async (userId): Promise<string> => {
+export const loginWithGoogle = async ({email, token}): Promise<AuthToken> => {
+    const response = await post({
+        path: `/api/google-auth`,
+        body: JSON.stringify({ email, token }),
+    });
+
+    return await response.json();
+};
+
+export const registerUser = async (user: UserRegistrationInfo): Promise<AuthToken> => {
+    const response = await post({
+        path: `/api/users`,
+        body: JSON.stringify(user),
+    });
+
+    return await response.json();
+};
+
+export const requestPasswordReset = async (email): Promise<void> => {
+    await post({
+        path: `/api/password/reset-request`,
+        body: JSON.stringify({ email }),
+    });
+};
+
+export const resetUserPassword = async (token, password): Promise<void> => {
+    await put({
+        path: `/api/password/update`,
+        body: JSON.stringify({token, password, confirmation: password})
+    })
+}
+
+export const registerLeague = async (userId: number, leagueInfo: LeagueRequest): Promise<League> => {
+    const response = await post({
+        path: `/api/leagues`,
+        body: JSON.stringify({...leagueInfo, weeklyBetAccountRatio: leagueInfo.weeklyBetAccountRatio / 100, admin: userId}),
+    });
+
+    return await response.json();
+};
+
+export const getUserContext = async (userId): Promise<UserContext> => {
     const response = await get({
         path: `/api/users/${userId}/context`,
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-export const updateUser = async (userId, user) => {
+export const updateUser = async (userId, user): Promise<void> => {
     await put({
         path: `/api/users/${userId}`,
         body: JSON.stringify(user)
     });
 };
 
-export const updateUserPass = async (userId, password) => {
+export const updateUserPass = async (userId, password): Promise<void> => {
     await put({
         path: `/api/users/${userId}/password`,
         body: JSON.stringify({
@@ -63,118 +94,87 @@ export const updateUserPass = async (userId, password) => {
     });
 };
 
-export const postInvite: any = async (leagueId: number, email: string) => {
+export const joinLeague = async (userId, token): Promise<void> => {
+    await post({
+        path: `/api/users/${userId}/leagues`,
+        body: JSON.stringify({
+            token: token,
+        })
+    });
+}
+
+export const switchUserLeague = async (userId, leagueId): Promise<void> => {
+    await put({
+        path: `/api/users/${userId}/current-league`,
+        body: JSON.stringify({
+            leagueId: leagueId,
+        })
+    })
+}
+
+export const postInvite = async (leagueId: number, email: string): Promise<LeagueInvite> => {
     const response = await post({
         path: `/api/leagues/${leagueId}/invites`,
         body: JSON.stringify({ email })
     });
 
-    if (response.status === 201) {
-        let data = await response.json();
-        return data;
-    }
+    return await response.json();
 };
 
-export const revokeInvite: any = async (leagueId: number, inviteId: number) => {
+export const revokeInvite = async (leagueId: number, inviteId: number): Promise<void> => {
     await deLete({
         path: `/api/leagues/${leagueId}/invites/${inviteId}`,
     });
     return;
 };
 
-export const getTransactionsForGambler: any = async (gamblerId): Promise<string> => {
+export const getTransactionsForGambler = async (gamblerId): Promise<BetOrParlayWrapper[]> => {
     const response = await get({
         path: `/api/gamblers/${gamblerId}/transactions`,
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-export const getGamesForSport: any = async (sportKey): Promise<string> => {
+export const getGamesForSport = async (sportKey): Promise<{bettables: Bettable[]}> => {
     const response = await get({
         path: `/api/games?sport=${sportKey}`,
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-export const getBetsForLeague: any = async (leagueId): Promise<string> => {
+export const getBetsForLeague = async (leagueId): Promise<GamblerBets> => {
     const response = await get({
         path: `/api/leagues/${leagueId}/bets`,
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-export const getGamblerBetCart: any = async (gamblerId): Promise<string> => {
-    const response = await get({
-        path: `/api/gamblers/${gamblerId}/cart`,
-    });
-
-    let data = await response.json();
-    return data;
-};
-
-export const createCartBet: any = async (gamblerId: number, bet: Bet) => {
+export const validateBets = async (gamblerId: number, bets: PotentialBet[], parlay?: CartParlay): Promise<string[]> => {
     const response = await post({
-        path: `/api/gamblers/${gamblerId}/cart`,
-        body: JSON.stringify(bet)
+        path: `/api/gamblers/${gamblerId}/cart/validate`,
+        body: JSON.stringify({bets, parlay})
     });
 
-    if (response.status === 201) {
-        let data = await response.json();
-        return data;
-    }
+    return await response.json();
 };
 
-export const editCartAmount: any = async (gamblerId: number, cartId: number, amount: number) => {
-    await put({
-        path: `/api/gamblers/${gamblerId}/cart/${cartId}`,
-        body: JSON.stringify({amount: amount})
+export const makeBets = async (gamblerId: number, bets: PotentialBet[], parlay?: CartParlay) => {
+    await post({
+        path: `/api/gamblers/${gamblerId}/cart/confirm`,
+        body: JSON.stringify({bets, parlay})
     });
 };
 
-export const removeFromCart: any = async (gamblerId: number, cartId: number) => {
-    await deLete({
-        path: `/api/gamblers/${gamblerId}/cart/${cartId}`,
-    });
-    return;
-};
-
-export const toggleParlayOnGamblerBetCart: any = async (gamblerId, active: boolean) => {
-    await put({
-        path: `/api/gamblers/${gamblerId}/cart/parlay`,
-        body: JSON.stringify({active: active})
-    });
-};
-
-export const editParlayAmount: any = async (gamblerId: number, amount: number) => {
-    await put({
-        path: `/api/gamblers/${gamblerId}/cart/parlay`,
-        body: JSON.stringify({amount: amount})
-    });
-};
-
-export const validateBets: any = async (gamblerId: number) => {
+export const getInviteByToken = async (token: string) => {
     const response = await get({
-        path: `/api/gamblers/${gamblerId}/cart/validate`
+        path: `/api/invites?token=${token}`
     });
 
-    let data = await response.json();
-    return data;
-};
-
-export const makeBets: any = async (gamblerId: number) => {
-    const response = await get({
-        path: `/api/gamblers/${gamblerId}/cart/confirm`
-    });
-
-    let data = await response.json();
-    return data;
-};
+    return await response.json();
+}
 
 
 

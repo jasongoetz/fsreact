@@ -1,10 +1,9 @@
 import React from "react";
-import {getLeagueGamblers} from "../league/leagueSelector";
-import {useSelector} from "react-redux";
 import {GamblerInfo} from "../types";
+import {useGlobalStores} from "../context/global_context";
 
 export const MiniStandings = () => {
-    const gamblers = useSelector(state => getLeagueGamblers(state).slice(0, 7));
+    const { leagueStore } = useGlobalStores();
 
     return (
         <table className='table standings'>
@@ -16,7 +15,7 @@ export const MiniStandings = () => {
             </tr>
             </thead>
             <tbody>
-            {gamblers.map((gambler: GamblerInfo , index: number) => {
+            {leagueStore.gamblers.slice(0,7).map((gambler: GamblerInfo, index: number) => {
                 return (<tr key={`mini-standings-${gambler.id}`}>
                     <td>{index + 1}</td>
                     <td>{gambler.user.firstName} {gambler.user.lastName}</td>

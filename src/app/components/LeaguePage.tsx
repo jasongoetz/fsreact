@@ -1,37 +1,39 @@
-import {Component} from "react";
 import React from "react";
-import {connect} from "react-redux";
-import {loadUserContext} from "../user/userActions";
-import {getLeague} from "../league/leagueSelector";
 import {Col, Container, Row} from "reactstrap";
 import {MiniStandings} from "./MiniStandings";
 import {Rules} from "./Rules";
 import MiniBets from "./MiniBets";
 import HomePagePanel from "./HomePagePanel";
-import {League} from "../types";
-
-export interface Props {
-    loadUserContext: () => void;
-    league: League;
-}
-
-export interface State {
-}
+import {useGlobalStores} from "../context/global_context";
+import {observer} from "mobx-react";
+import {LoadingContainer} from "./LoadingContainer";
+import styled from "@emotion/styled";
+import {useMediaQuery} from "react-responsive";
+import {LeagueSwitcher} from "./LeagueSwitcher";
 
 const leagueHeaderStyle = {
     top: "40px",
     right: "0px",
+    position: 'absolute' as 'absolute',
     width: "100%",
     backgroundColor: "#003D63",
     height: "75px",
     color: "#FFFFFF"
 };
 
-const leagueHeaderLeagueNameStyle = {
-    fontSize: "28px",
-    marginTop: "25px",
-    display: "inline-block",
-};
+const LeagueNameHeader = styled.div<{mobile: boolean}>(
+    {
+        marginTop: "25px",
+        display: "inline-block",
+        textTransform: 'uppercase',
+    },
+    ({ mobile }) => {
+        return {
+            marginTop: mobile ? "30px" : "25px",
+            fontSize: mobile ? "20px" : "28px",
+        }
+    },
+);
 
 const homePageStyle = {
     marginTop: "75px"
@@ -41,62 +43,52 @@ const homePagePanelStyle = {
     padding: "10px 15px"
 };
 
-class LeaguePage extends Component<Props, State> {
+const LeaguePage: React.FC = observer(() => {
 
-    async componentDidMount() {
-        await this.props.loadUserContext();
+    const isMobile = useMediaQuery({ query: '(max-width: 415px)' });
+
+    const { userStore, leagueStore } = useGlobalStores();
+    const league = leagueStore.league;
+
+    if (!league) {
+        return <LoadingContainer/>;
     }
 
-    render() {
-        return <div>
-
-            <div style={leagueHeaderStyle} className="league-header">
+    return (
+        <div>
+            <div style={leagueHeaderStyle}>
                 <Container>
-                    <div style={leagueHeaderLeagueNameStyle}>
-                        { this.props.league.name && this.props.league.name.toUpperCase() }
-                    </div>
+                    <LeagueNameHeader mobile={isMobile}>{league.name}</LeagueNameHeader>
+                    <LeagueSwitcher leagues={userStore.leagues} currentLeagueId={league.id} mobile={isMobile}/>
                 </Container>
             </div>
 
             <Container style={homePageStyle}>
                 <Row>
-                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}} lg={{size: 4, offset: 0}}>
+                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}}
+                         lg={{size: 4, offset: 0}}>
                         <HomePagePanel title="The Rules" linkUrl="/games" action="START BETTING">
                             <Rules/>
                         </HomePagePanel>
                     </Col>
 
-                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}} lg={{size: 4, offset: 0}}>
+                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}}
+                         lg={{size: 4, offset: 0}}>
                         <HomePagePanel title="Leaderboard" linkUrl="/standings" action="SEE THE STANDINGS">
                             <MiniStandings/>
                         </HomePagePanel>
                     </Col>
 
-                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}} lg={{size: 4, offset: 0}}>
+                    <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}}
+                         lg={{size: 4, offset: 0}}>
                         <HomePagePanel title="Pending Big Bets" linkUrl="/bets" action="SEE ALL BETS">
                             <MiniBets/>
                         </HomePagePanel>
                     </Col>
                 </Row>
             </Container>
+        </div>
+    );
+});
 
-        </div>;
-    }
-
-}
-
-
-const mapStateToProps = (state: State) => {
-    return {
-        league: getLeague(state),
-    };
-};
-
-const mapDispatchToProps = {
-    loadUserContext,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(LeaguePage);
+export default LeaguePage;

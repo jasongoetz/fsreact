@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
+import React, {FC, useState} from 'react';
 import './App.css';
 import NavHeader from "./components/NavHeader";
 import Login from "./components/Login";
 import MobileMenu from "./components/MobileMenu";
 import {Fonts} from "./theme/theme";
 import ImagePage from "./components/ImagePage";
-import {BrowserRouter as Router, Route, Link, Redirect, Switch} from "react-router-dom";
-import { Provider } from "react-redux";
-import store from "./store";
-import PrivateRoute from "./components/PrivateRoute";
-import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import PrivateLeagueRoute from "./components/routing/PrivateLeagueRoute";
+import UnauthenticatedRoute from "./components/routing/UnauthenticatedRoute";
 import LeaguePage from "./components/LeaguePage";
 import GamesPage from "./components/GamesPage";
 import Standings from "./components/Standings";
@@ -20,71 +18,34 @@ import LeagueManagement from "./components/LeagueManagement";
 import ErrorPanel from "./components/error/ErrorPanel";
 import ProfilePage from "./components/ProfilePage";
 import PasswordPage from "./components/PasswordPage";
-import MediaQuery from "react-responsive";
-
-export interface State {
-    showMobileMenu: boolean
-}
+import UserContext from "./components/UserContext";
+import Registration from "./components/Registration";
+import PrivateUnaffiliatedRoute from "./components/routing/PrivateUnaffiliatedRoute";
+import CreateLeagueForm from "./components/CreateLeagueForm";
+import {useGlobalStores} from "./context/global_context";
+import {RSVPPage} from "./components/RSVPPage";
+import ForgotPassword from "./components/ForgotPassword";
+import PasswordReset from "../components/PasswordReset";
 
 const appStyle = {
     fontFamily: Fonts.mainSite
 };
 
-class App extends Component {
+const App: FC = () => {
 
-    state = {
-        showMobileMenu: false,
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+    const toggleMobileMenu = () => {
+        setShowMobileMenu(!showMobileMenu);
     };
 
-    toggleMobileMenu = () => {
-        this.setState({
-            showMobileMenu: !this.state.showMobileMenu
-        });
-    };
-
-    render() {
-        return (
-            <Provider store={store}>
-                <Router>
-                    <div style={appStyle} className="App">
-                        <NavHeader
-                            toggleMobileMenu={this.toggleMobileMenu}
-                            toggleBetSlip={() => alert("NOT DONE YET")}
-                        />
-
-                        {this.state.showMobileMenu && <MobileMenu
-                            isAdmin={true}
-                            gamblerMoney={0}
-                            closeMenu={this.toggleMobileMenu}
-                        />}
-
-                        <Switch>
-                            <UnauthenticatedRoute exact path="/login" component={this.LoginPage} redirectTo="/" />
-                            <PrivateRoute exact path="/" component={this.HomePage} />
-                            <PrivateRoute exact path="/games" component={this.GamePage} />
-                            <PrivateRoute exact path="/standings" component={this.StandingsPage} />
-                            <PrivateRoute exact path="/bets" component={this.BetsPage} />
-                            <PrivateRoute exact path="/account" component={this.AccountPage}/>
-                            <PrivateRoute exact path="/transaction/show/:gamblerId" component={this.AccountPage}/>
-                            <PrivateRoute exact path="/league/settings" component={this.LeagueManagePage} />
-                            <PrivateRoute exact path="/confirmation" component={this.ConfirmationPage} />
-                            <PrivateRoute exact path="/profile" component={this.ProfileManagePage} />
-                            <PrivateRoute exact path="/user/password" component={this.PasswordManagePage} />
-                            <Route component={this.Page404} />
-                        </Switch>
-                    </div>
-                </Router>
-            </Provider>
-        );
-    }
-
-    HomePage = (navProps) => {
-        return (
+    const HomePage = (navProps) => {
+        return <UserContext>
             <LeaguePage {...navProps}/>
-        )
+        </UserContext>;
     };
 
-    LoginPage = (navProps) => {
+    const LoginPage = (navProps) => {
         return (
             <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
                 <Login {...navProps}/>
@@ -92,45 +53,147 @@ class App extends Component {
         )
     };
 
-    GamePage = () => {
-        return <GamesPage/>;
+    const RegistrationPage = (navProps) => {
+        return (
+            <ImagePage headline={"WELCOME TO FAKE STACKS."}>
+                <Registration {...navProps}/>
+            </ImagePage>
+        )
     };
 
-    StandingsPage = () => {
-        return <Standings/>;
+    const ForgotPasswordPage = (navProps) => {
+        return (
+            <ImagePage>
+                <ForgotPassword {...navProps}/>
+            </ImagePage>
+        )
+    }
+
+    const PasswordResetPage = (navProps) => {
+        return (
+            <ImagePage>
+                <PasswordReset {...navProps}/>
+            </ImagePage>
+        )
+    }
+
+    const NewLeaguePage = (navProps) => {
+        const {authStore} = useGlobalStores();
+        if (authStore.userId) {
+            return (
+                <UserContext>
+                    <ImagePage headline={"CREATE YOUR LEAGUE."}>
+                        <CreateLeagueForm userId={authStore.userId} {...navProps}/>
+                    </ImagePage>
+                </UserContext>
+            )
+        }
     };
 
-    BetsPage = () => {
-        return <LeagueBetList/>;
+    const JoinLeaguePage = (navProps) => {
+        return <div>JOIN A LEAGUE TODAY</div>;
     };
 
-    LeagueManagePage = () => {
-        return <LeagueManagement/>
+    const GamePage = () => {
+        return <UserContext>
+            <GamesPage/>
+        </UserContext>
     };
 
-    ConfirmationPage = () => {
+    const StandingsPage = () => {
+        return <UserContext>
+            <Standings/>
+        </UserContext>
+    };
+
+    const BetsPage = () => {
+        return <UserContext>
+            <LeagueBetList/>
+        </UserContext>
+    };
+
+    const LeagueManagePage = () => {
+        return <UserContext>
+            <LeagueManagement/>
+        </UserContext>;
+    };
+
+    const BetConfirmationPage = () => {
         return <ConfirmationPage/>;
     };
 
-    AccountPage = ({match}) => {
-        return <AccountPage gamblerId={match.params.gamblerId}/>
+    const UserAccountPage = ({match}) => {
+        return <UserContext>
+            <AccountPage providedGamblerId={match.params.gamblerId}/>
+        </UserContext>;
     };
 
-    ProfileManagePage = () => {
-        return <ImagePage>
-            <ProfilePage />
-        </ImagePage>;
+    const ProfileManagePage = () => {
+        const {userStore} = useGlobalStores();
+        return <UserContext>
+            <ImagePage>
+                {userStore.user ? <ProfilePage user={userStore.user}/> : <></>}
+            </ImagePage>
+        </UserContext>;
     };
 
-    PasswordManagePage = () => {
-        return <ImagePage>
-            <PasswordPage />
-        </ImagePage>;
+    const PasswordManagePage = () => {
+        const {authStore} = useGlobalStores();
+        if (authStore.userId) {
+            return <ImagePage>
+                <PasswordPage userId={authStore.userId}/>
+            </ImagePage>;
+        }
     };
 
-    Page404 = () => {
+    const Page404 = () => {
         return <ErrorPanel statusCode={404}/>
-    }
-}
+    };
+
+    const RSVPPageContainer = (navProps) => {
+        return (
+            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+                <RSVPPage {...navProps}/>
+            </ImagePage>
+        )
+    };
+
+    return (
+        <Router>
+            <div style={appStyle} className="App">
+                <NavHeader
+                    toggleMobileMenu={toggleMobileMenu}
+                />
+
+                {showMobileMenu && <MobileMenu
+                    isAdmin={true}
+                    gamblerMoney={0}
+                    closeMenu={toggleMobileMenu}
+                />}
+
+                <Switch>
+                    <UnauthenticatedRoute exact path="/login" component={LoginPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/rsvp" component={RSVPPageContainer} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/register" component={RegistrationPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/forgotpassword" component={ForgotPasswordPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/passwordreset" component={PasswordResetPage} redirectTo="/"/>
+                    <PrivateLeagueRoute exact path="/" component={HomePage}/>
+                    <PrivateUnaffiliatedRoute exact path="/league/join" component={JoinLeaguePage}/>
+                    <PrivateUnaffiliatedRoute exact path="/league/new" component={NewLeaguePage}/>
+                    <PrivateLeagueRoute exact path="/games" component={GamePage}/>
+                    <PrivateLeagueRoute exact path="/standings" component={StandingsPage}/>
+                    <PrivateLeagueRoute exact path="/bets" component={BetsPage}/>
+                    <PrivateLeagueRoute exact path="/account" component={UserAccountPage}/>
+                    <PrivateLeagueRoute exact path="/transaction/show/:gamblerId" component={UserAccountPage}/>
+                    <PrivateLeagueRoute exact path="/league/settings" component={LeagueManagePage}/>
+                    <PrivateLeagueRoute exact path="/confirmation" component={BetConfirmationPage}/>
+                    <PrivateLeagueRoute exact path="/profile" component={ProfileManagePage}/>
+                    <PrivateLeagueRoute exact path="/user/password" component={PasswordManagePage}/>
+                    <Route component={Page404}/>
+                </Switch>
+            </div>
+        </Router>
+    );
+};
 
 export default App;

@@ -1,13 +1,14 @@
 import React from "react";
 import {League} from "../types";
 import {Col, Container, Row, Table} from "reactstrap";
+import {Colors} from "../theme/theme";
 
 export const leagueTableStyle = {
     marginTop: '20px',
 };
 
 export const leagueTableHeadStyle = {
-    backgroundColor: '#ececec', //TODO
+    backgroundColor: Colors.lightGray
 };
 
 export const firstColumnStyle = {

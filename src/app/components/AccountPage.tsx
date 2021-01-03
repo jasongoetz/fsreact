@@ -1,19 +1,15 @@
 import React, {useEffect} from "react";
-import {connect, useDispatch, useSelector} from "react-redux";
-import {loadUserContext} from "../user/userActions";
-import {getLeague} from "../league/leagueSelector";
 import {Container, Table} from "reactstrap";
 import {PageHeader} from "./PageHeader";
-import {getGamblerWithAccount} from "../gambler/gamblerSelector";
-import {loadTransactions} from "../transactions/transactionActions";
-import {getTransactionsMap} from "../transactions/transactionsSelector";
+import {loadTransactions} from "../transactions/transaction.actions";
 import moment from 'moment';
 import {TransactionRow} from "./TransactionRow";
-import {State} from "../reducers/root";
-import {BetOrParlay} from "../types";
+import {BetOrParlayWrapper} from "../types";
+import {useGlobalStores} from "../context/global_context";
+import {observer} from "mobx-react";
 
-export interface Props {
-    gamblerId?: number;
+interface Props {
+    providedGamblerId?: string;
 }
 
 const userRecordStyle = {
@@ -26,30 +22,25 @@ const userStatsStyle = {
     paddingBottom: "20px"
 };
 
-const AccountPage: React.FC<Props> = ({gamblerId}) => {
+const AccountPage: React.FC<Props> = observer(({providedGamblerId}) => {
 
-    const dispatch = useDispatch();
-
-    const league = useSelector(state => getLeague(state));
-    const gambler =  useSelector((state: State) => getGamblerWithAccount(state, !!gamblerId ? gamblerId : state.gambler.id));
-    const transactionsMap = useSelector(state => getTransactionsMap(state));
+    const { gamblerStore, leagueStore, transactionsStore } = useGlobalStores();
+    const gamblerId = providedGamblerId ? parseInt(providedGamblerId) : gamblerStore.gambler?.id;
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (!league.id) {
-                await dispatch(loadUserContext());
-            }
-            if (gambler && gambler.id) {
-                await dispatch(loadTransactions(gambler.id));
-            }
-        };
-        fetchData();
-    }, [league, gambler]);
+        if (gamblerId) {
+            loadTransactions(gamblerId);
+        }
+    }, [gamblerId]);
 
-    if (!gambler) {
+
+    const gambler = leagueStore.gamblers.find(gambler => gambler.id === gamblerId)
+    if (!leagueStore.league || !gamblerId || !gambler) {
         return <div></div>;
     }
-    let betsAndParlays = transactionsMap[gambler.id] || [];
+    const leagueInfo = leagueStore.league;
+
+    let betsAndParlays = transactionsStore.transactionsByGambler[gamblerId] || [];
     return <Container>
         <PageHeader>{gambler.user.firstName} {gambler.user.lastName}</PageHeader>
         <div style={userStatsStyle}>
@@ -72,16 +63,15 @@ const AccountPage: React.FC<Props> = ({gamblerId}) => {
                 <td>{moment(gambler.user.createdAt).format("dddd, MMMM Do")}</td>
                 <td>Account Creation</td>
                 <td></td>
-                <td>{league.startingAccount.toFixed(2)}</td>
-                <td>{league.startingAccount.toFixed(2)}</td>
+                <td>{leagueInfo.startingAccount.toFixed(2)}</td>
+                <td>{leagueInfo.startingAccount.toFixed(2)}</td>
             </tr>
-            {betsAndParlays && betsAndParlays.map((betOrParlay: BetOrParlay, index) =>
-                <TransactionRow key={`tr-${index}`} betOrParlay={betOrParlay} moneyline={league.moneyline}/>)
+            {betsAndParlays && betsAndParlays.map((betOrParlay: BetOrParlayWrapper, index) =>
+                <TransactionRow key={`tr-${index}`} betOrParlay={betOrParlay} moneyline={leagueInfo.moneyline}/>)
             }
             </tbody>
         </Table>
-
-    </Container>;
-};
+    </Container>
+});
 
 export default AccountPage;

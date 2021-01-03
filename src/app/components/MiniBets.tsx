@@ -1,7 +1,6 @@
 import React from "react";
-import {Bet, FullLeague, Sport} from "../types";
-import {getLeague} from "../league/leagueSelector";
-import {useSelector} from "react-redux";
+import {FullBet, Sport} from "../types";
+import {useGlobalStores} from "../context/global_context";
 
 const pendingBetPanelStyle = {
     borderRadius: "0px",
@@ -22,7 +21,7 @@ const betHeadlineStyle = {
 };
 
 const shortenTeamName = (teamName: string, sport: Sport) => {
-    if (sport == "NFL") {
+    if (sport === "NFL") {
         const lastIndex = teamName.lastIndexOf(" ");
         return teamName.substring(0, lastIndex);
     }
@@ -31,10 +30,10 @@ const shortenTeamName = (teamName: string, sport: Sport) => {
     }
 };
 
-const getBetSummary = (bet: Bet) => {
-    if (bet.sideId == bet.bettable.sideId1) {
+const getBetSummary = (bet: FullBet) => {
+    if (bet.sideId === bet.bettable.sideId1) {
         return `${bet.bettable.team1} ${bet.line}`;
-    } else if (bet.sideId == bet.bettable.sideId2) {
+    } else if (bet.sideId === bet.bettable.sideId2) {
         return `${bet.bettable.team2} ${bet.line}`;
     } else {
         return `${bet.overunder === 'OVER' ? "Over" : "Under"} ${bet.line}`;
@@ -42,11 +41,12 @@ const getBetSummary = (bet: Bet) => {
 };
 
 const MiniBets = () => {
-    const league: FullLeague = useSelector(state => getLeague(state));
+    const { leagueStore } = useGlobalStores();
+    const league = leagueStore.league!;
 
     return (
         <div style={pendingBetPanelStyle}>
-            {league.topBets.bets.map(bet => {
+            {leagueStore.topBets.bets.map(bet => {
                 return <div key={`top-bet-card-${bet.id}`} style={pendingMiniBetCardStyle}>
                     <div style={betHeadlineStyle}>
                         ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}

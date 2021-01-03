@@ -1,24 +1,24 @@
 import React, {useState} from 'react';
-import {Button, Col, Container, FormFeedback, FormGroup, Input, Row, Table} from "reactstrap";
+import {Button, Col, Container, FormFeedback, FormGroup, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
-import {LeagueContext} from "../league/leagueReducer";
 import {FSButton} from "./FSComponents";
-import {useDispatch} from "react-redux";
-import {inviteUser, uninviteUser} from "../league/leagueActions";
 import {isEmailValid} from "../../util/EmailUtil";
 import {FSInput} from "./FSForm";
+import {GamblerInfo, LeagueInvite} from "../types";
+import {inviteUser, uninviteUser} from "../league/league.actions";
+import {observer} from "mobx-react";
 
 interface Props {
-    league: LeagueContext;
+    leagueId: number;
+    gamblers: GamblerInfo[];
+    invites: LeagueInvite[];
 }
 
-const gamblerHasEmail = (email: string, league: LeagueContext) => league.gamblers.some(gambler => gambler.user.email === email);
+const gamblerHasEmail = (email: string, gamblers: GamblerInfo[]) => gamblers.some(gambler => gambler.user.email === email);
 
-const existingInviteHasEmail = (email: string, league: LeagueContext) => league.invites.some(invite => invite.email === email);
+const existingInviteHasEmail = (email: string, invites: LeagueInvite[]) => invites.some(invite => invite.email === email);
 
-const LeagueInvites: React.FC<Props> = ({league}) => {
-
-    const dispatch = useDispatch();
+const LeagueInvites: React.FC<Props> = observer(({gamblers, invites}) => {
 
     const [inviteError, setInviteError] = useState<string | undefined>(undefined);
     const [inviteEmail, setInviteEmail] = useState('');
@@ -28,7 +28,7 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
         <Container>
             <Row>
                 <Col lg={6} md={8} sm={10}>
-                <Table size={'sm'} style={leagueTableStyle}>
+                <Table id={'leagueInvites'} size={'sm'} style={leagueTableStyle}>
                     <thead style={leagueTableHeadStyle}>
                     <tr>
                         <th style={firstColumnStyle}>League Invites</th>
@@ -36,13 +36,13 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {league.invites.map(invite =>
+                    {invites.map(invite =>
                         <tr key={`invite_${invite.id}`}>
                             <td>
                                 {invite.email}
                             </td>
                             <td>
-                                <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => dispatch(uninviteUser(league.id, invite.id))}>
+                                <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => uninviteUser(invite.id)}>
                                     Revoke Invite
                                 </Button>
                             </td>
@@ -74,17 +74,17 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
                                 type="submit"
                                 style={{padding: '3px 15px'}}
                                 onClick={() => {
-                                    if (gamblerHasEmail(inviteEmail, league)) {
+                                    if (gamblerHasEmail(inviteEmail, gamblers)) {
                                         setInviteError('Existing league member has this email');
                                         setEmailValid(false);
                                         return;
                                     }
-                                    else if (existingInviteHasEmail(inviteEmail, league)) {
+                                    else if (existingInviteHasEmail(inviteEmail, invites)) {
                                         setInviteError('Existing invite has this email');
                                         setEmailValid(false);
                                         return;
                                     }
-                                    dispatch(inviteUser(inviteEmail, league));
+                                    inviteUser(inviteEmail);
                                     setInviteEmail('');
                                 }}
                             >
@@ -98,7 +98,7 @@ const LeagueInvites: React.FC<Props> = ({league}) => {
             </Row>
         </Container>
     );
-};
+});
 
 export default LeagueInvites;
 

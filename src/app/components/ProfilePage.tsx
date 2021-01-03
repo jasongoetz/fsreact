@@ -1,38 +1,27 @@
-import React, {useEffect, useState} from 'react';
-import {Col, Container, FormFeedback, FormGroup, Label, Row} from "reactstrap";
-import {loadUserContext, updateUserProfile} from "../user/userActions";
-import {useDispatch, useSelector} from "react-redux";
-import {getUser} from "../user/userSelector";
+import React from 'react';
+import {Col, Container, FormGroup, Label, Row} from "reactstrap";
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {User} from "../types";
 import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import {authenticate} from "../auth/authActions";
+import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {updateUserProfile} from "../user/user.actions";
 
-const ProfilePage: React.FC<RouteComponentProps> = ({history}) => {
+interface Props extends RouteComponentProps {
+    user: User;
+}
 
-    const user: User = useSelector(state => getUser(state));
-    const dispatch = useDispatch();
+const ProfilePage: React.FC<Props> = ({history, user}) => {
 
-    useEffect(() => {
-        const loadContext = async () => {
-            if (!user.id) {
-                await dispatch(loadUserContext());
-            }
-        };
-        loadContext();
-    }, []);
-
-    const updateProfile = async (values, actions) => {
+    const updateProfile = async (values) => {
         try {
-            await dispatch(updateUserProfile({
+            await updateUserProfile(user.id,{
                 firstName: values.firstName,
                 lastName: values.lastName,
                 email: values.email,
                 notifyprocessedbets: values.notifyprocessedbets,
-            }));
+            });
 
             history.push('/');
         } catch (err) {
@@ -112,6 +101,8 @@ const ProfilePage: React.FC<RouteComponentProps> = ({history}) => {
                                 invalid={!!formik.errors.email}
                                 name="email"
                                 type="email"
+                                autoCapitalize={"off"}
+                                autoCorrect={"off"}
                                 onChange={formik.handleChange}
                                 value={formik.values.email}
                                 required
@@ -128,7 +119,7 @@ const ProfilePage: React.FC<RouteComponentProps> = ({history}) => {
                             />
                             <Label for="notifyprocessedbets" check>Email me when bets are processed</Label>
                         </FormGroup>
-                        <FSWideButton disabled={Object.keys(formik.errors).length > 0} color="primary" size="lg" style={{marginTop: '15px'}}>UPDATE PROFILE</FSWideButton>
+                        <FSWideButton type="submit" disabled={Object.keys(formik.errors).length > 0} color="primary" size="lg" style={{marginTop: '15px'}}>UPDATE PROFILE</FSWideButton>
                     </FSForm>
                 </Col>
             </Row>

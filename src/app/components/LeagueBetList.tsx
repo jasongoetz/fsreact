@@ -1,64 +1,40 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {Col, Container, Row} from "reactstrap";
+import React, {useEffect} from "react";
+import {Container, Row} from "reactstrap";
 import PendingBetCard from "./PendingBetCard";
-import {GamblerInfo} from "../types";
-import {loadUserContext} from "../user/userActions";
-import {} from "../api/api";
-import {loadBets} from "../bets/betActions";
-import {getBetsAndParlaysByGambler} from "../bets/betSelector";
 import {PageHeader} from "./PageHeader";
+import {useGlobalStores} from "../context/global_context";
+import {observer} from "mobx-react";
+import {loadBets} from "../bets/bet.actions";
 
-export interface Props {
-    betsAndParlaysByGambler: { [key:number]:any; };
-    loadUserContext: () => void;
-    loadBets: () => void;
-}
+const LeagueBetList: React.FC = observer(() => {
 
-export interface State {
-}
+    const {betStore, leagueStore} = useGlobalStores();
+    const league = leagueStore.league!;
+    const leagueId = league?.id;
 
-class LeagueBetList extends Component<Props, State> {
+    useEffect(() => {
+        if (!!leagueId) {
+            loadBets(leagueId);
+        }
+    }, [leagueId]);
 
-    async componentDidMount() {
-        await this.props.loadUserContext();
-        await this.props.loadBets();
-    }
+    const betsAndParlaysByGambler = betStore.betsAndParlaysByGambler;
+    return <Container>
+        <PageHeader>Pending Bets</PageHeader>
+        <Row>
+            {Object.keys(betsAndParlaysByGambler).map(gamblerId => {
+                let bets = betsAndParlaysByGambler[gamblerId].bets;
+                let parlays = betsAndParlaysByGambler[gamblerId].parlays;
+                let betCards = bets.map(bet => {
+                    return <PendingBetCard key={bet.id} gambler={bet.gambler} bet={bet} isParlay={false}/>
+                });
+                let parlayCards = parlays.map(parlay => {
+                    return <PendingBetCard key={parlay.id} gambler={parlay.gambler} bet={parlay} isParlay={true}/>
+                });
+                return betCards.concat(parlayCards);
+            })}
+        </Row>
+    </Container>;
+});
 
-    render() {
-        let gamblerIds = Object.keys(this.props.betsAndParlaysByGambler);
-        return <Container>
-            <PageHeader>Pending Bets</PageHeader>
-            <Row>
-                {gamblerIds.map(gamblerId => {
-                    let bets = this.props.betsAndParlaysByGambler[gamblerId].bets;
-                    let parlays = this.props.betsAndParlaysByGambler[gamblerId].parlays;
-                    let betCards = bets.map(bet => {
-                        return <PendingBetCard key={bet.id} gambler={bet.gambler} bet={bet} isParlay={false}></PendingBetCard>
-                    });
-                    let parlayCards = parlays.map(parlay => {
-                        return <PendingBetCard key={parlay.id} gambler={parlay.gambler} bet={parlay} isParlay={true}></PendingBetCard>
-                    });
-                    return betCards.concat(parlayCards);
-                })}
-            </Row>
-        </Container>;
-    }
-
-}
-
-const mapStateToProps = (state) => {
-    return {
-        betsAndParlaysByGambler: getBetsAndParlaysByGambler(state)
-    }
-};
-
-const mapDispatchToProps = {
-    loadUserContext,
-    loadBets,
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(LeagueBetList);
+export default LeagueBetList;

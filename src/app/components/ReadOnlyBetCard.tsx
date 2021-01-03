@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {Input, InputGroup, ListGroupItem, Row} from "reactstrap";
-import {Bet} from "../types";
+import React from "react";
+import {ListGroupItem} from "reactstrap";
+import {CartBet} from "../types";
 import moment from "moment";
 import {getBetSummary, getGameSummary} from "../../util/BetUtil";
 
@@ -17,42 +17,33 @@ const betChoiceStyle = {
     paddingBottom: '20px',
 };
 
-export interface Props {
-    bet: Bet;
+interface Props {
+    bet: CartBet;
     partOfParlay: boolean;
 }
 
-export interface State {
-}
+const ReadOnlyBetCard: React.FC<Props> = ({bet, partOfParlay}) => {
 
-class ReadOnlyBetCard extends Component<Props, State> {
-
-    async componentDidMount() {
-    }
-
-    render() {
-        const bet = this.props.bet;
-        return <ListGroupItem style={betCardStyle}>
-            <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-                <div style={{display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '10px'}}>
-                    <div style={betChoiceStyle}>
-                        <strong>{getBetSummary(bet)}</strong>
-                    </div>
-                    <div>{getGameSummary(bet)}</div>
-                    <div>{moment(bet.bettable.gameTime).format("dddd, MMM Do, h:mma z")}</div>
-                </div>
-                {!this.props.partOfParlay && this.getWagerFields(bet)
-                }
-            </div>
-        </ListGroupItem>
-    }
-
-    private getWagerFields(bet) {
+    const getWagerFields = (bet) => {
         return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '10px'}}>
             Wager ${bet.amount}, Win ${2 * (bet.amount || 0)}
 
         </div>;
-    }
+    };
+
+    return <ListGroupItem style={betCardStyle}>
+        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '10px'}}>
+                <div style={betChoiceStyle}>
+                    <strong>{getBetSummary(bet)}</strong>
+                </div>
+                <div>{getGameSummary(bet)}</div>
+                <div>{moment(bet.bettable.gameTime).format("dddd, MMM Do, h:mma z")}</div>
+            </div>
+            {!partOfParlay && getWagerFields(bet)}
+        </div>
+    </ListGroupItem>
+
 }
 
 export default ReadOnlyBetCard;

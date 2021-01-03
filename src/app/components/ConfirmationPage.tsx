@@ -1,13 +1,12 @@
-import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import React from "react";
 import {Col, Container, ListGroup} from "reactstrap";
-import {getCart} from "../cart/cartSelector";
 import {PageHeader} from "./PageHeader";
 import ReadOnlyBetCard from "./ReadOnlyBetCard";
 import {FSButton} from "./FSComponents";
 import {getButtonMessage} from "../../util/BetUtil";
-import { useHistory } from "react-router-dom";
-import {confirmBets} from "../cart/cartActions";
+import {useHistory} from "react-router-dom";
+import {useGlobalStores} from "../context/global_context";
+import {confirmBets} from "../cart/cart.actions";
 
 const totalTallyStyle = {
     marginTop: '20px',
@@ -18,22 +17,23 @@ const totalTallyStyle = {
 
 const ConfirmationPage: React.FC = () => {
 
-    const dispatch = useDispatch();
-    const cart = useSelector(state => getCart(state));
     const history = useHistory();
 
-    useEffect(() => {
-        if (cart.bets.length === 0) {
-            history.push('/games');
-        }
-    }, []);
+    const { cartStore } = useGlobalStores();
 
-    let parlay = cart.parlay || {};
-    let potentialBets = cart.bets;
-    let insufficientBets = potentialBets.length < 2;
-    let parlayActive = !!parlay.active && !insufficientBets;
-    let totalAmount = parlayActive ? parlay.amount : potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
+    const confirm = async () => {
+        await confirmBets();
+        history.push('/account');
+    };
 
+    if (cartStore.bets.length === 0) {
+        history.push('/games');
+    }
+    const parlay = cartStore.parlay;
+    const potentialBets = cartStore.bets;
+    const insufficientBets = potentialBets.length < 2;
+    const parlayActive = !!parlay?.active && !insufficientBets;
+    const totalAmount = parlayActive ? parlay!.amount : potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
     return <Container>
         <PageHeader>Bet Confirmation</PageHeader>
         <Col sm={12} md={{size: 10, offset: 1}} lg={{size: 6, offset: 3}}>
@@ -47,12 +47,12 @@ const ConfirmationPage: React.FC = () => {
                 )}
             </ListGroup>
             <div style={totalTallyStyle}>
-                <FSButton onClick={() => dispatch(confirmBets())}>
+                <FSButton onClick={() => confirm()}>
                     {getButtonMessage('Confirm', potentialBets.length, totalAmount, parlayActive)}
                 </FSButton>
             </div>
         </Col>
-    </Container>;
+    </Container>
 };
 
 export default ConfirmationPage;
