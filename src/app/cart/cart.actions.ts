@@ -1,56 +1,54 @@
-import {
-    createCartBet,
-    editCartAmount,
-    editParlayAmount,
-    getGamblerBetCart,
-    makeBets,
-    removeFromCart,
-    toggleParlayOnGamblerBetCart
-} from "../api/api";
 import {cartStore} from "./cart.store";
 import {gamblerStore} from "../gambler/gambler.store";
+import {PotentialBet} from "../types";
+import LocalCart from "./cart";
+import {makeBets} from "../api/api";
 
 const getGamblerId = (): number => gamblerStore.gambler!.id;
 
 export const loadCart = async () => {
-    const cart = await getGamblerBetCart(getGamblerId());
-    cartStore.loadCart(cart.bets, cart.parlay);
+    const cart = LocalCart.loadCart(getGamblerId());
+    await cartStore.loadCart(cart.bets, cart.parlay);
 };
 
-export const addBetToCart = async bet => {
-    const cartBet = await createCartBet(getGamblerId(), bet);
+export const addBetToCart = async (bet: PotentialBet) => {
+    const cartBet = await LocalCart.addCartBet(bet);
     if (cartBet) {
         cartStore.addBetToCart(cartBet);
     }
 };
 
-export const editCartBet = async (cartBetId: number, amount: number) => {
-    if (isNaN(amount)) {
+export const editCartBet = async (cartBetId: string, amount: number) => {
+    if (!!amount && isNaN(amount)) {
         return;
     }
-    await editCartAmount(getGamblerId(), cartBetId, amount);
-    cartStore.editCartBet(cartBetId, amount);
+    await LocalCart.editCartAmount(cartBetId, isNaN(amount) ? 0 : amount);
+    await cartStore.editCartBet(cartBetId, amount);
 };
 
-export const removeCartBet = async (cartBetId: number) => {
-    await removeFromCart(getGamblerId(), cartBetId);
-    cartStore.removeCartBet(cartBetId)
+export const removeCartBet = async (cartBetId: string) => {
+    await LocalCart.removeFromCart(cartBetId);
+    await cartStore.removeCartBet(cartBetId)
 };
 
 export const toggleParlay = async (active: boolean) => {
-    await toggleParlayOnGamblerBetCart(getGamblerId(), active);
-    cartStore.toggleParlay(active);
+    await LocalCart.editParlayActive(active);
+    await cartStore.toggleParlay(active);
 };
 
 export const editCartParlay = async (amount: number) => {
+    if (!!amount && isNaN(amount)) {
+        return true;
+    }
     if (isNaN(amount)) {
         return;
     }
-    await editParlayAmount(getGamblerId(), amount);
-    cartStore.editCartParlay(amount);
+    await LocalCart.editParlayAmount(amount);
+    await cartStore.editCartParlay(amount);
 };
 
 export const confirmBets = async () => {
-    await makeBets(getGamblerId());
+    await makeBets(getGamblerId(), cartStore.bets, cartStore.parlay);
+    await LocalCart.clearCart();
     cartStore.clearCart();
 };

@@ -6,21 +6,34 @@ import MiniBets from "./MiniBets";
 import HomePagePanel from "./HomePagePanel";
 import {useGlobalStores} from "../context/global_context";
 import {observer} from "mobx-react";
+import {LoadingContainer} from "./LoadingContainer";
+import styled from "@emotion/styled";
+import {useMediaQuery} from "react-responsive";
+import {LeagueSwitcher} from "./LeagueSwitcher";
 
 const leagueHeaderStyle = {
     top: "40px",
     right: "0px",
+    position: 'absolute' as 'absolute',
     width: "100%",
     backgroundColor: "#003D63",
     height: "75px",
     color: "#FFFFFF"
 };
 
-const leagueHeaderLeagueNameStyle = {
-    fontSize: "28px",
-    marginTop: "25px",
-    display: "inline-block",
-};
+const LeagueNameHeader = styled.div<{mobile: boolean}>(
+    {
+        marginTop: "25px",
+        display: "inline-block",
+        textTransform: 'uppercase',
+    },
+    ({ mobile }) => {
+        return {
+            marginTop: mobile ? "30px" : "25px",
+            fontSize: mobile ? "20px" : "28px",
+        }
+    },
+);
 
 const homePageStyle = {
     marginTop: "75px"
@@ -32,19 +45,21 @@ const homePagePanelStyle = {
 
 const LeaguePage: React.FC = observer(() => {
 
-    const { leagueStore } = useGlobalStores();
+    const isMobile = useMediaQuery({ query: '(max-width: 415px)' });
+
+    const { userStore, leagueStore } = useGlobalStores();
     const league = leagueStore.league;
 
     if (!league) {
-        return <div></div>;
+        return <LoadingContainer/>;
     }
+
     return (
         <div>
-            <div style={leagueHeaderStyle} className="league-header">
+            <div style={leagueHeaderStyle}>
                 <Container>
-                    <div style={leagueHeaderLeagueNameStyle}>
-                        {league.name && league.name.toUpperCase()}
-                    </div>
+                    <LeagueNameHeader mobile={isMobile}>{league.name}</LeagueNameHeader>
+                    <LeagueSwitcher leagues={userStore.leagues} currentLeagueId={league.id} mobile={isMobile}/>
                 </Container>
             </div>
 

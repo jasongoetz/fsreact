@@ -1,8 +1,9 @@
 import {action, observable} from "mobx";
-import {User, UserProfile} from "../types";
+import {League, User, UserProfile} from "../types";
 
 class UserStore {
     @observable user?: User;
+    @observable leagues: League[] = [];
     @observable loading: boolean = true;
     @observable error: boolean = false;
     @observable hasLeague: boolean = false;
@@ -11,6 +12,16 @@ class UserStore {
     saveUser = (user: User, hasLeague: boolean) => {
         this.loading = false;
         this.user = user;
+        this.hasLeague = hasLeague;
+    }
+
+    @action
+    saveLeagues = (leagues: League[]) => {
+        this.leagues = leagues;
+    }
+
+    @action
+    saveHasLeague = (hasLeague: boolean) => {
         this.hasLeague = hasLeague;
     }
 

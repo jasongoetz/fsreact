@@ -90,7 +90,13 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
                                 <Label for="leagueSport">Sport:</Label>
                             </FSLabelColumn>
                             <Col xs={7} sm={6}>
-                                <FSInput type="select" id="leagueSport" name="sport">
+                                <FSInput
+                                    type="select"
+                                    id="leagueSport"
+                                    name="sport"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                >
                                     {Object.keys(Sports).map(
                                         sportKey => <option key={`sport-${sportKey}`} value={sportKey}>{Sports[sportKey].name}</option>
                                     )}
@@ -105,7 +111,14 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
                                 <Label for="startingAccount">Starting Account Balance:</Label>
                             </FSLabelColumn>
                             <Col xs={7} sm={6}>
-                                <FSInput type="select" id="startingAccount" name="startingAccount" defaultValue="500">
+                                <FSInput
+                                    type="select"
+                                    id="startingAccount"
+                                    name="startingAccount"
+                                    defaultValue="500"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                >
                                     <option value="100">$100</option>
                                     <option value="250">$250</option>
                                     <option value="500">$500</option>
@@ -121,7 +134,14 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
                                 <Label for="weeklyBetCountMax">Weekly Bet Count Max:</Label>
                             </FSLabelColumn>
                             <Col xs={7} sm={6}>
-                                <FSInput type="select" id="weeklyBetCountMax" name="weeklyBetCountMax" defaultValue="6">
+                                <FSInput
+                                    type="select"
+                                    id="weeklyBetCountMax"
+                                    name="weeklyBetCountMax"
+                                    defaultValue="6"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                >
                                     <option value="3">3</option>
                                     <option value="4">4</option>
                                     <option value="5">5</option>
@@ -138,7 +158,14 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
                                 <Label for="weeklyBetAccountRatio">Weekly Bet Account Ratio:</Label>
                             </FSLabelColumn>
                             <Col xs={7} sm={6}>
-                                <FSInput type="select" id="weeklyBetAccountRatio" name="weeklyBetAccountRatio" defaultValue="50">
+                                <FSInput
+                                    type="select"
+                                    id="weeklyBetAccountRatio"
+                                    name="weeklyBetAccountRatio"
+                                    defaultValue="50"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                >
                                     <option value="25">25%</option>
                                     <option value="50">50%</option>
                                     <option value="75">75%</option>
@@ -149,7 +176,7 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
                         <FSFormFeedback>{formik.errors.weeklyBetAccountRatio}</FSFormFeedback>
                     </FormGroup>
 
-                    <FSWideButton type="submit" color="primary" size="lg">CREATE LEAGUE</FSWideButton>
+                    <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">CREATE LEAGUE</FSWideButton>
                 </FSForm>
             </Col>
         </Row>

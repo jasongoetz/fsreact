@@ -1,14 +1,18 @@
-import React from "react";
-import {Col, FormGroup, NavLink, Row} from "reactstrap";
-import {Link, RouteComponentProps, withRouter, useHistory} from 'react-router-dom';
+import React, {useEffect} from "react";
+import {Col, FormGroup, Row} from "reactstrap";
+import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from 'react-router-dom';
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {FSWideButton} from "./FSComponents";
 import {register} from "../auth/auth.actions";
+import {useGlobalStores} from "../context/global_context";
+import {loadInviteByToken} from "../invite/invite.actions";
+import {LoadingContainer} from "./LoadingContainer";
+import {joinLeagueWithInvite} from "../user/user.actions";
 
 interface Props extends RouteComponentProps {
-    invite: any; //FIXME
+    token?: string;
 }
 
 const formSigninHeading = {
@@ -17,18 +21,24 @@ const formSigninHeading = {
     marginTop: '0px',
 };
 
-const Registration: React.FC<Props> = ({invite}) => {
+const Registration: React.FC<Props> = () => {
 
     const history = useHistory();
 
-    const registerUser = async (values) => {
-        try {
-            await register(values);
-            history.push('/league/new');
-        } catch (err) {
-            formik.setErrors({confirmation: 'Your user profile could not be created'});
+    const location = useLocation();
+    const useQuery = () => {
+        return new URLSearchParams(location.search);
+    }
+
+    const {authStore, inviteStore} = useGlobalStores();
+    const query = useQuery();
+    const token = query.get("token");
+    const invite = inviteStore.invite;
+    useEffect(() => {
+        if (token && !invite) {
+            loadInviteByToken(token);
         }
-    };
+    }, [token, invite]);
 
     const registrationSchema = yup.object().shape({
         firstName: yup.string()
@@ -36,13 +46,30 @@ const Registration: React.FC<Props> = ({invite}) => {
         lastName: yup.string()
             .required('Please enter your last name'),
         email: yup.string()
-            .required('Please enter your email'),
+            .email('Please enter a valid email')
+            .required('Please enter a valid email'),
         password: yup.string()
             .required('Please enter a new password'),
         confirmation: yup.string()
             .required('Please enter your password again')
             .oneOf([yup.ref("password"), null], "Your passwords must match"),
     });
+
+    const registerUser = async (values) => {
+        try {
+            await register(values);
+            if (invite) {
+                console.log("Joining league");
+                await joinLeagueWithInvite(authStore.userId!, invite);
+                history.push('/');
+            }
+            else {
+                history.push('/league/new');
+            }
+        } catch (err) {
+            formik.setErrors({confirmation: 'Your user profile could not be created'});
+        }
+    };
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -57,11 +84,15 @@ const Registration: React.FC<Props> = ({invite}) => {
         onSubmit: registerUser
     });
 
+    if (token && !inviteStore.invite) {
+        return <LoadingContainer/>;
+    }
+
     return (
         <Row>
             <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}}>
                 <FSForm id="registration" onSubmit={formik.handleSubmit}>
-                    {invite && <h3 style={formSigninHeading}>Welcome. Finish registering an account to join.</h3>}
+                    {invite && <FormGroup><h3 style={formSigninHeading}>Finish registering an account to join.</h3></FormGroup>}
                     <FormGroup>
                         <FSInput
                             placeholder="First Name"
@@ -71,7 +102,6 @@ const Registration: React.FC<Props> = ({invite}) => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.firstName}
-                            required
                         />
                         {formik.touched.firstName && <FSFormFeedback>{formik.errors.firstName}</FSFormFeedback>}
                     </FormGroup>
@@ -84,7 +114,6 @@ const Registration: React.FC<Props> = ({invite}) => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.lastName}
-                            required
                         />
                         {formik.touched.lastName && <FSFormFeedback>{formik.errors.lastName}</FSFormFeedback>}
                     </FormGroup>
@@ -93,11 +122,12 @@ const Registration: React.FC<Props> = ({invite}) => {
                             placeholder="Email"
                             invalid={formik.touched.email && !!formik.errors.email}
                             name="email"
-                            type="text"
+                            type="email"
+                            autoCapitalize={"off"}
+                            autoCorrect={"off"}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.email}
-                            required
                         />
                         <FSFormFeedback>{formik.errors.email}</FSFormFeedback>
                     </FormGroup>
@@ -110,7 +140,6 @@ const Registration: React.FC<Props> = ({invite}) => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.password}
-                            required
                         />
                         <FSFormFeedback>{formik.errors.password}</FSFormFeedback>
                     </FormGroup>
@@ -123,15 +152,14 @@ const Registration: React.FC<Props> = ({invite}) => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.confirmation}
-                            required
                         />
                         {formik.touched.confirmation && <FSFormFeedback>{formik.errors.confirmation}</FSFormFeedback>}
                     </FormGroup>
                     <FSInput type="hidden" name="token" value={invite ? invite.token : ''} />
-                    <FSWideButton type="submit" color="primary" size="lg">SIGN UP</FSWideButton>
+                    <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">SIGN UP</FSWideButton>
                     {invite &&
                         <div style={{marginTop: '10px'}}>
-                            Have an account under a different email? <NavLink tag={Link} to={`/login?${invite.token}`}>Log in.</NavLink>
+                            Already have an account? <Link to={`/login?token=${invite.token}`}>Log in.</Link>
                         </div>
                     }
                 </FSForm>

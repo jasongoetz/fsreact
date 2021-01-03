@@ -1,6 +1,6 @@
 import React from "react";
 import {Col} from "reactstrap";
-import {Bet, GamblerInfo, Parlay} from "../types";
+import {Bet, GamblerInfo, Parlay, Wager} from "../types";
 import {Link} from "react-router-dom";
 import moment from "moment";
 
@@ -34,27 +34,30 @@ const betCardContentStyle = {
 
 const PendingBetCard: React.FC<Props> = ({gambler, bet, isParlay}) => {
 
-    const getBetHeadline = (bet: Bet, isParlay: boolean) => {
+    const getBetHeadline = (wager: Wager, isParlay: boolean) => {
         if (isParlay) {
-            let parlay = bet as Parlay;
+            const parlay = wager as Parlay;
             return `${parlay.bets.length} Bet Parlay`;
         }
-        if (bet.sideId === bet.bettable.sideId1) {
-            return `${bet.bettable.team1} ${bet.line}`;
-        } else if (bet.sideId === bet.bettable.sideId2) {
-            return `${bet.bettable.team2} ${bet.line}`;
-        } else {
-            return `${(bet.overunder === 'OVER' ? "Over" : "Under")} ${bet.line}`;
+        else {
+            const bet  = wager as Bet;
+            if (bet.sideId === bet.bettable.sideId1) {
+                return `${bet.bettable.team1} ${bet.line}`;
+            } else if (bet.sideId === bet.bettable.sideId2) {
+                return `${bet.bettable.team2} ${bet.line}`;
+            } else {
+                return `${(bet.overunder === 'OVER' ? "Over" : "Under")} ${bet.line}`;
+            }
         }
     };
 
-    const getWager = (bet: Bet, isParlay: boolean) => {
+    const getWager = (wager: Wager, isParlay: boolean) => {
         if (isParlay) {
-            let parlay: Parlay = bet as Parlay;
+            const parlay = wager as Parlay;
             return `$${parlay.amount} (to win $${parlay.amount * Math.pow(2, parlay.bets.length)})`
         }
         else {
-            return `$${bet.amount}`;
+            return `$${wager.amount}`;
         }
     };
 

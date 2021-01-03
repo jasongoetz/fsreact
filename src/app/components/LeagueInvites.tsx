@@ -6,6 +6,7 @@ import {isEmailValid} from "../../util/EmailUtil";
 import {FSInput} from "./FSForm";
 import {GamblerInfo, LeagueInvite} from "../types";
 import {inviteUser, uninviteUser} from "../league/league.actions";
+import {observer} from "mobx-react";
 
 interface Props {
     leagueId: number;
@@ -17,7 +18,7 @@ const gamblerHasEmail = (email: string, gamblers: GamblerInfo[]) => gamblers.som
 
 const existingInviteHasEmail = (email: string, invites: LeagueInvite[]) => invites.some(invite => invite.email === email);
 
-const LeagueInvites: React.FC<Props> = ({leagueId, gamblers, invites}) => {
+const LeagueInvites: React.FC<Props> = observer(({gamblers, invites}) => {
 
     const [inviteError, setInviteError] = useState<string | undefined>(undefined);
     const [inviteEmail, setInviteEmail] = useState('');
@@ -27,7 +28,7 @@ const LeagueInvites: React.FC<Props> = ({leagueId, gamblers, invites}) => {
         <Container>
             <Row>
                 <Col lg={6} md={8} sm={10}>
-                <Table size={'sm'} style={leagueTableStyle}>
+                <Table id={'leagueInvites'} size={'sm'} style={leagueTableStyle}>
                     <thead style={leagueTableHeadStyle}>
                     <tr>
                         <th style={firstColumnStyle}>League Invites</th>
@@ -97,7 +98,7 @@ const LeagueInvites: React.FC<Props> = ({leagueId, gamblers, invites}) => {
             </Row>
         </Container>
     );
-};
+});
 
 export default LeagueInvites;
 

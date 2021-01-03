@@ -60,11 +60,11 @@ const closeStyle = {
 };
 
 interface Props {
-    cartId: number;
+    cartId: string;
     bet: CartBet;
     partOfParlay: boolean;
-    onClose: (cartId: number) => void;
-    onEdit: (cartId: number, amount: number) => void;
+    onClose: (cartId: string) => void;
+    onEdit: (cartId: string, amount: number) => void;
 }
 
 const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, cartId}) => {
@@ -77,7 +77,7 @@ const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, 
                 <Input
                     type="number"
                     style={betAmountStyle}
-                    value={bet.amount}
+                    value={bet.amount || ''}
                     onChange={(e) => onEdit(cartId, parseInt(e.target.value))}
                 />
             </InputGroup>

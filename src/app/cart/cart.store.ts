@@ -17,12 +17,12 @@ class CartStore {
     };
 
     @action
-    editCartBet = async (cartBetId: number, amount: number) => {
+    editCartBet = async (cartBetId: string, amount: number) => {
         this.bets = this.bets.map(bet => (bet.id === cartBetId) ? {...bet, amount: amount} : bet);
     };
 
     @action
-    removeCartBet = async (cartBetId: number) => {
+    removeCartBet = async (cartBetId: string) => {
         this.bets = this.bets.filter(bet => (bet.id !== cartBetId));
         if (this.parlay) {
             this.parlay.active = this.parlay && this.parlay.active && this.bets.length > 1;

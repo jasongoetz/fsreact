@@ -34,7 +34,7 @@ const TeamBettableButton: React.FC<Props> = observer(({bettable, team}) => {
 
     const betClick = () => {
         let bet = {
-            bettableId: bettable.id,
+            bettable: bettable,
             sideId: getSideId()
         };
         addBetToCart(bet);

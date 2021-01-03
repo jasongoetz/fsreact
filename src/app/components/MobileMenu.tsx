@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import {Link} from "react-router-dom";
 import {logout} from "../auth/auth.actions";
 import {useGoogleLogout} from "react-google-login";
+import {requireEnv} from "../../util/require-env";
 
 const MobileMenuOverlay = styled.div({
     width: "100%",
@@ -24,6 +25,7 @@ const MobileMenuOverlay = styled.div({
 const closeButtonStyle = {
     top: 0,
     left: 0,
+    position: 'absolute' as 'absolute',
     marginLeft: "10px",
     marginTop: "0px",
     backgroundColor: 'transparent',
@@ -38,6 +40,7 @@ const navLinkStyle = {
 };
 
 const accountBalanceStyle = {
+    position: 'absolute' as 'absolute',
     color: Colors.white,
     fontSize: "16px",
     bottom: "0px",
@@ -58,8 +61,9 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
         return <NavItem><NavLink style={navLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink></NavItem>;
     };
 
+
     const { signOut } = useGoogleLogout({
-        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '', //TODO: require this variable on startup
+        clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID'),
     })
 
     const handleLogout = async () => {
@@ -70,7 +74,7 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
 
     return (
         <MobileMenuOverlay>
-            <Button type="button" style={closeButtonStyle} className="menu-close" onClick={closeMenu}>
+            <Button type="button" style={closeButtonStyle} onClick={closeMenu}>
                 <span>&times;</span>
             </Button>
             <Nav vertical>
@@ -85,7 +89,7 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
             </Nav>
 
             <div>
-                <a style={accountBalanceStyle} className="menu-account-bottom money" href="/account">
+                <a style={accountBalanceStyle} className="money" href="/account">
                     You have ${gamblerMoney}.00
                 </a>
             </div>

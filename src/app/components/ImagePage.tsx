@@ -5,6 +5,7 @@ import {Colors} from "../theme/theme";
 
 const backgroundImageStyle = {
     width: "100%",
+    position: 'absolute' as 'absolute',
     background: getRandomImageUrl(),
     backgroundSize: "cover",
     backgroundPosition: "center center",
@@ -17,6 +18,7 @@ const backgroundImageStyle = {
 
 const backgroundImageOverlay = {
     width: "100%",
+    position: 'absolute' as 'absolute',
     backgroundColor: "black",
     opacity: 0.6,
     zIndex: -3,
@@ -49,8 +51,8 @@ const ImagePage: FC<Props> = ({headline, children}) => (
             </Row>
         }
         {children}
-        <div className="signin-page" style={backgroundImageStyle}/>
-        <div className="signin-page-overlay" style={backgroundImageOverlay}/>
+        <div style={backgroundImageStyle}/>
+        <div style={backgroundImageOverlay}/>
     </Container>
 );
 

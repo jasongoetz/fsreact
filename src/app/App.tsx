@@ -23,6 +23,9 @@ import Registration from "./components/Registration";
 import PrivateUnaffiliatedRoute from "./components/routing/PrivateUnaffiliatedRoute";
 import CreateLeagueForm from "./components/CreateLeagueForm";
 import {useGlobalStores} from "./context/global_context";
+import {RSVPPage} from "./components/RSVPPage";
+import ForgotPassword from "./components/ForgotPassword";
+import PasswordReset from "../components/PasswordReset";
 
 const appStyle = {
     fontFamily: Fonts.mainSite
@@ -57,6 +60,22 @@ const App: FC = () => {
             </ImagePage>
         )
     };
+
+    const ForgotPasswordPage = (navProps) => {
+        return (
+            <ImagePage>
+                <ForgotPassword {...navProps}/>
+            </ImagePage>
+        )
+    }
+
+    const PasswordResetPage = (navProps) => {
+        return (
+            <ImagePage>
+                <PasswordReset {...navProps}/>
+            </ImagePage>
+        )
+    }
 
     const NewLeaguePage = (navProps) => {
         const {authStore} = useGlobalStores();
@@ -111,11 +130,11 @@ const App: FC = () => {
 
     const ProfileManagePage = () => {
         const {userStore} = useGlobalStores();
-        if (userStore.user) {
-            return <ImagePage>
-                <ProfilePage user={userStore.user}/>
-            </ImagePage>;
-        }
+        return <UserContext>
+            <ImagePage>
+                {userStore.user ? <ProfilePage user={userStore.user}/> : <></>}
+            </ImagePage>
+        </UserContext>;
     };
 
     const PasswordManagePage = () => {
@@ -129,6 +148,14 @@ const App: FC = () => {
 
     const Page404 = () => {
         return <ErrorPanel statusCode={404}/>
+    };
+
+    const RSVPPageContainer = (navProps) => {
+        return (
+            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+                <RSVPPage {...navProps}/>
+            </ImagePage>
+        )
     };
 
     return (
@@ -146,7 +173,10 @@ const App: FC = () => {
 
                 <Switch>
                     <UnauthenticatedRoute exact path="/login" component={LoginPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/rsvp" component={RSVPPageContainer} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/register" component={RegistrationPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/forgotpassword" component={ForgotPasswordPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/passwordreset" component={PasswordResetPage} redirectTo="/"/>
                     <PrivateLeagueRoute exact path="/" component={HomePage}/>
                     <PrivateUnaffiliatedRoute exact path="/league/join" component={JoinLeaguePage}/>
                     <PrivateUnaffiliatedRoute exact path="/league/new" component={NewLeaguePage}/>

@@ -33,7 +33,7 @@ const ConfirmationPage: React.FC = () => {
     const potentialBets = cartStore.bets;
     const insufficientBets = potentialBets.length < 2;
     const parlayActive = !!parlay?.active && !insufficientBets;
-    const totalAmount = potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
+    const totalAmount = parlayActive ? parlay!.amount : potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
     return <Container>
         <PageHeader>Bet Confirmation</PageHeader>
         <Col sm={12} md={{size: 10, offset: 1}} lg={{size: 6, offset: 3}}>

@@ -3,6 +3,10 @@ describe('Set Up', () => {
     let email;
     const password = 'asdfasdf';
 
+    before(() => {
+        cy.logout();
+    })
+
     it('registers and create league', function () {
 
         let time = Date.now().valueOf();

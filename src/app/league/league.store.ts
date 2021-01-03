@@ -1,4 +1,4 @@
-import {FullBet, GamblerInfo, League, LeagueInfo, LeagueInvite, Parlay} from "../types";
+import {FullBet, GamblerInfo, League, LeagueInvite, Parlay} from "../types";
 import {action, observable} from "mobx";
 
 class LeagueStore {

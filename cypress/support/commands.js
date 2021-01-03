@@ -23,6 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import { MailSlurp } from 'mailslurp-client';
 
 let LOCAL_STORAGE_MEMORY = {};
 
@@ -37,3 +38,20 @@ Cypress.Commands.add("restoreLocalStorage", () => {
         localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
     });
 });
+
+Cypress.Commands.add("logout", () => {
+    console.log("Clearing...");
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+});
+
+const mailslurp = new MailSlurp({ apiKey: Cypress.env('MAIL_SLURP_API_KEY') });
+
+Cypress.Commands.add("createInbox", () => {
+    return mailslurp.createInbox();
+});
+
+Cypress.Commands.add("waitForLatestEmail", (inboxId) => {
+    return mailslurp.waitForLatestEmail(inboxId, 30000);
+});
+

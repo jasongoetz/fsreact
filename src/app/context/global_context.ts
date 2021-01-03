@@ -8,17 +8,19 @@ import {userStore} from "../user/user.store";
 import {authStore} from "../auth/auth.store";
 import {errorStore} from "../error/error.store";
 import {transactionsStore} from "../transactions/transactions.store";
+import {inviteStore} from "../invite/invite.store";
 
 export const globalContext = createContext({
+    authStore,
     bettableStore,
     betStore,
     cartStore,
-    leagueStore,
-    gamblerStore,
-    userStore,
-    authStore,
     errorStore,
+    gamblerStore,
+    inviteStore,
+    leagueStore,
     transactionsStore,
+    userStore,
 });
 
 export const useGlobalStores = () => useContext(globalContext);

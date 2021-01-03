@@ -17,13 +17,14 @@ import {
 import {Colors} from "../theme/theme";
 import {Link} from "react-router-dom";
 import {Gambler, GamblerInfo, League, User} from "../types";
-import MediaQuery from "react-responsive";
+import {useMediaQuery} from "react-responsive";
 import styled from "@emotion/styled";
 import BetSlip from "./BetSlip";
 import {logout} from "../auth/auth.actions";
 import {useGlobalStores} from "../context/global_context";
 import {observer} from "mobx-react";
 import {useGoogleLogout} from "react-google-login";
+import {requireEnv} from "../../util/require-env";
 
 const navbarStyle = {
     backgroundColor: Colors.lightGray,
@@ -85,6 +86,8 @@ interface Props {
 
 const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
+    const isMobile = useMediaQuery({ query: '(max-width: 415px)' });
+
     const [mobileBetSlipOpen, setMobileBetSlipOpen] = useState(false);
 
     const {authStore, cartStore, gamblerStore, leagueStore, userStore} = useGlobalStores();
@@ -94,7 +97,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     };
 
     const { signOut } = useGoogleLogout({
-        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '', //TODO: require this variable on startup
+        clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID')
     })
 
     const handleLogout = async (e) => {
@@ -156,32 +159,31 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     const authenticated = authStore.authenticated;
 
     return (
-        <Navbar style={navbarStyle} fixed="top" light expand="sm">
+        <Navbar style={navbarStyle} fixed="top" light expand="md">
             <Container style={navbarContainerStyle}>
                 <NavbarToggler style={menuButtonStyle} onClick={toggleMobileMenu}/>
-                <Collapse className="w-100" navbar>
+                <Collapse navbar>
                     {authenticated && leagueStore.league && getLeftNavBar(leagueStore.league, gambler)}
                 </Collapse>
 
-                <NavbarBrand style={brandStyle} href="/" className="fixedTop" mx="auto">FAKE STACKS</NavbarBrand>
+                <NavbarBrand style={brandStyle} href="/" mx="auto">FAKE STACKS</NavbarBrand>
 
                 <NavbarToggler style={betSlipButtonStyle}>
-                                    <span style={badgeContainerStyle}>
-                                    <Badge style={betSlipBadgeStyle}
-                                           pill>{cartStore.bets.length}</Badge>
-                                    <img src="/images/bets-menu.svg" alt="Bets Menu" onClick={toggleBetSlip}/>
-                                    </span>
+                    <span style={badgeContainerStyle}>
+                        <Badge style={betSlipBadgeStyle} pill>
+                            {cartStore.bets.length}
+                        </Badge>
+                        <img src="/images/bets-menu.svg" alt="Bets Menu" onClick={toggleBetSlip}/>
+                    </span>
                 </NavbarToggler>
 
-                {authenticated && gambler &&
-                <MediaQuery maxWidth={576}>
+                {authenticated && gambler && isMobile &&
                     <BetSlipCollapse isOpen={mobileBetSlipOpen}>
                         <BetSlip gamblerId={gambler.id}/>
                     </BetSlipCollapse>
-                </MediaQuery>
                 }
 
-                <Collapse className="w-100 justify-content-end" navbar>
+                <Collapse className="justify-content-end" navbar>
                     {authenticated && getRightNavBar(userStore.user, gambler)}
                 </Collapse>
             </Container>

@@ -14,7 +14,7 @@ const LeagueMembers: React.FC<Props> = ({adminId, gamblers}) => {
         <Container>
             <Row>
                 <Col lg={6} md={8} sm={10}>
-                    <Table size={'sm'} style={leagueTableStyle}>
+                    <Table id={'leagueMembers'} size={'sm'} style={leagueTableStyle}>
                         <thead style={leagueTableHeadStyle}>
                         <tr>
                             <th style={firstColumnStyle}>League Members</th>

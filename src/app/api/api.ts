@@ -1,12 +1,15 @@
-
-import {post, get, deLete, put} from './fetch';
+import {deLete, get, post, put} from './fetch';
 import {
-    Bet,
+    AuthToken,
     BetOrParlayWrapper,
     Bettable,
-    CartBet, CartParlay,
-    Credentials, League, LeagueInfo,
+    CartParlay,
+    Credentials,
+    League,
     LeagueInvite,
+    LeagueRequest,
+    PotentialBet,
+    UserContext,
     UserRegistrationInfo
 } from "../types";
 import {GamblerBets} from "../bets/bet.store";
@@ -16,72 +19,62 @@ export interface Token {
     issueDate: number;
 }
 
-export class ResponseError extends Error {
-    constructor(message: string, code: string) {
-        super(message);
-        this.name = 'ResponseError';
-        this.code = code;
-    }
-    code: string;
-}
-
-export interface LoginUser {
-    email: string;
-    password: string;
-    token?: string;
-}
-
-//TODO: Fix return type
-export const login = async ({email, password, token}: Credentials): Promise<any> => {
+export const login = async ({email, password, token}: Credentials): Promise<AuthToken> => {
     const response = await post({
         path: `/api/auth`,
         body: JSON.stringify({ email, password, token }),
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-//TODO: Fix return type
-export const loginWithGoogle = async ({email, token}): Promise<any> => {
+export const loginWithGoogle = async ({email, token}): Promise<AuthToken> => {
     const response = await post({
         path: `/api/google-auth`,
         body: JSON.stringify({ email, token }),
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-//TODO: Fix return type
-export const registerUser = async (user: UserRegistrationInfo): Promise<any> => {
+export const registerUser = async (user: UserRegistrationInfo): Promise<AuthToken> => {
     const response = await post({
         path: `/api/users`,
         body: JSON.stringify(user),
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-export const registerLeague = async (userId: number, leagueInfo: LeagueInfo): Promise<League> => {
+export const requestPasswordReset = async (email): Promise<void> => {
+    await post({
+        path: `/api/password/reset-request`,
+        body: JSON.stringify({ email }),
+    });
+};
+
+export const resetUserPassword = async (token, password): Promise<void> => {
+    await put({
+        path: `/api/password/update`,
+        body: JSON.stringify({token, password, confirmation: password})
+    })
+}
+
+export const registerLeague = async (userId: number, leagueInfo: LeagueRequest): Promise<League> => {
     const response = await post({
         path: `/api/leagues`,
         body: JSON.stringify({...leagueInfo, weeklyBetAccountRatio: leagueInfo.weeklyBetAccountRatio / 100, admin: userId}),
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-//TODO: Fix return type
-export const getUserContext = async (userId): Promise<any> => {
+export const getUserContext = async (userId): Promise<UserContext> => {
     const response = await get({
         path: `/api/users/${userId}/context`,
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
 export const updateUser = async (userId, user): Promise<void> => {
@@ -101,14 +94,31 @@ export const updateUserPass = async (userId, password): Promise<void> => {
     });
 };
 
+export const joinLeague = async (userId, token): Promise<void> => {
+    await post({
+        path: `/api/users/${userId}/leagues`,
+        body: JSON.stringify({
+            token: token,
+        })
+    });
+}
+
+export const switchUserLeague = async (userId, leagueId): Promise<void> => {
+    await put({
+        path: `/api/users/${userId}/current-league`,
+        body: JSON.stringify({
+            leagueId: leagueId,
+        })
+    })
+}
+
 export const postInvite = async (leagueId: number, email: string): Promise<LeagueInvite> => {
     const response = await post({
         path: `/api/leagues/${leagueId}/invites`,
         body: JSON.stringify({ email })
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
 export const revokeInvite = async (leagueId: number, inviteId: number): Promise<void> => {
@@ -123,8 +133,7 @@ export const getTransactionsForGambler = async (gamblerId): Promise<BetOrParlayW
         path: `/api/gamblers/${gamblerId}/transactions`,
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
 export const getGamesForSport = async (sportKey): Promise<{bettables: Bettable[]}> => {
@@ -132,8 +141,7 @@ export const getGamesForSport = async (sportKey): Promise<{bettables: Bettable[]
         path: `/api/games?sport=${sportKey}`,
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
 export const getBetsForLeague = async (leagueId): Promise<GamblerBets> => {
@@ -141,71 +149,32 @@ export const getBetsForLeague = async (leagueId): Promise<GamblerBets> => {
         path: `/api/leagues/${leagueId}/bets`,
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-export const getGamblerBetCart = async (gamblerId): Promise<{ bets: CartBet[], parlay: CartParlay }> => {
-    const response = await get({
-        path: `/api/gamblers/${gamblerId}/cart`,
-    });
-
-    let data = await response.json();
-    return data;
-};
-
-export const createCartBet = async (gamblerId: number, bet: Bet): Promise<CartBet> => {
+export const validateBets = async (gamblerId: number, bets: PotentialBet[], parlay?: CartParlay): Promise<string[]> => {
     const response = await post({
-        path: `/api/gamblers/${gamblerId}/cart`,
-        body: JSON.stringify(bet)
+        path: `/api/gamblers/${gamblerId}/cart/validate`,
+        body: JSON.stringify({bets, parlay})
     });
 
-    let data = await response.json();
-    return data;
+    return await response.json();
 };
 
-export const editCartAmount = async (gamblerId: number, cartId: number, amount: number) => {
-    await put({
-        path: `/api/gamblers/${gamblerId}/cart/${cartId}`,
-        body: JSON.stringify({amount: amount})
-    });
-};
-
-export const removeFromCart = async (gamblerId: number, cartId: number) => {
-    await deLete({
-        path: `/api/gamblers/${gamblerId}/cart/${cartId}`,
-    });
-    return;
-};
-
-export const toggleParlayOnGamblerBetCart = async (gamblerId, active: boolean) => {
-    await put({
-        path: `/api/gamblers/${gamblerId}/cart/parlay`,
-        body: JSON.stringify({active: active})
+export const makeBets = async (gamblerId: number, bets: PotentialBet[], parlay?: CartParlay) => {
+    await post({
+        path: `/api/gamblers/${gamblerId}/cart/confirm`,
+        body: JSON.stringify({bets, parlay})
     });
 };
 
-export const editParlayAmount = async (gamblerId: number, amount: number) => {
-    await put({
-        path: `/api/gamblers/${gamblerId}/cart/parlay`,
-        body: JSON.stringify({amount: amount})
-    });
-};
-
-export const validateBets = async (gamblerId: number): Promise<string[]> => {
+export const getInviteByToken = async (token: string) => {
     const response = await get({
-        path: `/api/gamblers/${gamblerId}/cart/validate`
+        path: `/api/invites?token=${token}`
     });
 
-    let data = await response.json();
-    return data;
-};
-
-export const makeBets = async (gamblerId: number) => {
-    await get({
-        path: `/api/gamblers/${gamblerId}/cart/confirm`
-    });
-};
+    return await response.json();
+}
 
 
 

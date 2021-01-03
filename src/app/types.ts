@@ -1,4 +1,10 @@
 
+export interface AuthToken {
+    issued: string;
+    expires: string;
+    token: string;
+}
+
 export interface UserProfile {
     firstName: string;
     lastName: string;
@@ -19,6 +25,33 @@ export interface UserRegistrationInfo {
     token?: string;
 }
 
+export interface UserContext {
+    user: User;
+    league: LeagueContext;
+    gambler: GamblerInfo;
+    userLeagues: League[];
+}
+
+export interface LeagueContext extends League {
+    gamblers: GamblerInfo[];
+    topBets: {bets: FullBet[], parlays: Parlay[]};
+    invites: LeagueInvite[];
+}
+
+export interface League {
+    id: number;
+    name: string;
+    sport: Sport;
+    startingAccount: number;
+    weeklyBetCountMax: number;
+    weeklyBetAccountRatio: number;
+    moneyline: string,
+    landingMessage: string,
+    admin: number
+}
+
+export type LeagueRequest = Pick<League, "name" | "sport" | "startingAccount" | "weeklyBetAccountRatio" | "weeklyBetCountMax">;
+
 export type Sport = 'CFB' | 'NFL' | 'NBA';
 
 export interface Gambler {
@@ -27,12 +60,9 @@ export interface Gambler {
     league: number;
 }
 
-export interface GamblerInfo {
-    id: number;
-    user: User;
+export interface GamblerInfo extends Gambler {
     bets: Bet[];
     parlays: Parlay[];
-    league: number;
     money: number;
     pending: number;
     wins: number;
@@ -41,16 +71,11 @@ export interface GamblerInfo {
     record: string;
 }
 
-export interface League {
-    id: number;
-    name: string;
-    sport: Sport;
-    startingAccount: number;
-    weeklyBetAccountRatio: number,
-    weeklyBetCountMax: number,
-    moneyline: string,
-    landingMessage: string,
-    admin: number
+export interface Invite {
+    token: string;
+    email: string;
+    user: number;
+    league: number;
 }
 
 export type Bettable = {
@@ -71,35 +96,36 @@ export type Bettable = {
 export type OverUnder = 'OVER' | 'UNDER';
 export type Outcome = 'WIN' | 'LOSS' | 'PUSH';
 
-export type Bet = {
-    gambler: number;
-    bettable: Bettable;
+export interface Wager {
+    id: number;
+    gambler: number | Gambler;
     time: string
     amount: number;
+    outcome: Outcome;
+    complete: boolean;
+}
+
+export interface Bet extends Wager {
+    bettable: Bettable;
     sideId: string;
     overunder: OverUnder;
     line: string;
-    outcome: Outcome;
-    complete: boolean;
-};
-
-export interface FullBet {
-    id: number,
-    time: string,
-    amount: number,
-    sideId: string,
-    overunder: string,
-    line: string,
-    outcome: string,
-    complete: boolean,
-    archived: boolean,
-    gambler: Gambler,
-    bettable: Bettable,
-    parlay?: Parlay,
 }
 
-export interface Parlay extends Bet {
+export interface Parlay extends Wager {
     bets: Bet[]
+}
+
+export type PotentialBet = {
+    bettable: Bettable;
+    sideId?: string;
+    overunder?: OverUnder;
+}
+
+export interface FullBet extends Bet {
+    archived: boolean,
+    gambler: Gambler,
+    parlay?: Parlay,
 }
 
 type BetOrParlay = Bet | Parlay;
@@ -110,13 +136,17 @@ export interface BetOrParlayWrapper {
     tally: number;
 }
 
+export interface Cart {
+    bets: CartBet[];
+    parlay: CartParlay;
+}
+
 export interface CartBet {
-    id: number;
-    gambler: number;
+    id: string;
     bettable: Bettable;
     amount: number;
-    sideId: string;
-    overunder: OverUnder;
+    sideId?: string;
+    overunder?: OverUnder;
     line: string;
 }
 
@@ -136,14 +166,6 @@ export interface LeagueInvite {
     email: string;
     user: number;
     league: number;
-}
-
-export interface LeagueInfo {
-    name: string;
-    sport: string;
-    startingAccount: number;
-    weeklyBetCountMax: number;
-    weeklyBetAccountRatio: number;
 }
 
 export interface Credentials {

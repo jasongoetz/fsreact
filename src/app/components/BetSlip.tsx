@@ -137,8 +137,8 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
         return active ? {...style, ...activeStyles} : style;
     };
 
-    const confirmBets = async (gamblerId: number) => {
-        const errors = await validateBets(gamblerId);
+    const reviewBets = async (gamblerId: number) => {
+        const errors = await validateBets(gamblerId, cartStore.bets, cartStore.parlay);
         if (errors.length > 0) {
             setErrors(errors);
         } else {
@@ -154,7 +154,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
     const potentialBets = cartStore.bets;
     const insufficientBets = potentialBets.length < 2;
     const betParlayTabActive = !!parlay?.active && !insufficientBets;
-    const totalAmount = potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
+    const totalAmount = potentialBets.reduce((sum, bet) => sum + (bet.amount || 0), 0);
     return (<Container style={containerStyle}>
         <Row style={panelHeadingStyle}>
             <div style={panelTitleStyle}>
@@ -200,8 +200,8 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                     </ListGroupItem>
                     }
                     <ListGroupItem style={totalTallyStyle}>
-                        <FSButton onClick={() => confirmBets(gamblerId)}>
-                            {getButtonMessage('Review', potentialBets.length, totalAmount, !betParlayTabActive)}
+                        <FSButton onClick={() => reviewBets(gamblerId)}>
+                            {getButtonMessage('Review', potentialBets.length, totalAmount, betParlayTabActive)}
                         </FSButton>
                     </ListGroupItem>
                 </ListGroup>
@@ -265,7 +265,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                     </ListGroupItem>
                     }
                     <ListGroupItem style={totalTallyStyle}>
-                        <FSButton onClick={() => confirmBets(gamblerId)}>
+                        <FSButton onClick={() => reviewBets(gamblerId)}>
                             {getButtonMessage('Review', potentialBets.length, parlay?.amount || 0, betParlayTabActive)}
                         </FSButton>
                     </ListGroupItem>

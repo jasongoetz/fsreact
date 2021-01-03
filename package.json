@@ -20,7 +20,7 @@
     "react-responsive": "^8.0.1",
     "react-router-dom": "5.1.2",
     "react-scripts": "3.4.0",
-    "reactstrap": "8.6.0",
+    "reactstrap": "8.8.1",
     "yup": "^0.28.0"
   },
   "scripts": {
@@ -50,7 +50,8 @@
     "@types/reactstrap": "^6.4.3",
     "@types/yup": "^0.26.27",
     "awesome-typescript-loader": "^5.2.1",
-    "cypress": "^5.1.0",
+    "cypress": "6.2.0",
+    "mailslurp-client": "^10.0.4",
     "typescript": "~3.9.2"
   },
   "resolutions": {

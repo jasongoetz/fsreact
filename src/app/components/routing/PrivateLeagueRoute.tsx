@@ -13,7 +13,9 @@ const PrivateLeagueRoute = observer(({component: Comp, ...rest}) => {
         return <Redirect to={{pathname: '/login', state: {from: location}}}/>
     }
 
+    console.log(`Hitting a private league route. User: ${userStore.user?.id}, hasLeague: ${userStore.hasLeague}`);
     if (!!userStore.user?.id && !userStore.hasLeague) {
+        console.log("Not affiliated with league. Redirecting to new league page. Value " + userStore.hasLeague);
         return <Redirect to={{pathname: '/league/new', state: {from: location}}}/>;
     }
 

@@ -21,7 +21,7 @@ const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overunder}
     };
 
     const betClick = () => {
-        let bet = {bettableId: bettable.id, overunder: overunder};
+        let bet = {bettable: bettable, overunder: overunder};
         addBetToCart(bet);
     };
 

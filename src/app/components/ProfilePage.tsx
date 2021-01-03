@@ -101,6 +101,8 @@ const ProfilePage: React.FC<Props> = ({history, user}) => {
                                 invalid={!!formik.errors.email}
                                 name="email"
                                 type="email"
+                                autoCapitalize={"off"}
+                                autoCorrect={"off"}
                                 onChange={formik.handleChange}
                                 value={formik.values.email}
                                 required
@@ -117,7 +119,7 @@ const ProfilePage: React.FC<Props> = ({history, user}) => {
                             />
                             <Label for="notifyprocessedbets" check>Email me when bets are processed</Label>
                         </FormGroup>
-                        <FSWideButton disabled={Object.keys(formik.errors).length > 0} color="primary" size="lg" style={{marginTop: '15px'}}>UPDATE PROFILE</FSWideButton>
+                        <FSWideButton type="submit" disabled={Object.keys(formik.errors).length > 0} color="primary" size="lg" style={{marginTop: '15px'}}>UPDATE PROFILE</FSWideButton>
                     </FSForm>
                 </Col>
             </Row>
