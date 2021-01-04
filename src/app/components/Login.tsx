@@ -136,6 +136,7 @@ const Login: React.FC<Props> = () => {
                             name="password"
                             type="password"
                             placeholder="Password"
+                            autoComplete={"current-password"}
                             invalid={!!formik.errors.password}
                             onChange={formik.handleChange}
                             value={formik.values.password}

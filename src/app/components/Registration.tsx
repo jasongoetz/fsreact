@@ -136,6 +136,7 @@ const Registration: React.FC<Props> = () => {
                             invalid={formik.touched.password && !!formik.errors.password}
                             name="password"
                             type="password"
+                            autoComplete={"current-password"}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.password}
