@@ -10,7 +10,6 @@ export const loadUserContext = async (userId: number) => {
         const userContext = await getUserContext(userId);
         userStore.saveUser(userContext.user, !!userContext.league);
         userStore.saveLeagues(userContext.userLeagues);
-        console.log("Loaded context and saving user. hasLeague=" + userStore.hasLeague);
         if (userContext.league) {
             gamblerStore.saveGambler(userContext.gambler);
             leagueStore.saveLeague(userContext.league, userContext.league.gamblers, userContext.league.invites, userContext.league.topBets);
@@ -32,7 +31,6 @@ export const updateUserPassword = async (userId: number, password: string) => {
 export const joinLeagueWithInvite = async (userId: number, invite: Invite) => {
     await joinLeague(userId, invite.token);
     userStore.saveHasLeague(true);
-    console.log("After joining the league, my hasLeague value is " + userStore.hasLeague);
 }
 
 export const switchLeague = async (leagueId: number) => {

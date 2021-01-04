@@ -75,7 +75,6 @@ const Login: React.FC<Props> = () => {
         try {
             await authenticate({email, password});
             if (invite) {
-                console.log("Joining league");
                 await joinLeagueWithInvite(authStore.userId!, invite);
             }
         } catch (err) {

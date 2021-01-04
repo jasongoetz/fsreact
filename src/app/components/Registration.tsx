@@ -59,7 +59,6 @@ const Registration: React.FC<Props> = () => {
         try {
             await register(values);
             if (invite) {
-                console.log("Joining league");
                 await joinLeagueWithInvite(authStore.userId!, invite);
                 history.push('/');
             }

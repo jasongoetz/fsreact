@@ -29,7 +29,6 @@ const LeagueDropdownToggle = styled(DropdownToggle, { shouldForwardProp: prop =>
         border: '0px',
     },
     ({ isMobile }) => {
-        console.log("HI!");
         return {
             ':after': {
                 borderTop: isMobile ? '.4em solid' : '.3em solid',
