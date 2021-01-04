@@ -5,15 +5,16 @@ import {User} from "../types";
 import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
 import {updateUserProfile} from "../user/user.actions";
 
 interface Props extends RouteComponentProps {
     user: User;
 }
 
-const ProfilePage: React.FC<Props> = ({history, user}) => {
+const ProfilePage: React.FC<Props> = ({ user}) => {
 
+    const history = useHistory();
     const updateProfile = async (values) => {
         try {
             await updateUserProfile(user.id,{
