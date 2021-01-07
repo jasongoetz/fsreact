@@ -16,10 +16,10 @@ const GamesPage: React.FC<Props> = observer(() => {
     const {bettableStore, leagueStore, gamblerStore} = useGlobalStores();
 
     useEffect(() => {
-        if (leagueStore.league) {
+        if (leagueStore.league && !bettableStore.loaded) {
             loadGames(leagueStore.league.sport);
         }
-    }, [leagueStore.league]);
+    }, [leagueStore.league, bettableStore.loaded]);
 
     return (
         <Container>

@@ -13,10 +13,10 @@ const LeagueBetList: React.FC = observer(() => {
     const leagueId = league?.id;
 
     useEffect(() => {
-        if (!!leagueId) {
+        if (!!leagueId && !betStore.loaded) {
             loadBets(leagueId);
         }
-    }, [leagueId]);
+    }, [leagueId, betStore.loaded]);
 
     const betsAndParlaysByGambler = betStore.betsAndParlaysByGambler;
     return <Container>

@@ -3,10 +3,12 @@ import {action, observable} from "mobx";
 
 class BettableStore {
     @observable bettables: Bettable[] = []
+    loaded: boolean = false
 
     @action
     saveBettables = async (bettables: Bettable[]) => {
         this.bettables = bettables;
+        this.loaded = true;
     };
 }
 

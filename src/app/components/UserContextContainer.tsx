@@ -9,9 +9,9 @@ interface Props {
 
 const UserContextContainer: FC<React.PropsWithChildren<Props>> = (props) => {
     const { userStore } = useGlobalStores();
-    useLoadContext(props.userId);
+    useLoadContext(props.userId, userStore.loaded);
 
-    if (userStore.loading) {
+    if (!userStore.loaded) {
         return <LoadingContainer/>
     }
     else {

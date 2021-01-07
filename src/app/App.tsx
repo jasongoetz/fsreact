@@ -167,7 +167,6 @@ const App: FC = () => {
 
                 {showMobileMenu && <MobileMenu
                     isAdmin={true}
-                    gamblerMoney={0}
                     closeMenu={toggleMobileMenu}
                 />}
 

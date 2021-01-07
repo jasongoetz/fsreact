@@ -4,13 +4,13 @@ import {League, User, UserProfile} from "../types";
 class UserStore {
     @observable user?: User;
     @observable leagues: League[] = [];
-    @observable loading: boolean = true;
     @observable error: boolean = false;
     @observable hasLeague: boolean = false;
+    @observable loaded: boolean = false;
 
     @action
     saveUser = (user: User, hasLeague: boolean) => {
-        this.loading = false;
+        this.loaded = true;
         this.user = user;
         this.hasLeague = hasLeague;
     }

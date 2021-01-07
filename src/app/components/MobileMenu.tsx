@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import {logout} from "../auth/auth.actions";
 import {useGoogleLogout} from "react-google-login";
 import {requireEnv} from "../../util/require-env";
+import {useGlobalStores} from "../context/global_context";
 
 const MobileMenuOverlay = styled.div({
     width: "100%",
@@ -51,16 +52,16 @@ const accountBalanceStyle = {
 
 interface Props {
     isAdmin: boolean;
-    gamblerMoney: number;
     closeMenu: () => void;
 }
 
-const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
+const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin}) => {
+
+    const { gamblerStore, leagueStore } = useGlobalStores();
 
     const navLink = (label: string, path: string, onClick?: (e) => void) => {
         return <NavItem><NavLink style={navLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink></NavItem>;
     };
-
 
     const { signOut } = useGoogleLogout({
         clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID'),
@@ -71,6 +72,9 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
         await logout();
         closeMenu();
     };
+
+    const gambler = leagueStore.gamblers.find(g => g.id === gamblerStore.gambler?.id)
+    const gamblerMoney = gambler ? gambler.money - gambler.pending : 0;
 
     return (
         <MobileMenuOverlay>
@@ -86,13 +90,10 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin, gamblerMoney}) => {
                 {navLink("PROFILE", "/profile", closeMenu)}
                 {navLink("PASSWORD", "/user/password/", closeMenu)}
                 {navLink("SIGN OUT", "/", handleLogout)}
+                <NavItem style={accountBalanceStyle}>
+                    <NavLink style={navLinkStyle} tag={Link} to="/account" onClick={closeMenu}>You have ${gamblerMoney.toFixed(2)}</NavLink>
+                </NavItem>
             </Nav>
-
-            <div>
-                <a style={accountBalanceStyle} className="money" href="/account">
-                    You have ${gamblerMoney}.00
-                </a>
-            </div>
 
         </MobileMenuOverlay>
     );

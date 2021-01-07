@@ -7,10 +7,12 @@ export interface GamblerBets {
 
 class BetStore {
     @observable betsAndParlaysByGambler: GamblerBets = {}
+    loaded: boolean = false;
 
     @action
     saveBets = async (bets: GamblerBets) => {
         this.betsAndParlaysByGambler = bets
+        this.loaded = true;
     };
 }
 

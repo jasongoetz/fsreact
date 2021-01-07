@@ -1,21 +1,17 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect} from "react";
 import {loadUserContext} from "../user/user.actions";
 
-export const useLoadContext = (userId: number) => {
-    const [loading, setLoading] = useState(false);
+export const useLoadContext = (userId: number, loaded: boolean) => {
 
     const loadContext = useCallback(
         async (userId: number) => {
-            setLoading(true);
             await loadUserContext(userId);
-            setLoading(false);
-        },
-        [setLoading],
+        }, []
     );
 
     useEffect(() => {
-        loadContext(userId);
-    }, [userId, loadContext]);
-
-    return { loading, loadContext };
+        if (!loaded) {
+            loadContext(userId);
+        }
+    }, [userId, loaded, loadContext]);
 };
