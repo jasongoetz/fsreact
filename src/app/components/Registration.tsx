@@ -10,6 +10,7 @@ import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
 import {joinLeagueWithInvite} from "../user/user.actions";
+import ApiError from "../api/apiError";
 
 interface Props extends RouteComponentProps {
     token?: string;
@@ -66,7 +67,14 @@ const Registration: React.FC<Props> = () => {
                 history.push('/league/new');
             }
         } catch (err) {
-            formik.setErrors({confirmation: 'Your user profile could not be created'});
+            let errMessage = 'Your user profile could not be created'
+            if (ApiError.is(err)) {
+                let resp = await err.payload.json();
+                if (err.payload.status === 400) {
+                    errMessage = resp.message;
+                }
+            }
+            formik.setErrors({confirmation: errMessage});
         }
     };
 
@@ -159,7 +167,7 @@ const Registration: React.FC<Props> = () => {
                     <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">SIGN UP</FSWideButton>
                     {invite &&
                         <div style={{marginTop: '10px'}}>
-                            Already have an account? <Link to={`/login?token=${invite.token}`}>Log in.</Link>
+                            Already have an account? <Link to={"/login" + (!!token ? `?token=${invite.token}` : '')}>Log in.</Link>
                         </div>
                     }
                 </FSForm>

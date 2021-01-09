@@ -107,6 +107,9 @@ const Login: React.FC<Props> = () => {
         return <LoadingContainer/>;
     }
 
+    console.log("TOKEN: " + token);
+    console.log("TOKEN: " + !!token);
+
     return (
         <Row>
             <Col
@@ -144,7 +147,7 @@ const Login: React.FC<Props> = () => {
                         <FSFormFeedback>{formik.errors.password}</FSFormFeedback>
                     </FormGroup>
                     <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">SIGN IN</FSWideButton>
-                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link to={`/register?token=${token}`}>Sign up.</Link></div>
+                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
                     {attemptedLogin && <div style={{marginTop: '10px'}}>Forgot your password? <Link to={"/forgotpassword"}>Reset it.</Link></div>}
                     {/*<button onClick={signIn}>Sign in with Google</button>*/}
                 </FSForm>

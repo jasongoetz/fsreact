@@ -8,4 +8,8 @@ export default class ApiError extends Error {
         super(...params);
         this.payload = payload;
     }
+
+    static is(err: any): err is ApiError {
+        return err.type === ApiError.TYPE;
+    }
 }
