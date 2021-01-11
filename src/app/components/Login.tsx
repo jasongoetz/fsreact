@@ -107,9 +107,6 @@ const Login: React.FC<Props> = () => {
         return <LoadingContainer/>;
     }
 
-    console.log("TOKEN: " + token);
-    console.log("TOKEN: " + !!token);
-
     return (
         <Row>
             <Col
@@ -126,6 +123,7 @@ const Login: React.FC<Props> = () => {
                             name="email"
                             type="email"
                             placeholder="Email"
+                            autoComplete={"username"}
                             autoCapitalize={"off"}
                             autoCorrect={"off"}
                             invalid={!!formik.errors.email}

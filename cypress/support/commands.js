@@ -40,7 +40,6 @@ Cypress.Commands.add("restoreLocalStorage", () => {
 });
 
 Cypress.Commands.add("logout", () => {
-    console.log("Clearing...");
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
 });

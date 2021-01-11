@@ -130,6 +130,7 @@ const Registration: React.FC<Props> = () => {
                             invalid={formik.touched.email && !!formik.errors.email}
                             name="email"
                             type="email"
+                            autoComplete={"username"}
                             autoCapitalize={"off"}
                             autoCorrect={"off"}
                             onChange={formik.handleChange}
@@ -144,7 +145,7 @@ const Registration: React.FC<Props> = () => {
                             invalid={formik.touched.password && !!formik.errors.password}
                             name="password"
                             type="password"
-                            autoComplete={"current-password"}
+                            autoComplete={"new-password"}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.password}
@@ -157,6 +158,7 @@ const Registration: React.FC<Props> = () => {
                             invalid={formik.touched.confirmation && !!formik.errors.confirmation}
                             name="confirmation"
                             type="password"
+                            autoComplete={"new-password"}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.confirmation}
