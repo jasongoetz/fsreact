@@ -15,6 +15,7 @@ export interface UserProfile {
 export interface User extends UserProfile {
     id: number;
     createdAt: string;
+    systemadmin: boolean;
 }
 
 export interface UserRegistrationInfo {
@@ -92,6 +93,20 @@ export type Bettable = {
     ouoff: boolean;
     off: boolean;
 };
+
+export type BettableWithScore = Bettable & { gameScore: GameScore }
+
+export interface GameScore {
+    bettable: number;
+    team1_score: number;
+    team2_score: number;
+}
+
+export interface GameScoreRequest {
+    bettable: number;
+    side1Score: number;
+    side2Score: number;
+}
 
 export type OverUnder = 'OVER' | 'UNDER';
 export type Outcome = 'WIN' | 'LOSS' | 'PUSH';

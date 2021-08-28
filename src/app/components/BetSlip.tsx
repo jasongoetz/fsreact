@@ -24,7 +24,6 @@ import {editCartBet, editCartParlay, loadCart, removeCartBet, toggleParlay} from
 
 const containerStyle = {
     borderRadius: "0px",
-    //marginTop: "20px",
     backgroundColor: "#ececec",
 };
 

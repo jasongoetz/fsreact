@@ -15,3 +15,11 @@ export const FSWideButton = styled(FSButton)({
     width: '100%',
     textTransform: 'uppercase' as 'uppercase',
 });
+
+export const GoogleButton = styled(Button)({
+    width: '100%',
+    textTransform: 'uppercase' as 'uppercase',
+    color: '#444',
+    backgroundColor: '#fff',
+    borderRadius: 3,
+});

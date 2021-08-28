@@ -4,13 +4,16 @@ import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from 're
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import {FSWideButton} from "./FSComponents";
-import {register} from "../auth/auth.actions";
+import {FSWideButton, GoogleButton} from "./FSComponents";
+import {oAuthAuthenticate, register} from "../auth/auth.actions";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
 import {joinLeagueWithInvite} from "../user/user.actions";
 import ApiError from "../api/apiError";
+import {GoogleIcon} from "./svg/google_icon";
+import {useGoogleLogin} from "react-google-login";
+import {requireEnv} from "../../util/require-env";
 
 interface Props extends RouteComponentProps {
     token?: string;
@@ -91,6 +94,30 @@ const Registration: React.FC<Props> = () => {
         onSubmit: registerUser
     });
 
+    const onSignIn = async (response: any) => {
+        const profile = response.getBasicProfile();
+        console.log(JSON.stringify(profile));
+        try {
+            await oAuthAuthenticate(profile.getEmail(), response.tokenId);
+            if (invite) {
+                await joinLeagueWithInvite(authStore.userId!, invite);
+            }
+        } catch (err) {
+            formik.setErrors({password: 'This email does not exist'});
+        }
+    }
+
+    const onSignInFail = async (response) => {
+        console.log("SIGN IN FAILED!!!");
+    }
+
+    const { signIn } = useGoogleLogin({
+        onSuccess: onSignIn,
+        onFailure: onSignInFail,
+        clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID'),
+        isSignedIn: true,
+    });
+
     if (token && !inviteStore.invite) {
         return <LoadingContainer/>;
     }
@@ -100,6 +127,11 @@ const Registration: React.FC<Props> = () => {
             <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}}>
                 <FSForm id="registration" onSubmit={formik.handleSubmit}>
                     {invite && <FormGroup><h3 style={formSigninHeading}>Finish registering an account to join.</h3></FormGroup>}
+                    <GoogleButton outline onClick={signIn}>
+                        <GoogleIcon />
+                        Sign up with Google
+                    </GoogleButton>
+                    <hr/>
                     <FormGroup>
                         <FSInput
                             placeholder="First Name"

@@ -2,9 +2,9 @@ import {deLete, get, post, put} from './fetch';
 import {
     AuthToken,
     BetOrParlayWrapper,
-    Bettable,
+    Bettable, BettableWithScore,
     CartParlay,
-    Credentials,
+    Credentials, GameScoreRequest,
     League,
     LeagueInvite,
     LeagueRequest,
@@ -41,6 +41,15 @@ export const registerUser = async (user: UserRegistrationInfo): Promise<AuthToke
     const response = await post({
         path: `/api/users`,
         body: JSON.stringify(user),
+    });
+
+    return await response.json();
+};
+
+export const registerWithGoogle = async ({firstName, lastName, email, token}): Promise<AuthToken> => {
+    const response = await post({
+        path: `/api/google-register`,
+        body: JSON.stringify({firstName, lastName, email, token}),
     });
 
     return await response.json();
@@ -134,6 +143,21 @@ export const getTransactionsForGambler = async (gamblerId): Promise<BetOrParlayW
     });
 
     return await response.json();
+};
+
+export const getAllGamesForOpenBets = async (): Promise<BettableWithScore[]> => {
+    const response = await get({
+        path: `/api/admin/games`,
+    });
+    return await response.json();
+};
+
+
+export const postGameScores = async (scores: GameScoreRequest[]) => {
+    await post({
+        path: `/api/admin/games`,
+        body: JSON.stringify({scores: scores})
+    });
 };
 
 export const getGamesForSport = async (sportKey): Promise<{bettables: Bettable[]}> => {

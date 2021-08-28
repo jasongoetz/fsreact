@@ -1,4 +1,4 @@
-import {login, loginWithGoogle, registerUser, Token} from "../api/api";
+import {login, loginWithGoogle, registerUser, registerWithGoogle, Token} from "../api/api";
 import jwtDecode from 'jwt-decode';
 import {Credentials, UserRegistrationInfo} from "../types";
 import {authStore} from "./auth.store";
@@ -37,6 +37,13 @@ export const register = async (userInfo: UserRegistrationInfo) => {
 
     storeToken(authToken);
 };
+
+export const oAuthRegister = async (firstName: string, lastName: string, email: string, token: string) => {
+    const auth = await registerWithGoogle({firstName, lastName, email, token});
+    const authToken = auth.token;
+
+    storeToken(authToken);
+}
 
 
 

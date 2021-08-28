@@ -13,7 +13,6 @@ export const RSVPPage: React.FC = observer(() => {
     }
 
     const {inviteStore} = useGlobalStores();
-    //const authenticated = !!authStore.authenticated;
     const query = useQuery();
     const token = query.get("token");
     useEffect(() => {

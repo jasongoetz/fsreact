@@ -9,8 +9,10 @@ import {authStore} from "../auth/auth.store";
 import {errorStore} from "../error/error.store";
 import {transactionsStore} from "../transactions/transactions.store";
 import {inviteStore} from "../invite/invite.store";
+import {adminStore} from "../admin/admin.store";
 
 export const globalContext = createContext({
+    adminStore,
     authStore,
     bettableStore,
     betStore,

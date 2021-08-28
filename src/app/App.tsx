@@ -26,6 +26,7 @@ import {useGlobalStores} from "./context/global_context";
 import {RSVPPage} from "./components/RSVPPage";
 import ForgotPassword from "./components/ForgotPassword";
 import PasswordReset from "../components/PasswordReset";
+import AdminGamesPage from "./components/AdminGamesPage";
 
 const appStyle = {
     fontFamily: Fonts.mainSite
@@ -90,7 +91,7 @@ const App: FC = () => {
         }
     };
 
-    const JoinLeaguePage = (navProps) => {
+    const JoinLeaguePage = () => {
         return <div>JOIN A LEAGUE TODAY</div>;
     };
 
@@ -125,6 +126,12 @@ const App: FC = () => {
     const UserAccountPage = ({match}) => {
         return <UserContext>
             <AccountPage providedGamblerId={match.params.gamblerId}/>
+        </UserContext>;
+    };
+
+    const AdminPage = () => {
+        return <UserContext adminRequired>
+            <AdminGamesPage/>
         </UserContext>;
     };
 
@@ -188,6 +195,7 @@ const App: FC = () => {
                     <PrivateLeagueRoute exact path="/confirmation" component={BetConfirmationPage}/>
                     <PrivateLeagueRoute exact path="/profile" component={ProfileManagePage}/>
                     <PrivateLeagueRoute exact path="/user/password" component={PasswordManagePage}/>
+                    <PrivateLeagueRoute exact path="/admin" component={AdminPage}/>
                     <Route component={Page404}/>
                 </Switch>
             </div>

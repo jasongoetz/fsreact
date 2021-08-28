@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Col, FormGroup, Row} from "reactstrap";
 import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
-import {authenticate} from "../auth/auth.actions";
-import {FSWideButton} from "./FSComponents";
+import {authenticate, oAuthAuthenticate} from "../auth/auth.actions";
+import {FSWideButton, GoogleButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {Link, useLocation} from "react-router-dom";
@@ -10,6 +10,9 @@ import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
 import {joinLeagueWithInvite} from "../user/user.actions";
+import {useGoogleLogin} from "react-google-login";
+import {requireEnv} from "../../util/require-env";
+import {GoogleIcon} from "./svg/google_icon";
 
 const formSigninStyle = {
     paddingBottom: "15px"
@@ -82,26 +85,29 @@ const Login: React.FC<Props> = () => {
         }
     };
 
-    // const onSignIn = async (response: any) => {
-    //     try {
-    //         const profile = response.getBasicProfile();
-    //         await oAuthAuthenticate(profile.getEmail(), response.tokenId);
-    //     } catch (err) {
-    //         formik.setErrors({password: 'This email does not exist'}); //TODO: This should lead to registration
-    //     }
-    //
-    // }
-    //
-    // const onSignInFail = async (response) => {
-    //     console.log("SIGN IN FAILED!!!");
-    // }
+    const onSignIn = async (response: any) => {
+        const profile = response.getBasicProfile();
+        console.log(JSON.stringify(profile));
+        try {
+            await oAuthAuthenticate(profile.getEmail(), response.tokenId);
+            if (invite) {
+                await joinLeagueWithInvite(authStore.userId!, invite);
+            }
+        } catch (err) {
+            formik.setErrors({password: 'This email does not exist'});
+        }
+    }
 
-    // const { signIn } = useGoogleLogin({
-    //     onSuccess: onSignIn,
-    //     onFailure: onSignInFail,
-    //     clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID'),
-    //     isSignedIn: true,
-    // })
+    const onSignInFail = async (response) => {
+        console.log("SIGN IN FAILED!!!");
+    }
+
+    const { signIn } = useGoogleLogin({
+        onSuccess: onSignIn,
+        onFailure: onSignInFail,
+        clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID'),
+        isSignedIn: true,
+    })
 
     if (token && !inviteStore.invite) {
         return <LoadingContainer/>;
@@ -116,7 +122,12 @@ const Login: React.FC<Props> = () => {
                 lg={{offset: 4, size: 4}}
             >
                 <FSForm style={formSigninStyle} onSubmit={formik.handleSubmit}>
-                    {invite && <FormGroup><h3 style={formSigninHeading}>Welcome. Finish registering an account to join.</h3></FormGroup>}
+                    {invite && <FormGroup><h3 style={formSigninHeading}>Sign in to join this league.</h3></FormGroup>}
+                    <GoogleButton outline onClick={signIn}>
+                        <GoogleIcon />
+                        Sign in with Google
+                    </GoogleButton>
+                    <hr/>
                     <FormGroup>
                         <FSInput
                             autoFocus
@@ -147,7 +158,6 @@ const Login: React.FC<Props> = () => {
                     <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">SIGN IN</FSWideButton>
                     <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
                     {attemptedLogin && <div style={{marginTop: '10px'}}>Forgot your password? <Link to={"/forgotpassword"}>Reset it.</Link></div>}
-                    {/*<button onClick={signIn}>Sign in with Google</button>*/}
                 </FSForm>
             </Col>
         </Row>
