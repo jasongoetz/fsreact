@@ -14,7 +14,7 @@ const PrivateLeagueRoute = observer(({component: Comp, ...rest}) => {
     }
 
     if (!!userStore.user?.id && !userStore.hasLeague) {
-        return <Redirect to={{pathname: '/league/new', state: {from: location}}}/>;
+        return <Redirect to={{pathname: '/league/join', state: {from: location}}}/>;
     }
 
     return (

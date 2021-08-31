@@ -72,12 +72,12 @@ export const LeagueSwitcher: React.FC<Props> = ({leagues, currentLeagueId, mobil
 
     return (
         <Dropdown style={leagueSwitcherStyle} isOpen={dropdownOpen} toggle={toggle}>
-            <LeagueDropdownToggle isMobile={mobile} caret>
+            <LeagueDropdownToggle data-testid={'league-switcher'} isMobile={mobile} caret>
                 {!mobile && <span>Switch Leagues</span>}
             </LeagueDropdownToggle>
             <DropdownMenu style={dropdownMenuStyle} right={mobile}>
-                {leagues.filter(league => league.id !== currentLeagueId).map(league =>
-                    <LeagueDropdownItem onClick={() => switchToLeague(league.id)} key={league.id}>{league.name} ({league.sport})</LeagueDropdownItem>
+                {leagues.filter(league => league.id !== currentLeagueId).map((league, i) =>
+                    <LeagueDropdownItem data-testid={'lg-switcher-item-'+i} onClick={() => switchToLeague(league.id)} key={league.id}>{league.name} ({league.sport})</LeagueDropdownItem>
                 )}
             </DropdownMenu>
         </Dropdown>

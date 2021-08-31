@@ -59,7 +59,9 @@ const LeaguePage: React.FC = observer(() => {
             <div style={leagueHeaderStyle}>
                 <Container>
                     <LeagueNameHeader mobile={isMobile}>{league.name}</LeagueNameHeader>
-                    <LeagueSwitcher leagues={userStore.leagues} currentLeagueId={league.id} mobile={isMobile}/>
+                    {(userStore.leagues.length > 1) &&
+                        <LeagueSwitcher leagues={userStore.leagues} currentLeagueId={league.id} mobile={isMobile}/>
+                    }
                 </Container>
             </div>
 

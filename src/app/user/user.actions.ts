@@ -30,7 +30,7 @@ export const updateUserPassword = async (userId: number, password: string) => {
 
 export const joinLeagueWithInvite = async (userId: number, invite: Invite) => {
     await joinLeague(userId, invite.token);
-    userStore.saveHasLeague(true);
+    await loadUserContext(userId);
 }
 
 export const switchLeague = async (leagueId: number) => {

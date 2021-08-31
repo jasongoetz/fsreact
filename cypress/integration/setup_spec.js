@@ -10,7 +10,7 @@ describe('Set Up', () => {
     it('registers and create league', function () {
 
         let time = Date.now().valueOf();
-        cy.visit('/register')
+        cy.visit('/fsregister')
 
         email = `jason.goetz+${time}@gmail.com`;
 
@@ -21,7 +21,7 @@ describe('Set Up', () => {
         cy.get('input[name=confirmation]').type(`${password}{enter}`)
 
         // we should be redirected to /dashboard
-        cy.url().should('include', '/league/new')
+        cy.url().should('include', '/league/join')
 
         cy.get('input[id=leagueName]').type('CFB ' + time + '{enter}');
 
@@ -36,7 +36,7 @@ describe('Set Up', () => {
     it('logs in', function () {
         // destructuring assignment of the this.currentUser object
 
-        cy.visit('/login')
+        cy.visit('/fslogin')
 
         cy.get('input[name=email]').type(email)
 

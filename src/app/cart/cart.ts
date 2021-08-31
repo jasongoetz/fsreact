@@ -70,6 +70,7 @@ class LocalCart {
 
     public clearCart = () => {
         this.cart = {bets: [], parlay: {active: false, amount: 0}};
+        this.saveCart();
     }
 
     private betIsInCart = (bet: PotentialBet) => {

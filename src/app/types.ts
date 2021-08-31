@@ -16,6 +16,9 @@ export interface User extends UserProfile {
     id: number;
     createdAt: string;
     systemadmin: boolean;
+    leagueInvites: LeagueInviteWithFullLeague[];
+    googleAccount: number;
+    fsAccount: number;
 }
 
 export interface UserRegistrationInfo {
@@ -181,6 +184,14 @@ export interface LeagueInvite {
     email: string;
     user: number;
     league: number;
+}
+
+export interface LeagueInviteWithFullLeague {
+    id: number;
+    token: string;
+    email: string;
+    user: number;
+    league: League;
 }
 
 export interface Credentials {

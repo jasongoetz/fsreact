@@ -50,5 +50,5 @@ export const editCartParlay = async (amount: number) => {
 export const confirmBets = async () => {
     await makeBets(getGamblerId(), cartStore.bets, cartStore.parlay);
     await LocalCart.clearCart();
-    cartStore.clearCart();
+    await cartStore.clearCart();
 };

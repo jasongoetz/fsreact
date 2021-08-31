@@ -7,6 +7,7 @@ import {logout} from "../auth/auth.actions";
 import {useGoogleLogout} from "react-google-login";
 import {requireEnv} from "../../util/require-env";
 import {useGlobalStores} from "../context/global_context";
+import {userStore} from "../user/user.store";
 
 const MobileMenuOverlay = styled.div({
     width: "100%",
@@ -64,11 +65,13 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin}) => {
     };
 
     const { signOut } = useGoogleLogout({
+        onLogoutSuccess: () => logout(),
         clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID'),
     })
 
     const handleLogout = async () => {
         await signOut();
+        //FIXME: For some reason "onLogoutSuccess" above sometimes never happens
         await logout();
         closeMenu();
     };

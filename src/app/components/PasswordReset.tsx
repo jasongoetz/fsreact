@@ -1,7 +1,7 @@
 import React from 'react';
 import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
-import {UpdatePasswordForm} from "../app/components/UpdatePasswordForm";
-import {resetUserPassword} from "../app/api/api";
+import {UpdatePasswordForm} from "./UpdatePasswordForm";
+import {resetUserPassword} from "../api/api";
 
 const PasswordReset: React.FC<RouteComponentProps> = ({history}) => {
 

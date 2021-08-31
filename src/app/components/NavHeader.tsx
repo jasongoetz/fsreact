@@ -97,12 +97,14 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     };
 
     const { signOut } = useGoogleLogout({
+        onLogoutSuccess: async () => await logout(),
         clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID')
     })
 
     const handleLogout = async (e) => {
         e.preventDefault();
         await signOut();
+        //FIXME: For some reason "onLogoutSuccess" above sometimes never happens
         await logout();
     };
 
@@ -139,9 +141,11 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
                     <DropdownItem>
                         {navLink("EDIT", "/profile")}
                     </DropdownItem>
-                    <DropdownItem>
-                        {navLink("UPDATE PASSWORD", "/user/password")}
-                    </DropdownItem>
+                    {userStore.user?.fsAccount &&
+                        <DropdownItem>
+                            {navLink("UPDATE PASSWORD", "/user/password")}
+                        </DropdownItem>
+                    }
                 </DropdownMenu>
             </UncontrolledDropdown>
             {!!gambler &&

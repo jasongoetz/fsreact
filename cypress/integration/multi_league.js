@@ -35,13 +35,27 @@ describe('MultiLeague', () => {
         password: 'w'
     }
 
+    let george = {
+        firstName: 'George',
+        lastName: 'Jones',
+        email: `gjones+${time}@fakestacks.com`,
+        password: 'g'
+    }
+
+    let tammy = {
+        firstName: 'Tammy',
+        lastName: 'Wynette',
+        email: `twynette+${time}@fakestacks.com`,
+        password: 't'
+    }
+
     describe('Create a user, create a league, invite a user, accept the invite', function() {
 
         //Create first commish
         it('registers and creates league', function () {
 
             let time = Date.now().valueOf();
-            cy.visit('/register')
+            cy.visit('/fsregister')
 
             cy.get('input[name=firstName]').type(hank.firstName);
             cy.get('input[name=lastName]').type(hank.lastName);
@@ -52,7 +66,7 @@ describe('MultiLeague', () => {
             cy.get('[data-cy=submit]').click()
 
             // we should be redirected to /dashboard
-            cy.url().should('include', '/league/new')
+            cy.url().should('include', '/league/join')
         })
 
         //Create league for commish
@@ -71,7 +85,8 @@ describe('MultiLeague', () => {
         });
 
         const password = "jg-test-password";
-        let inboxId;
+        let waylonInboxId;
+        let georgeInboxId;
 
         it("Should fail for bad email address in invite", () => {
             // sign up with inbox email address and the password
@@ -86,8 +101,9 @@ describe('MultiLeague', () => {
                 // verify a new inbox was created
                 assert.isDefined(inbox);
 
-                // save the inboxId for later checking the emails
-                inboxId = inbox.id;
+                // save the waylonInboxId for later checking the emails
+                waylonInboxId = inbox.id;
+                console.log("waylon inbox = " + waylonInboxId);
                 waylon.email = inbox.emailAddress;
 
                 // sign up with inbox email address and the password
@@ -99,10 +115,19 @@ describe('MultiLeague', () => {
             });
         });
 
-        let token;
-        it("can receive the invite email and extract the token", () => {
+        it("Invite a third person to the league (without real email address)", () => {
+            // sign up with inbox email address and the password
+            cy.get("input[type=email]").clear();
+            cy.get("input[type=email]").type(george.email);
+            cy.get('button[type="submit"]').click();
+
+            cy.contains(george.email);
+        });
+
+        let waylonInviteToken;
+        it("First invitee can receive the invite email and extract the token", () => {
             // wait for an email in the inbox
-            cy.waitForLatestEmail(inboxId).then((email) => {
+            cy.waitForLatestEmail(waylonInboxId).then((email) => {
                 // verify we received an email
                 assert.isDefined(email);
 
@@ -110,7 +135,7 @@ describe('MultiLeague', () => {
                 assert.strictEqual(/JOIN THE LEAGUE/.test(email.body), true);
 
                 // extract the token (so we can confirm the user)
-                token = /token=(.*?)\"/.exec(email.body)[1];
+                waylonInviteToken = /token=(.*?)\"/.exec(email.body)[1];
             });
         });
 
@@ -119,7 +144,9 @@ describe('MultiLeague', () => {
             cy.logout();
 
             let time = Date.now().valueOf();
-            cy.visit('/rsvp?token=' + token);
+            cy.visit('/rsvp?token=' + waylonInviteToken);
+
+            cy.get('[data-testid="fs-registration-button"]').click();
 
             cy.get('input[name=firstName]').type(waylon.firstName);
             cy.get('input[name=lastName]').type(waylon.lastName);
@@ -139,6 +166,8 @@ describe('MultiLeague', () => {
             let time = Date.now().valueOf();
             cy.visit('/');
 
+            cy.get('[data-testid="fs-login-button"]').click();
+
             cy.get('input[name=email]').type(hank.email);
             cy.get('input[name=password]').type(`${hank.password}`);
 
@@ -151,8 +180,132 @@ describe('MultiLeague', () => {
             //Check that League Members has two people
             cy.get('#leagueMembers').find('tr').should('have.length', 3);
 
-            //Check that League Invites has zero people
-            cy.get('#leagueInvites').find('tr').should('have.length', 2);
+            //Check that League Invites has one person
+            cy.get('#leagueInvites').find('tr').should('have.length', 3);
+        });
+
+        // let georgeInviteToken;
+        // it("Second invitee can receive the invite email and extract the token", () => {
+        //     // wait for an email in the inbox
+        //     cy.waitForLatestEmail(georgeInboxId).then((email) => {
+        //         // verify we received an email
+        //         assert.isDefined(email);
+        //
+        //         // verify that email contains the code
+        //         assert.strictEqual(/JOIN THE LEAGUE/.test(email.body), true);
+        //
+        //         // extract the token (so we can confirm the user)
+        //         georgeInviteToken = /token=(.*?)\"/.exec(email.body)[1];
+        //     });
+        // });
+
+        it("Second invitee just signs up and sees the invite, then sees they have invite in app", () => {
+            // wait for an email in the inbox
+            cy.logout();
+
+            cy.visit('/register');
+
+            cy.get('[data-testid="fs-registration-button"]').click();
+
+            cy.get('input[name=firstName]').type(george.firstName);
+            cy.get('input[name=lastName]').type(george.lastName);
+            cy.get('input[name=email]').type(george.email);
+            cy.get('input[name=password]').type(george.password);
+            cy.get('input[name=confirmation]').type(`${george.password}`);
+
+            cy.get('[data-cy=submit]').click()
+
+            cy.get('[data-testid="join-league-0"]').click();
+
+            cy.contains('SEE THE STANDINGS');
+        });
+
+        //Create first commish
+        it('Tammy registers and creates league', function () {
+            cy.logout();
+
+            cy.visit('/fsregister')
+
+            cy.get('input[name=firstName]').type(tammy.firstName);
+            cy.get('input[name=lastName]').type(tammy.lastName);
+            cy.get('input[name=email]').type(tammy.email);
+            cy.get('input[name=password]').type(tammy.password);
+            cy.get('input[name=confirmation]').type(`${tammy.password}`)
+
+            cy.get('[data-cy=submit]').click()
+
+            // we should be redirected to /dashboard
+            cy.url().should('include', '/league/join')
+        })
+
+        //Create league for commish
+        it('Tammy creates an initial league', function () {
+            cy.get('input[id=leagueName]').type(`TAMMY LEAGUE ${time}`);
+
+            cy.get('[data-cy=submit]').click()
+
+            cy.url().should('eq', Cypress.config().baseUrl + '/');
+        });
+
+
+        it('Tammy visits the league management page and invites Waylon to second league', function () {
+            cy.get('[id="manage"]').click();
+            cy.contains("League Management");
+
+            cy.get("input[type=email]").clear();
+            cy.get("input[type=email]").type(waylon.email);
+            cy.get('button[type="submit"]').click();
+
+            cy.contains(waylon.email);
+        });
+
+        let secondWaylonInviteToken;
+        it("Waylon gets second invite email extracts the token", () => {
+            // wait for an email in the inbox
+            console.log("waylon inbox (2nd time) = " + waylonInboxId);
+            cy.waitForLatestUnreadEmail(waylonInboxId).then((email) => {
+                // verify we received an email
+                assert.isDefined(email);
+
+                // verify that email contains the code
+                assert.strictEqual(/JOIN THE LEAGUE/.test(email.body), true);
+
+                // extract the token (so we can confirm the user)
+                secondWaylonInviteToken = /token=(.*?)\"/.exec(email.body)[1];
+            });
+        });
+
+        it("Waylon accepts this invite too, joining the second league", () => {
+            // wait for an email in the inbox
+            cy.logout();
+
+            cy.visit('/rsvp?token=' + secondWaylonInviteToken);
+
+            cy.get('a[href*="/login"]').click()
+
+            cy.get('[data-testid="fs-login-button"]').click();
+
+            cy.get('input[name=email]').type(waylon.email);
+            cy.get('input[name=password]').type(waylon.password);
+
+            cy.get('[data-cy=submit]').click();
+
+            cy.contains('SEE THE STANDINGS');
+
+            //There are only two people in the standings (We're in Tammy's league)
+            cy.get('.standings').find('tbody>tr').should('have.length', 2);
+        });
+
+        it("Waylon sees a League Switcher and switches leagues", () => {
+
+            cy.get('[data-testid="league-switcher"]').click();
+
+            cy.get('[data-testid="lg-switcher-item-0"]').click();
+
+            cy.contains('CFB');
+
+            //There are only two people in the standings (We're in Tammy's league)
+            cy.get('.standings').find('tbody>tr').should('have.length', 3);
         });
 
     });

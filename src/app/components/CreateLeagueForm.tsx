@@ -1,6 +1,6 @@
 import React from "react";
 import {Col, FormGroup, Label, Row} from "reactstrap";
-import {RouteComponentProps, withRouter, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {FSForm, FSFormFeedback, FSInput, FSLabelColumn} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
@@ -9,18 +9,11 @@ import {Sports} from "../types";
 import {createLeague} from "../league/league.actions";
 import {loadUserContext} from "../user/user.actions";
 
-interface Props extends RouteComponentProps {
+interface Props {
     userId: number;
-    invite: any; //FIXME
 }
 
-const formSigninHeading = {
-    fontSize: '16px',
-    marginBottom: '10px',
-    marginTop: '0px',
-};
-
-const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
+const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
 
     const history = useHistory();
 
@@ -64,7 +57,6 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
         <Row>
             <Col xs={{size: 12, offset: 0}} sm={{size: 10, offset: 1}} md={{size: 8, offset: 2}} lg={{size: 6, offset: 3}}>
                 <FSForm id="create-league" onSubmit={formik.handleSubmit}>
-                    {invite && <h3 style={formSigninHeading}>Welcome. Finish registering an account to join.</h3>}
                     <FormGroup>
                         <Row>
                             <FSLabelColumn xs={5} sm={6}>
@@ -184,4 +176,4 @@ const CreateLeagueForm: React.FC<Props> = ({invite, userId}) => {
 
 };
 
-export default withRouter(CreateLeagueForm);
+export default CreateLeagueForm;

@@ -46,15 +46,6 @@ export const registerUser = async (user: UserRegistrationInfo): Promise<AuthToke
     return await response.json();
 };
 
-export const registerWithGoogle = async ({firstName, lastName, email, token}): Promise<AuthToken> => {
-    const response = await post({
-        path: `/api/google-register`,
-        body: JSON.stringify({firstName, lastName, email, token}),
-    });
-
-    return await response.json();
-};
-
 export const requestPasswordReset = async (email): Promise<void> => {
     await post({
         path: `/api/password/reset-request`,
@@ -145,9 +136,9 @@ export const getTransactionsForGambler = async (gamblerId): Promise<BetOrParlayW
     return await response.json();
 };
 
-export const getAllGamesForOpenBets = async (): Promise<BettableWithScore[]> => {
+export const getAllGamesForOpenBets = async (future?: boolean): Promise<BettableWithScore[]> => {
     const response = await get({
-        path: `/api/admin/games`,
+        path: `/api/admin/games` + (future ? '?future=true' : ''),
     });
     return await response.json();
 };

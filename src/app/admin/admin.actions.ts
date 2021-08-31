@@ -2,8 +2,8 @@ import {adminStore} from "./admin.store";
 import {getAllGamesForOpenBets, postGameScores} from "../api/api";
 import {GameScoreRequest} from "../types";
 
-export const loadGamesForOpenBets = async () => {
-    const games = await getAllGamesForOpenBets();
+export const loadGamesForOpenBets = async (future?: boolean) => {
+    const games = await getAllGamesForOpenBets(future);
     await adminStore.saveGamesWithOpenBets(games);
 };
 

@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Col, FormGroup, Row} from "reactstrap";
-import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
-import {authenticate, oAuthAuthenticate} from "../auth/auth.actions";
-import {FSWideButton, GoogleButton} from "./FSComponents";
-import {useFormik} from "formik";
-import * as yup from "yup";
-import {Link, useLocation} from "react-router-dom";
+import {FSForm} from "./FSForm";
+import {oAuthAuthenticate} from "../auth/auth.actions";
+import {GoogleButton} from "./FSComponents";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
@@ -36,6 +34,7 @@ interface LoginValues {
 const Login: React.FC<Props> = () => {
 
     const location = useLocation();
+    const history = useHistory();
     const useQuery = () => {
         return new URLSearchParams(location.search);
     }
@@ -50,56 +49,16 @@ const Login: React.FC<Props> = () => {
         }
     }, [token, invite]);
 
-    const [attemptedLogin, setAttemptedLogin] = useState(false)
-
-    const loginSchema = yup.object().shape({
-        email: yup.string()
-            .email('Your account username is a valid email')
-            .required('Your email username is required'),
-        password: yup.string()
-            .required('Please enter your password'),
-    });
-
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: '',
-            token: invite ? invite.token : '',
-        },
-        validationSchema: loginSchema,
-        onSubmit: async (values, actions) => {
-            setAttemptedLogin(true);
-            submitLogin(values.email, values.password);
-            actions.setSubmitting(false);
-        }
-    });
-
-    const submitLogin = async (email: string, password: string) => {
-        try {
-            await authenticate({email, password});
-            if (invite) {
-                await joinLeagueWithInvite(authStore.userId!, invite);
-            }
-        } catch (err) {
-            formik.setErrors({password: 'Your email or password is incorrect'});
-        }
-    };
-
     const onSignIn = async (response: any) => {
         const profile = response.getBasicProfile();
-        console.log(JSON.stringify(profile));
-        try {
-            await oAuthAuthenticate(profile.getEmail(), response.tokenId);
-            if (invite) {
-                await joinLeagueWithInvite(authStore.userId!, invite);
-            }
-        } catch (err) {
-            formik.setErrors({password: 'This email does not exist'});
+        await oAuthAuthenticate(profile.getEmail(), response.tokenId);
+        if (invite) {
+            await joinLeagueWithInvite(authStore.userId!, invite);
         }
     }
 
     const onSignInFail = async (response) => {
-        console.log("SIGN IN FAILED!!!");
+        console.log("SIGN IN FAILED!!!" + JSON.stringify(response));
     }
 
     const { signIn } = useGoogleLogin({
@@ -121,43 +80,17 @@ const Login: React.FC<Props> = () => {
                 md={{offset: 3, size: 6}}
                 lg={{offset: 4, size: 4}}
             >
-                <FSForm style={formSigninStyle} onSubmit={formik.handleSubmit}>
+                <FSForm style={formSigninStyle}>
                     {invite && <FormGroup><h3 style={formSigninHeading}>Sign in to join this league.</h3></FormGroup>}
-                    <GoogleButton outline onClick={signIn}>
+                    <GoogleButton data-testid="google-login-button" outline onClick={signIn}>
                         <GoogleIcon />
                         Sign in with Google
                     </GoogleButton>
                     <hr/>
-                    <FormGroup>
-                        <FSInput
-                            autoFocus
-                            name="email"
-                            type="email"
-                            placeholder="Email"
-                            autoComplete={"username"}
-                            autoCapitalize={"off"}
-                            autoCorrect={"off"}
-                            invalid={!!formik.errors.email}
-                            onChange={formik.handleChange}
-                            value={formik.values.email}
-                        />
-                        <FSFormFeedback>{formik.errors.email}</FSFormFeedback>
-                    </FormGroup>
-                    <FormGroup>
-                        <FSInput
-                            name="password"
-                            type="password"
-                            placeholder="Password"
-                            autoComplete={"current-password"}
-                            invalid={!!formik.errors.password}
-                            onChange={formik.handleChange}
-                            value={formik.values.password}
-                        />
-                        <FSFormFeedback>{formik.errors.password}</FSFormFeedback>
-                    </FormGroup>
-                    <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">SIGN IN</FSWideButton>
+                    <GoogleButton data-testid="fs-login-button" outline onClick={() => history.push('/fslogin')}>
+                        Sign in with Fake Stacks
+                    </GoogleButton>
                     <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
-                    {attemptedLogin && <div style={{marginTop: '10px'}}>Forgot your password? <Link to={"/forgotpassword"}>Reset it.</Link></div>}
                 </FSForm>
             </Col>
         </Row>

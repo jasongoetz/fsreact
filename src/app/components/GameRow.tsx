@@ -24,7 +24,8 @@ const GameTimeCol = styled(Col)({
 
 const TeamNameCol = styled(Col)({
     textAlign: "right",
-    paddingTop: "5px"
+    paddingTop: "10px",
+    fontSize: "1.05rem",
 });
 
 interface Props {

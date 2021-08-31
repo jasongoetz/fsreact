@@ -10,6 +10,7 @@ import {FSWideButton} from "./FSComponents";
 import styled from "@emotion/styled";
 import {Colors} from "../theme/theme";
 import {BettableWithScore} from "../types";
+import {useLocation} from "react-router-dom";
 
 
 const OutcomeCard = styled.div({
@@ -23,13 +24,21 @@ const OutcomeCard = styled.div({
 });
 
 const AdminGamesPage: React.FC = observer(() => {
+    const location = useLocation();
+    const useQuery = () => {
+        return new URLSearchParams(location.search);
+    }
+
+    const query = useQuery();
+    const future = query.get("future");
+
     const {adminStore} = useGlobalStores();
 
     useEffect(() => {
         if (!adminStore.loaded) {
-            loadGamesForOpenBets();
+            loadGamesForOpenBets(future === 'true');
         }
-    }, [adminStore.loaded]);
+    }, [adminStore.loaded, future]);
 
     return (
         <Container>

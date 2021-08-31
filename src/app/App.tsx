@@ -21,12 +21,14 @@ import PasswordPage from "./components/PasswordPage";
 import UserContext from "./components/UserContext";
 import Registration from "./components/Registration";
 import PrivateUnaffiliatedRoute from "./components/routing/PrivateUnaffiliatedRoute";
-import CreateLeagueForm from "./components/CreateLeagueForm";
 import {useGlobalStores} from "./context/global_context";
 import {RSVPPage} from "./components/RSVPPage";
 import ForgotPassword from "./components/ForgotPassword";
-import PasswordReset from "../components/PasswordReset";
+import PasswordReset from "./components/PasswordReset";
 import AdminGamesPage from "./components/AdminGamesPage";
+import JoinLeagueScreen from "./components/JoinLeagueScreen";
+import FakeStacksLogin from "./components/FakeStacksLogin";
+import FakeStacksRegistration from "./components/FakeStacksRegistration";
 
 const appStyle = {
     fontFamily: Fonts.mainSite
@@ -54,10 +56,26 @@ const App: FC = () => {
         )
     };
 
+    const FSLoginPage = (navProps) => {
+        return (
+            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+                <FakeStacksLogin {...navProps}/>
+            </ImagePage>
+        )
+    };
+
     const RegistrationPage = (navProps) => {
         return (
-            <ImagePage headline={"WELCOME TO FAKE STACKS."}>
+            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
                 <Registration {...navProps}/>
+            </ImagePage>
+        )
+    };
+
+    const FSRegistrationPage = (navProps) => {
+        return (
+            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+                <FakeStacksRegistration {...navProps}/>
             </ImagePage>
         )
     };
@@ -78,21 +96,15 @@ const App: FC = () => {
         )
     }
 
-    const NewLeaguePage = (navProps) => {
+    const JoinLeaguePage = () => {
         const {authStore} = useGlobalStores();
         if (authStore.userId) {
             return (
                 <UserContext>
-                    <ImagePage headline={"CREATE YOUR LEAGUE."}>
-                        <CreateLeagueForm userId={authStore.userId} {...navProps}/>
-                    </ImagePage>
+                    <JoinLeagueScreen/>
                 </UserContext>
             )
         }
-    };
-
-    const JoinLeaguePage = () => {
-        return <div>JOIN A LEAGUE TODAY</div>;
     };
 
     const GamePage = () => {
@@ -179,13 +191,14 @@ const App: FC = () => {
 
                 <Switch>
                     <UnauthenticatedRoute exact path="/login" component={LoginPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/fslogin" component={FSLoginPage} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/rsvp" component={RSVPPageContainer} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/register" component={RegistrationPage} redirectTo="/"/>
+                    <UnauthenticatedRoute exact path="/fsregister" component={FSRegistrationPage} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/forgotpassword" component={ForgotPasswordPage} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/passwordreset" component={PasswordResetPage} redirectTo="/"/>
                     <PrivateLeagueRoute exact path="/" component={HomePage}/>
                     <PrivateUnaffiliatedRoute exact path="/league/join" component={JoinLeaguePage}/>
-                    <PrivateUnaffiliatedRoute exact path="/league/new" component={NewLeaguePage}/>
                     <PrivateLeagueRoute exact path="/games" component={GamePage}/>
                     <PrivateLeagueRoute exact path="/standings" component={StandingsPage}/>
                     <PrivateLeagueRoute exact path="/bets" component={BetsPage}/>

@@ -54,3 +54,7 @@ Cypress.Commands.add("waitForLatestEmail", (inboxId) => {
     return mailslurp.waitForLatestEmail(inboxId, 30000);
 });
 
+Cypress.Commands.add("waitForLatestUnreadEmail", (inboxId) => {
+    return mailslurp.waitForLatestEmail(inboxId, 30000, true);
+});
+

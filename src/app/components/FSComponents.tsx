@@ -1,5 +1,9 @@
 import styled from "@emotion/styled";
-import {Button} from "reactstrap";
+import {Button, Container} from "reactstrap";
+
+export const FSPageContainer = styled(Container)({
+   marginTop: 15
+});
 
 export const FSButton = styled(Button)`
     && {
