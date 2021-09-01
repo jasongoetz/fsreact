@@ -11,6 +11,7 @@ import styled from "@emotion/styled";
 import {Colors} from "../theme/theme";
 import {BettableWithScore} from "../types";
 import {useLocation} from "react-router-dom";
+import {loadUserContext} from "../user/user.actions";
 
 
 const OutcomeCard = styled.div({
@@ -66,6 +67,8 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
         side2Score: game.gameScore?.team2_score,
     }));
 
+    const {authStore} = useGlobalStores();
+
     const formik = useFormik({
         initialValues: {
             outcomes: initialOutcomes
@@ -81,6 +84,9 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
         }),
         onSubmit: async (values, actions) => {
             await submitGameScores(values.outcomes);
+            if (authStore.userId) {
+                await loadUserContext(authStore.userId);
+            }
         }
     });
 

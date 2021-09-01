@@ -1,6 +1,7 @@
 import {adminStore} from "./admin.store";
 import {getAllGamesForOpenBets, postGameScores} from "../api/api";
 import {GameScoreRequest} from "../types";
+import {loadUserContext} from "../user/user.actions";
 
 export const loadGamesForOpenBets = async (future?: boolean) => {
     const games = await getAllGamesForOpenBets(future);
