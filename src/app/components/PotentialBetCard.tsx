@@ -3,6 +3,7 @@ import {Button, Input, InputGroup, ListGroupItem} from "reactstrap";
 import {CartBet} from "../types";
 import moment from "moment";
 import {getBetSummary, getGameSummary} from "../../util/BetUtil";
+import {getBetWinnings} from "../../util/MoneylineUtil";
 
 const potentialBetStyle = {
     backgroundColor: "#ececec",
@@ -63,11 +64,12 @@ interface Props {
     cartId: string;
     bet: CartBet;
     partOfParlay: boolean;
+    moneyline: number;
     onClose: (cartId: string) => void;
     onEdit: (cartId: string, amount: number) => void;
 }
 
-const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, cartId}) => {
+const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, cartId, moneyline}) => {
 
     const getWagerFields = (bet) => {
         return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '10px'}}>
@@ -85,7 +87,7 @@ const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, 
             <InputGroup style={{width: '30%'}}>
                 <span style={disabledGroupAddOn}>$</span>
                 <Input readOnly disabled type="number" min="0" style={betWinningsStyle} className="form-control"
-                       value={2 * (bet.amount || 0)}/>
+                       value={getBetWinnings(bet.amount || 0, moneyline)}/>
             </InputGroup>
         </div>;
     };

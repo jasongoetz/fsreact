@@ -22,7 +22,7 @@ export const editCartBet = async (cartBetId: string, amount: number) => {
     if (!!amount && isNaN(amount)) {
         return;
     }
-    await LocalCart.editCartAmount(cartBetId, isNaN(amount) ? 0 : amount);
+    await LocalCart.editCartAmount(cartBetId, amount);
     await cartStore.editCartBet(cartBetId, amount);
 };
 
@@ -38,9 +38,6 @@ export const toggleParlay = async (active: boolean) => {
 
 export const editCartParlay = async (amount: number) => {
     if (!!amount && isNaN(amount)) {
-        return true;
-    }
-    if (isNaN(amount)) {
         return;
     }
     await LocalCart.editParlayAmount(amount);

@@ -56,6 +56,10 @@ export const LeagueSettings: React.FC<Props> = ({league}) => <Container>
                     <td>Weekly Bet Count Max:</td>
                     <td style={settingValueStyle}>{league.weeklyBetCountMax}</td>
                 </tr>
+                <tr>
+                    <td>Moneyline:</td>
+                    <td style={settingValueStyle}>{league.moneyline}</td>
+                </tr>
                 </tbody>
             </Table>
         </Col>

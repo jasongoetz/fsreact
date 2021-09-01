@@ -2,6 +2,7 @@ import React from "react";
 import moment from "moment";
 import {Bet, Parlay, BetOrParlayWrapper, Wager} from "../types";
 import {Colors} from "../theme/theme";
+import {getBetWinnings, getParlayWinnings} from "../../util/MoneylineUtil";
 
 const parlayBetRowStyle = {
     borderTop: "0px",
@@ -63,49 +64,33 @@ const getOutcome = (bet: Wager) => {
     }
 };
 
-const vigFactor = (moneyline: string) => {
-    let num = parseFloat(moneyline);
-    return (num > 0) ? (num + 100) / 100 : (num < 0) ? (-num + 100) / -num : 1;
-};
-
-const getAmount = (betOrParlay: BetOrParlayWrapper, moneyline: string) => {
+const getWinnings = (betOrParlay: BetOrParlayWrapper, moneyline: number) => {
     if (betOrParlay.value.outcome === 'WIN') {
         if (betOrParlay.type === 'parlay') {
             const parlay = betOrParlay.value as Parlay;
-            return parlayWinnings(parlay, moneyline);
+            return getParlayWinnings(parlay.amount, moneyline, parlay.bets.filter(b => b.outcome === 'WIN').length);
         } else {
             const bet = betOrParlay.value as Bet;
-            return betWinnings(bet, moneyline);
+            return getBetWinnings(bet.amount, moneyline);
         }
     } else if (betOrParlay.value.outcome === 'LOSS') {
-        return betOrParlay.value.amount;
+        return '--';
     } else if (betOrParlay.value.complete === true) {
-        return "-";
+        return betOrParlay.value.amount;
     } else {
         if (betOrParlay.type === 'parlay') {
             const parlay = betOrParlay.value as Parlay;
-            return `${betOrParlay.value.amount} to win ${parlayWinnings(parlay, moneyline, true)}`;
+            return `${betOrParlay.value.amount} to win ${getParlayWinnings(parlay.amount, moneyline, parlay.bets.length)}`;
         } else {
             const bet = betOrParlay.value as Bet;
-            return betWinnings(bet, moneyline);
+            return getBetWinnings(bet.amount, moneyline);
         }
     }
 };
 
-const betWinnings = (bet: Bet, moneyline: string) => {
-    let winning = bet.amount * vigFactor(moneyline);
-    winning = Math.round(winning * 100) / 100;
-    return winning - bet.amount;
-};
-
-const parlayWinnings = (parlay: Parlay, moneyline: string, potential: boolean = false) => {
-    let wonBets = parlay.bets.filter(bet => potential || bet.outcome === 'WIN');
-    let amount = parlay.amount * Math.pow(vigFactor(moneyline), wonBets.length);
-    return Math.round(amount * 100) / 100 - parlay.amount;
-};
-
-export const TransactionRow: React.FC<{ betOrParlay: BetOrParlayWrapper, moneyline: string }> = ({betOrParlay, moneyline}) => {
-    let amount = getAmount(betOrParlay, moneyline);
+export const TransactionRow: React.FC<{ betOrParlay: BetOrParlayWrapper, moneyline: number }> = ({betOrParlay, moneyline}) => {
+    let amount = betOrParlay.value.amount;
+    let winnings = getWinnings(betOrParlay, moneyline);
     return (
         <React.Fragment>
             <tr style={{backgroundColor: getRowColor(betOrParlay)}}>
@@ -113,6 +98,7 @@ export const TransactionRow: React.FC<{ betOrParlay: BetOrParlayWrapper, moneyli
                 <td>{getDescription(betOrParlay)}</td>
                 <td>{getOutcome(betOrParlay.value as Wager)}</td>
                 <td>{typeof amount === 'number' ? amount.toFixed(2) : amount}</td>
+                <td>{typeof winnings === 'number' ? winnings.toFixed(2) : winnings}</td>
                 <td>{betOrParlay.tally.toFixed(2)}</td>
             </tr>
             {betOrParlay.type === 'parlay' && (betOrParlay.value as Parlay).bets.map((bet, index) => {
@@ -120,6 +106,7 @@ export const TransactionRow: React.FC<{ betOrParlay: BetOrParlayWrapper, moneyli
                     <td style={{...parlayBetDateStyle, ...parlayBetRowStyle}}>{moment(bet.bettable.gameTime).format("dddd, MMMM Do")}</td>
                     <td style={{...parlayBetRowStyle, paddingLeft: "20px"}}>{getBetDescription(bet)}</td>
                     <td style={{...parlayBetRowStyle, ...parlayBetOutcomeStyle}}>{bet.outcome}</td>
+                    <td style={parlayBetRowStyle}/>
                     <td style={parlayBetRowStyle}/>
                     <td style={parlayBetRowStyle}/>
                 </tr>

@@ -3,6 +3,7 @@ import {ListGroupItem} from "reactstrap";
 import {CartBet} from "../types";
 import moment from "moment";
 import {getBetSummary, getGameSummary} from "../../util/BetUtil";
+import {getBetWinnings} from "../../util/MoneylineUtil";
 
 const betCardStyle = {
     backgroundColor: "#ececec",
@@ -20,13 +21,14 @@ const betChoiceStyle = {
 interface Props {
     bet: CartBet;
     partOfParlay: boolean;
+    moneyline: number;
 }
 
-const ReadOnlyBetCard: React.FC<Props> = ({bet, partOfParlay}) => {
+const ReadOnlyBetCard: React.FC<Props> = ({bet, partOfParlay, moneyline}) => {
 
     const getWagerFields = (bet) => {
         return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '10px'}}>
-            Wager ${bet.amount}, Win ${2 * (bet.amount || 0)}
+            Wager ${bet.amount}, Win ${getBetWinnings(bet.amount, moneyline)}
 
         </div>;
     };

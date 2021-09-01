@@ -49,7 +49,7 @@ export interface League {
     startingAccount: number;
     weeklyBetCountMax: number;
     weeklyBetAccountRatio: number;
-    moneyline: string,
+    moneyline: number,
     landingMessage: string,
     admin: number
 }

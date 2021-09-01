@@ -54,7 +54,8 @@ const AccountPage: React.FC<Props> = observer(({providedGamblerId}) => {
                 <th>Date</th>
                 <th>Transaction</th>
                 <th>Win/Loss</th>
-                <th>Amount</th>
+                <th>Paid</th>
+                <th>Win</th>
                 <th>Tally</th>
             </tr>
             </thead>

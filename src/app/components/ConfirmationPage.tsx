@@ -7,6 +7,7 @@ import {getButtonMessage} from "../../util/BetUtil";
 import {useHistory} from "react-router-dom";
 import {useGlobalStores} from "../context/global_context";
 import {confirmBets} from "../cart/cart.actions";
+import {loadUserContext} from "../user/user.actions";
 
 const totalTallyStyle = {
     marginTop: '20px',
@@ -19,10 +20,13 @@ const ConfirmationPage: React.FC = () => {
 
     const history = useHistory();
 
-    const { cartStore } = useGlobalStores();
+    const { authStore, cartStore, leagueStore } = useGlobalStores();
 
     const confirm = async () => {
         await confirmBets();
+        if (authStore.userId) {
+            await loadUserContext(authStore.userId);
+        }
         history.push('/account');
     };
 
@@ -34,25 +38,33 @@ const ConfirmationPage: React.FC = () => {
     const insufficientBets = potentialBets.length < 2;
     const parlayActive = !!parlay?.active && !insufficientBets;
     const totalAmount = parlayActive ? parlay!.amount : potentialBets.reduce((sum, bet) => sum + bet.amount, 0);
-    return <Container>
-        <PageHeader>Bet Confirmation</PageHeader>
-        <Col sm={12} md={{size: 10, offset: 1}} lg={{size: 6, offset: 3}}>
-            <ListGroup>
-                {potentialBets.map(bet =>
-                    <ReadOnlyBetCard
-                        key={bet.id}
-                        bet={bet}
-                        partOfParlay={parlayActive}
-                    />
-                )}
-            </ListGroup>
-            <div style={totalTallyStyle}>
-                <FSButton onClick={() => confirm()}>
-                    {getButtonMessage('Confirm', potentialBets.length, totalAmount, parlayActive)}
-                </FSButton>
-            </div>
-        </Col>
-    </Container>
+
+    if (!leagueStore.league) {
+        return <Container></Container>;
+    }
+    else {
+        const moneyline = leagueStore.league.moneyline;
+        return <Container>
+            <PageHeader>Bet Confirmation</PageHeader>
+            <Col sm={12} md={{size: 10, offset: 1}} lg={{size: 6, offset: 3}}>
+                <ListGroup>
+                    {potentialBets.map(bet =>
+                        <ReadOnlyBetCard
+                            key={bet.id}
+                            bet={bet}
+                            moneyline={moneyline}
+                            partOfParlay={parlayActive}
+                        />
+                    )}
+                </ListGroup>
+                <div style={totalTallyStyle}>
+                    <FSButton onClick={() => confirm()}>
+                        {getButtonMessage('Confirm', potentialBets.length, totalAmount, parlayActive)}
+                    </FSButton>
+                </div>
+            </Col>
+        </Container>
+    }
 };
 
 export default ConfirmationPage;

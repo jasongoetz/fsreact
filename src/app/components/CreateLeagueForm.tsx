@@ -48,6 +48,7 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
             startingAccount: '500',
             weeklyBetCountMax: '6',
             weeklyBetAccountRatio: '50',
+            bettingBonus: false,
         },
         validationSchema: leagueCreationSchema,
         onSubmit: registerLeague
@@ -166,6 +167,27 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
                             </Col>
                         </Row>
                         <FSFormFeedback>{formik.errors.weeklyBetAccountRatio}</FSFormFeedback>
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
+                            <FSLabelColumn xs={5} sm={6}>
+                                <Label for="weeklyBetAccountRatio">Betting Bonus:</Label>
+                            </FSLabelColumn>
+                            <Col xs={7} sm={6}>
+                                <FSInput
+                                    type="select"
+                                    id="moneyline"
+                                    name="moneyline"
+                                    defaultValue="50"
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                >
+                                    <option value="100">No Bonus</option>
+                                    <option value="110">10% Bonus</option>
+                                    <option value="115">15% Bonus</option>
+                                </FSInput>
+                            </Col>
+                        </Row>
                     </FormGroup>
 
                     <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">CREATE LEAGUE</FSWideButton>

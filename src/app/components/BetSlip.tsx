@@ -21,6 +21,7 @@ import {useHistory} from "react-router-dom";
 import {useGlobalStores} from "../context/global_context";
 import {observer} from "mobx-react";
 import {editCartBet, editCartParlay, loadCart, removeCartBet, toggleParlay} from "../cart/cart.actions";
+import {getParlayWinnings} from "../../util/MoneylineUtil";
 
 const containerStyle = {
     borderRadius: "0px",
@@ -82,14 +83,14 @@ const disabledGroupAddOn = {
 const wagerAmountStyle = {
     borderRadius: "0px",
     padding: "6px 3px",
-    width: "50px",
+    width: "100px",
     maxWidth: "65px",
 };
 
 const wagerWinningsStyle = {
     borderRadius: "0px",
     padding: "6px 3px",
-    width: "50px",
+    width: "100px",
     maxWidth: "65px",
 };
 
@@ -116,7 +117,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
 
     const history = useHistory();
 
-    const {cartStore} = useGlobalStores();
+    const {cartStore, leagueStore} = useGlobalStores();
 
     useEffect(() => {
         if (gamblerId) {
@@ -145,10 +146,11 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
         }
     };
 
-    if (!gamblerId) {
+    if (!gamblerId || !leagueStore.league) {
         return <div></div>;
     }
 
+    const moneyline = leagueStore.league.moneyline;
     const parlay = cartStore.parlay;
     const potentialBets = cartStore.bets;
     const insufficientBets = potentialBets.length < 2;
@@ -185,6 +187,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                             cartId={bet.id}
                             bet={bet}
                             partOfParlay={false}
+                            moneyline={moneyline}
                             onClose={(cartId) => removeCartBet(cartId)}
                             onEdit={(cartId, amount) => editCartBet(cartId, amount)}
                         />
@@ -217,6 +220,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                             cartId={bet.id}
                             bet={bet}
                             partOfParlay={true}
+                            moneyline={moneyline}
                             onClose={(cartId) => removeCartBet(cartId)}
                             onEdit={(cartId, amount) => editCartBet(cartId, amount)}
                         />
@@ -231,7 +235,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                                     <Input type="number" min="0" step="1" style={wagerAmountStyle}
                                            className="form-control" id="amount"
                                            onChange={(e) => editCartParlay(parseInt(e.target.value))}
-                                           value={parlay?.amount || 0}/>
+                                           value={parlay?.amount || ''}/>
                                 </InputGroup>
                             </div>
                             <div>
@@ -244,9 +248,9 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                             <div>
                                 <InputGroup>
                                     <span style={disabledGroupAddOn}>$</span>
-                                    <Input readOnly disabled type="number" min="0" step="1"
+                                    <Input readOnly disabled type="number" min="0"
                                            style={wagerWinningsStyle} className="form-control"
-                                           value={Math.pow(2, potentialBets.length) * (parlay?.amount || 0)}/>
+                                           value={getParlayWinnings(parlay?.amount || 0, moneyline, potentialBets.length)}/>
                                 </InputGroup>
                             </div>
                             <div>
