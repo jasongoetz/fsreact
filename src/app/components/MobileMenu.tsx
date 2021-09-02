@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Nav, NavItem, NavLink} from "reactstrap";
+import {Button, DropdownItem, Nav, NavItem, NavLink} from "reactstrap";
 import {Colors} from "../theme/theme";
 import styled from "@emotion/styled";
 import {Link} from "react-router-dom";
@@ -7,7 +7,6 @@ import {logout} from "../auth/auth.actions";
 import {useGoogleLogout} from "react-google-login";
 import {requireEnv} from "../../util/require-env";
 import {useGlobalStores} from "../context/global_context";
-import {userStore} from "../user/user.store";
 
 const MobileMenuOverlay = styled.div({
     width: "100%",
@@ -58,7 +57,7 @@ interface Props {
 
 const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin}) => {
 
-    const { gamblerStore, leagueStore } = useGlobalStores();
+    const { authStore, userStore, gamblerStore, leagueStore } = useGlobalStores();
 
     const navLink = (label: string, path: string, onClick?: (e) => void) => {
         return <NavItem><NavLink style={navLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink></NavItem>;
@@ -91,7 +90,9 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin}) => {
                 {navLink("BETS", "/bets", closeMenu)}
                 {isAdmin && navLink("MANAGE", "/league/settings", closeMenu)}
                 {navLink("PROFILE", "/profile", closeMenu)}
-                {navLink("PASSWORD", "/user/password/", closeMenu)}
+                {userStore.user?.fsAccount &&
+                    navLink("PASSWORD", "/user/password/", closeMenu)
+                }
                 {navLink("SIGN OUT", "/", handleLogout)}
                 <NavItem style={accountBalanceStyle}>
                     <NavLink style={navLinkStyle} tag={Link} to="/account" onClick={closeMenu}>You have ${gamblerMoney.toFixed(2)}</NavLink>

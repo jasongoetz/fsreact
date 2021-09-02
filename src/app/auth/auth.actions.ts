@@ -2,9 +2,15 @@ import {login, loginWithGoogle, registerUser, Token} from "../api/api";
 import jwtDecode from 'jwt-decode';
 import {Credentials, UserRegistrationInfo} from "../types";
 import {authStore} from "./auth.store";
+import {userStore} from "../user/user.store";
+import {gamblerStore} from "../gambler/gambler.store";
+import {leagueStore} from "../league/league.store";
 
 export const logout = async () => {
     authStore.clear();
+    userStore.clear();
+    gamblerStore.clear();
+    leagueStore.clear();
 };
 
 const storeToken = (authToken?: string) => {

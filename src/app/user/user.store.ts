@@ -31,6 +31,14 @@ class UserStore {
             this.user = {...this.user, ...userProfile};
         }
     }
+
+    @action
+    clear = () => {
+        this.loaded = false;
+        this.user = undefined;
+        this.hasLeague = false;
+        this.leagues = [];
+    }
 }
 
 export const userStore = new UserStore();

@@ -86,7 +86,7 @@ interface Props {
 
 const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
-    const isMobile = useMediaQuery({ query: '(max-width: 415px)' });
+    const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 
     const [mobileBetSlipOpen, setMobileBetSlipOpen] = useState(false);
 
@@ -161,6 +161,10 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
     const gambler = leagueStore.gamblers.find(g => g.id === gamblerStore.gambler?.id)
     const authenticated = authStore.authenticated;
+
+    if (!authenticated) {
+        return <></>
+    }
 
     return (
         <Navbar style={navbarStyle} fixed="top" light expand="md">

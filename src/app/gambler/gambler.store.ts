@@ -8,6 +8,11 @@ class GamblerStore {
     saveGambler = (gambler: Gambler) => {
         this.gambler = gambler;
     }
+
+    @action
+    clear = () => {
+        this.gambler = undefined;
+    }
 }
 
 export const gamblerStore = new GamblerStore();

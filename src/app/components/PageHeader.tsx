@@ -1,7 +1,8 @@
 import React from "react";
 
 const pageHeaderStyle = {
-    marginTop: "20px",
+    marginTop: "30px",
+    marginBottom: "20px",
     fontSize: "1.25rem"
 };
 

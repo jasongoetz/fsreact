@@ -10,7 +10,7 @@ interface Props {
 
 const innerHomePagePanelStyle = {
     border: "2px solid #c0c0c0",
-    padding: "10px 20px"
+    padding: "20px 20px 10px 20px"
 };
 
 const homePagePanelHeading = {
@@ -31,7 +31,7 @@ const panelActionRowStyle = {
 
 const HomePagePanel: React.FC<Props> = ({children, title, linkUrl, action}) =>
     <div style={innerHomePagePanelStyle}>
-        <h3 style={homePagePanelHeading}>{title}</h3>
+        <h4 style={homePagePanelHeading}>{title}</h4>
         <div style={homePagePanelContentStyle}>
             <div style={homePagePanelContentInnerStyle}>
                 {children}

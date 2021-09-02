@@ -26,6 +26,7 @@ import {getParlayWinnings} from "../../util/MoneylineUtil";
 const containerStyle = {
     borderRadius: "0px",
     backgroundColor: "#ececec",
+    maxWidth: 767,
 };
 
 const panelHeadingStyle = {
@@ -174,7 +175,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
                          disabled={insufficientBets}>Parlay</NavLink>
             </NavItem>
         </Nav>
-        <TabContent activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
+        <TabContent style={{width: '100%'}} activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
 
             <TabPane tabId="bet-straight">
                 <Row style={{color: "#777574"}} hidden={(potentialBets.length > 0)}>

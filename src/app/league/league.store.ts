@@ -29,6 +29,13 @@ class LeagueStore {
         this.invites = this.invites.filter((invite: LeagueInvite) => invite.id !== inviteId);
     };
 
+    @action
+    clear = () => {
+        this.league = undefined;
+        this.gamblers = [];
+        this.invites = [];
+    }
+
 }
 
 export const leagueStore = new LeagueStore();
