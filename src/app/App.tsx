@@ -29,6 +29,7 @@ import AdminGamesPage from "./components/AdminGamesPage";
 import JoinLeagueScreen from "./components/JoinLeagueScreen";
 import FakeStacksLogin from "./components/FakeStacksLogin";
 import FakeStacksRegistration from "./components/FakeStacksRegistration";
+import CreateLeagueForm from "./components/CreateLeagueForm";
 
 const appStyle = {
     fontFamily: Fonts.mainSite
@@ -104,6 +105,19 @@ const App: FC = () => {
                     <JoinLeagueScreen/>
                 </UserContext>
             )
+        }
+    };
+
+    const NewLeaguePage = () => {
+        const {authStore} = useGlobalStores();
+        if (authStore.userId) {
+            return (
+                <UserContext>
+                    <ImagePage headline={"CREATE YOUR LEAGUE."}>
+                        <CreateLeagueForm userId={authStore.userId}/>
+                    </ImagePage>
+                </UserContext>
+            );
         }
     };
 
@@ -199,6 +213,7 @@ const App: FC = () => {
                     <UnauthenticatedRoute exact path="/passwordreset" component={PasswordResetPage} redirectTo="/"/>
                     <PrivateLeagueRoute exact path="/" component={HomePage}/>
                     <PrivateUnaffiliatedRoute exact path="/league/join" component={JoinLeaguePage}/>
+                    <PrivateLeagueRoute exact path="/league/new" component={NewLeaguePage}/>
                     <PrivateLeagueRoute exact path="/games" component={GamePage}/>
                     <PrivateLeagueRoute exact path="/standings" component={StandingsPage}/>
                     <PrivateLeagueRoute exact path="/bets" component={BetsPage}/>
