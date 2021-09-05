@@ -178,9 +178,9 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
                 <NavbarToggler style={betSlipButtonStyle}>
                     <span style={badgeContainerStyle}>
-                        <Badge style={betSlipBadgeStyle} pill>
+                        {cartStore.bets.length > 0 && <Badge style={betSlipBadgeStyle} pill>
                             {cartStore.bets.length}
-                        </Badge>
+                        </Badge>}
                         <img src="/images/bets-menu.svg" alt="Bets Menu" onClick={toggleBetSlip}/>
                     </span>
                 </NavbarToggler>
