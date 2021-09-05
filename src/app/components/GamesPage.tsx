@@ -29,8 +29,8 @@ const GamesPage: React.FC<Props> = observer(() => {
                     {bettableStore.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable}/>)}
                 </Col>
                 <Col md={4}>
-                    <MediaQuery minWidth={415}>
-                        <BetSlip gamblerId={gamblerStore.gambler?.id}/>
+                    <MediaQuery minWidth={767}>
+                        <BetSlip gamblerId={gamblerStore.gambler?.id} />
                     </MediaQuery>
                 </Col>
             </Row>

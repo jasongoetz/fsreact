@@ -187,7 +187,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
                 {authenticated && gambler && isMobile &&
                     <BetSlipCollapse isOpen={mobileBetSlipOpen}>
-                        <BetSlip gamblerId={gambler.id}/>
+                        <BetSlip gamblerId={gambler.id} onReview={() => setMobileBetSlipOpen(false)}/>
                     </BetSlipCollapse>
                 }
 

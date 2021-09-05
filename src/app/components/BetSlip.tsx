@@ -110,9 +110,10 @@ const errorRowStyle = {
 
 interface Props {
     gamblerId?: number;
+    onReview?: () => void;
 }
 
-const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
+const BetSlip: React.FC<Props> = observer(({gamblerId, onReview}) => {
 
     const [errors, setErrors] = useState<string[]>([]);
 
@@ -143,6 +144,9 @@ const BetSlip: React.FC<Props> = observer(({gamblerId}) => {
         if (errors.length > 0) {
             setErrors(errors);
         } else {
+            if (onReview) {
+                onReview();
+            }
             history.push('/confirmation');
         }
     };
