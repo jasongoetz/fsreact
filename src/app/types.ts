@@ -99,10 +99,21 @@ export type Bettable = {
 
 export type BettableWithScore = Bettable & { gameScore: GameScore }
 
+interface TeamInfo {
+    teamId: number,
+    name: string,
+    alias1?: string,
+    alias2?: string,
+    alias3?: string;
+    sport: Sport;
+}
+
 export interface GameScore {
     bettable: number;
-    team1_score: number;
-    team2_score: number;
+    team1: TeamInfo;
+    team2: TeamInfo;
+    team1Score: number;
+    team2Score: number;
 }
 
 export interface GameScoreRequest {

@@ -63,8 +63,8 @@ const AdminGamesPage: React.FC = observer(() => {
 const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}) => {
     const initialOutcomes = games.map(game => ({
         bettable: game.id,
-        side1Score: game.gameScore?.team1_score,
-        side2Score: game.gameScore?.team2_score,
+        side1Score: game.gameScore?.team2Score, //FIXME: Determine the correct team here
+        side2Score: game.gameScore?.team1Score, //FIXME: Determine the correct team here
     }));
 
     const {authStore} = useGlobalStores();
@@ -101,7 +101,7 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
                         <Input type="number" min="0" step="1"
                                id={'team1Score-' + game.id}
                                name={`outcomes[${index}][side1Score]`}
-                               value={game.gameScore?.team1_score}
+                               value={game.gameScore?.team2Score} //FIXME: Determine the correct team
                                error={formik.errors[`outcomes[${index}][side1Score]`]}
                                onChange={formik.handleChange}
                         />
@@ -115,7 +115,7 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
                         <Input type="number" min="0" step="1"
                                id={'team2Score-' + game.id}
                                name={`outcomes[${index}][side2Score]`}
-                               value={game.gameScore?.team2_score}
+                               value={game.gameScore?.team1Score} //FIXME: Determine the correct team
                                error={formik.errors[`outcomes[${game.id}][side2Score]`]}
                                onChange={formik.handleChange}
                         />

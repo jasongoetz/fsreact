@@ -1,5 +1,4 @@
 import React from 'react';
-import {Container} from "reactstrap";
 import {LeagueSettings} from "./LeagueSettings";
 import LeagueMembers from "./LeagueMembers";
 import LeagueInvites from "./LeagueInvites";

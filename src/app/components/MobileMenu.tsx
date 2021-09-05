@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, DropdownItem, Nav, NavItem, NavLink} from "reactstrap";
+import {Button, Nav, NavItem, NavLink} from "reactstrap";
 import {Colors} from "../theme/theme";
 import styled from "@emotion/styled";
 import {Link} from "react-router-dom";
@@ -57,7 +57,7 @@ interface Props {
 
 const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin}) => {
 
-    const { authStore, userStore, gamblerStore, leagueStore } = useGlobalStores();
+    const { userStore, gamblerStore, leagueStore } = useGlobalStores();
 
     const navLink = (label: string, path: string, onClick?: (e) => void) => {
         return <NavItem><NavLink style={navLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink></NavItem>;
