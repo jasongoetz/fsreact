@@ -80,6 +80,7 @@ export interface Invite {
     email: string;
     user: number;
     league: number;
+    accepted?: boolean;
 }
 
 export type Bettable = {

@@ -30,6 +30,7 @@ import JoinLeagueScreen from "./components/JoinLeagueScreen";
 import FakeStacksLogin from "./components/FakeStacksLogin";
 import FakeStacksRegistration from "./components/FakeStacksRegistration";
 import CreateLeagueForm from "./components/CreateLeagueForm";
+import OpenRoute from "./components/routing/OpenRoute";
 
 const appStyle = {
     fontFamily: Fonts.mainSite
@@ -206,7 +207,7 @@ const App: FC = () => {
                 <Switch>
                     <UnauthenticatedRoute exact path="/login" component={LoginPage} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/fslogin" component={FSLoginPage} redirectTo="/"/>
-                    <UnauthenticatedRoute exact path="/rsvp" component={RSVPPageContainer} redirectTo="/"/>
+                    <OpenRoute exact path="/rsvp" component={RSVPPageContainer} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/register" component={RegistrationPage} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/fsregister" component={FSRegistrationPage} redirectTo="/"/>
                     <UnauthenticatedRoute exact path="/forgotpassword" component={ForgotPasswordPage} redirectTo="/"/>

@@ -4,6 +4,7 @@ import {Invite, UserProfile} from "../types";
 import {leagueStore} from "../league/league.store";
 import {gamblerStore} from "../gambler/gambler.store";
 import {userStore} from "./user.store";
+import {inviteStore} from "../invite/invite.store";
 
 export const loadUserContext = async (userId: number) => {
     try {
@@ -30,6 +31,7 @@ export const updateUserPassword = async (userId: number, password: string) => {
 
 export const joinLeagueWithInvite = async (userId: number, invite: Invite) => {
     await joinLeague(userId, invite.token);
+    inviteStore.inviteAccepted();
     await loadUserContext(userId);
 }
 

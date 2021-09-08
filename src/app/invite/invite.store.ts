@@ -10,6 +10,13 @@ class InviteStore {
         this.invite = invite;
     }
 
+    @action
+    inviteAccepted = () => {
+        if (this.invite) {
+            this.invite.accepted = true;
+        }
+    }
+
 }
 
 export const inviteStore = new InviteStore();

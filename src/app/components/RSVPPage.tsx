@@ -5,6 +5,7 @@ import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
 import {observer} from "mobx-react";
 import Registration from "./Registration";
+import {joinLeagueWithInvite} from "../user/user.actions";
 
 export const RSVPPage: React.FC = observer(() => {
     const location = useLocation();
@@ -12,7 +13,7 @@ export const RSVPPage: React.FC = observer(() => {
         return new URLSearchParams(location.search);
     }
 
-    const {inviteStore} = useGlobalStores();
+    const {inviteStore, authStore} = useGlobalStores();
     const query = useQuery();
     const token = query.get("token");
     useEffect(() => {
@@ -21,12 +22,22 @@ export const RSVPPage: React.FC = observer(() => {
         }
     }, [token]);
 
+    useEffect(() => {
+        if (authStore.authenticated && authStore.userId && inviteStore.invite) {
+            joinLeagueWithInvite(authStore.userId, inviteStore.invite);
+        }
+    }, [authStore.authenticated, authStore.userId, inviteStore.invite]);
+
     if (!token) {
         return <Redirect to={{pathname: '/login', state: {from: location}}}/>
     }
 
-    if (!inviteStore.invite) {
+    if (!inviteStore.invite || (authStore.authenticated && !inviteStore.invite.accepted)) {
         return <LoadingContainer/>;
+    }
+
+    if (inviteStore.invite && inviteStore.invite.accepted) {
+        return <Redirect to={{pathname: '/', state: {from: location}}}/>
     }
 
     return <Registration />
