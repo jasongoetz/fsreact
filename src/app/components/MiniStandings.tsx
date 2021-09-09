@@ -18,7 +18,7 @@ export const MiniStandings = () => {
             {leagueStore.gamblers.slice(0,7).map((gambler: GamblerInfo, index: number) => {
                 return (<tr key={`mini-standings-${gambler.id}`}>
                     <td>{index + 1}</td>
-                    <td>{gambler.user.firstName} {gambler.user.lastName}</td>
+                    <td>{gambler.user.firstName} {gambler.user.lastName}{gambler.defunct ? ' (Defunct)' : ''}</td>
                     <td>
                         <a href={`transaction/show/${gambler.id}`}>
                             ${gambler.money.toFixed(2)}

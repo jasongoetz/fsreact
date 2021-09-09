@@ -42,7 +42,7 @@ const AccountPage: React.FC<Props> = observer(({providedGamblerId}) => {
 
     let betsAndParlays = transactionsStore.transactionsByGambler[gamblerId] || [];
     return <Container>
-        <PageHeader>{gambler.user.firstName} {gambler.user.lastName}</PageHeader>
+        <PageHeader>{gambler.user.firstName} {gambler.user.lastName}{gambler.defunct ? ' (Defunct)' : ''}</PageHeader>
         <div style={userStatsStyle}>
             Account Balance: ${(gambler.money - gambler.pending).toFixed(2)} (Money:
             ${gambler.money.toFixed(2)} Pending: ${gambler.pending.toFixed(2)})

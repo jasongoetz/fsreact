@@ -44,7 +44,7 @@ const Standings: React.FC = observer(() => {
                     {leagueStore.gamblers.map((gambler, index) => {
                         return <tr key={`standings-${gambler.id}`}>
                             <td>{index + 1}</td>
-                            <td>{gambler.user.firstName} {gambler.user.lastName}</td>
+                            <td>{gambler.user.firstName} {gambler.user.lastName}{gambler.defunct ? ' (Defunct)' : ''}</td>
                             <td>
                                 <a href={`transaction/show/${gambler.id}`}>
                                     ${gambler.money.toFixed(2)}

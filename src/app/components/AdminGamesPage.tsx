@@ -101,7 +101,7 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
                         <Input type="number" min="0" step="1"
                                id={'team1Score-' + game.id}
                                name={`outcomes[${index}][side1Score]`}
-                               value={game.gameScore?.team2Score} //FIXME: Determine the correct team
+                               value={formik.values.outcomes[index].side1Score}
                                error={formik.errors[`outcomes[${index}][side1Score]`]}
                                onChange={formik.handleChange}
                         />
@@ -115,7 +115,7 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
                         <Input type="number" min="0" step="1"
                                id={'team2Score-' + game.id}
                                name={`outcomes[${index}][side2Score]`}
-                               value={game.gameScore?.team1Score} //FIXME: Determine the correct team
+                               value={formik.values.outcomes[index].side2Score}
                                error={formik.errors[`outcomes[${game.id}][side2Score]`]}
                                onChange={formik.handleChange}
                         />

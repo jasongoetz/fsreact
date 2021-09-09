@@ -62,6 +62,7 @@ export interface Gambler {
     id: number;
     user: User;
     league: number;
+    defunct: boolean;
 }
 
 export interface GamblerInfo extends Gambler {
