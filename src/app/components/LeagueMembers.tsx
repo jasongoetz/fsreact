@@ -1,7 +1,9 @@
 import React from 'react';
-import {Col, Container, Row, Table} from "reactstrap";
+import {Button, Col, Container, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
 import {GamblerInfo} from "../types";
+import {loadUserContext} from "../user/user.actions";
+import {renewGamblerInLeague} from "../league/league.actions";
 
 interface Props {
     adminId: number;
@@ -9,6 +11,15 @@ interface Props {
 }
 
 const LeagueMembers: React.FC<Props> = ({adminId, gamblers}) => {
+
+    const renew = async (gamblerId) => {
+        await renewGamblerInLeague(gamblerId);
+        await loadUserContext(adminId);
+    }
+
+    const newerGamblerExistsForUser = async (gambler) => {
+        return gamblers.some(g => g.user.id === gambler.user.id && g.id > gambler.id);
+    }
 
     return (
         <Container>
@@ -22,14 +33,14 @@ const LeagueMembers: React.FC<Props> = ({adminId, gamblers}) => {
                         </tr>
                         </thead>
                         <tbody>
-                        {gamblers.map(gambler => gambler.user)
-                            .sort((u1, u2) => u1.lastName < u2.lastName ? -1 : 1)
-                            .map(user =>
-                                <tr key={`member_${user.id}`}>
+                        {gamblers
+                            .sort((g1, g2) => g1.user.lastName < g2.user.lastName ? -1 : 1)
+                            .map(gambler =>
+                                <tr key={`member_${gambler.user.id}`}>
                                     <td>
-                                        {user.firstName} {user.lastName} {(adminId === user.id) && "(League Admin)"}
+                                        {gambler.user.firstName} {gambler.user.lastName} {(adminId === gambler.user.id) && "(League Admin)"} {gambler.defunct && "(Defunct)"}
                                     </td>
-                                    <td></td>
+                                    <td>{gambler.money === 0 && !gambler.defunct && <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => renew(gambler.id)}>Renew</Button>}</td>
                                 </tr>
                             )}
                         </tbody>

@@ -128,6 +128,12 @@ export const revokeInvite = async (leagueId: number, inviteId: number): Promise<
     return;
 };
 
+export const renewGambler = async (gamblerId): Promise<void> => {
+    await post({
+        path: `/api/gamblers/${gamblerId}/renew`
+    })
+}
+
 export const getTransactionsForGambler = async (gamblerId): Promise<BetOrParlayWrapper[]> => {
     const response = await get({
         path: `/api/gamblers/${gamblerId}/transactions`,
