@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, Col, Container, Row, Table} from "reactstrap";
 import {firstColumnStyle, leagueTableHeadStyle, leagueTableStyle} from "./LeagueSettings";
 import {GamblerInfo} from "../types";
 import {loadUserContext} from "../user/user.actions";
 import {renewGamblerInLeague} from "../league/league.actions";
+import ConfirmationModal from "./ConfirmationModal";
 
 interface Props {
     adminId: number;
@@ -12,17 +13,31 @@ interface Props {
 
 const LeagueMembers: React.FC<Props> = ({adminId, gamblers}) => {
 
-    const renew = async (gamblerId) => {
+    const renew = async (gamblerId: number) => {
         await renewGamblerInLeague(gamblerId);
         await loadUserContext(adminId);
     }
 
-    const newerGamblerExistsForUser = async (gambler) => {
-        return gamblers.some(g => g.user.id === gambler.user.id && g.id > gambler.id);
-    }
+    const [gambler, setGambler] = useState<GamblerInfo | undefined>(undefined);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
     return (
         <Container>
+            <ConfirmationModal
+                title={'Renew Gambler Account?'}
+                description={`Are you sure you want to renew gambler ${gambler?.user.firstName} ${gambler?.user.lastName}'s account? Their old account will remain in the standings`}
+                acceptAction={'Renew'}
+                onAccept={async () => {
+                    if (gambler) {
+                        await renew(gambler.id);
+                    }
+                }}
+                onCancel={() => {
+                    setModalIsOpen(false);
+                    setGambler(undefined);
+                }}
+                showModal={modalIsOpen}
+            />
             <Row>
                 <Col lg={6} md={8} sm={10}>
                     <Table id={'leagueMembers'} size={'sm'} style={leagueTableStyle}>
@@ -40,7 +55,21 @@ const LeagueMembers: React.FC<Props> = ({adminId, gamblers}) => {
                                     <td>
                                         {gambler.user.firstName} {gambler.user.lastName} {(adminId === gambler.user.id) && "(League Admin)"} {gambler.defunct && "(Defunct)"}
                                     </td>
-                                    <td>{gambler.money === 0 && !gambler.defunct && <Button size={"sm"} color="link" style={{padding: '0px'}} onClick={() => renew(gambler.id)}>Renew</Button>}</td>
+                                    <td>
+                                        {gambler.money === 0 && !gambler.defunct &&
+                                            <Button
+                                                size={"sm"}
+                                                color="link"
+                                                style={{padding: '0px'}}
+                                                onClick={() => {
+                                                    setGambler(gambler);
+                                                    setModalIsOpen(true)
+                                                }}
+                                            >
+                                                Renew
+                                            </Button>
+                                        }
+                                    </td>
                                 </tr>
                             )}
                         </tbody>

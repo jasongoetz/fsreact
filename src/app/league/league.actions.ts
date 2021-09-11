@@ -2,8 +2,6 @@ import {postInvite, registerLeague, renewGambler, revokeInvite} from "../api/api
 import {handleHTTPError} from "../error/error.actions";
 import {leagueStore} from "./league.store";
 import {LeagueRequest} from "../types";
-import {userStore} from "../user/user.store";
-import {loadUserContext} from "../user/user.actions";
 
 const getLeagueId = (): number => leagueStore.league!.id;
 
