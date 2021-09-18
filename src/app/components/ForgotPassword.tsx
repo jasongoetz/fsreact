@@ -49,7 +49,7 @@ const ForgotPassword: React.FC<Props> = () => {
             await requestPasswordReset(email);
             setResetRequested(true);
         } catch (err) {
-            formik.setErrors({email: 'There was an error with your request'});
+            formik.setErrors({email: 'Email not found'});
         }
     };
 
