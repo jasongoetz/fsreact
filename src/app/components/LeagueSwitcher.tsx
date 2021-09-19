@@ -4,7 +4,7 @@ import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {Colors} from "../theme/theme";
 import styled from "@emotion/styled";
 import {switchLeague} from "../user/user.actions";
-import {loadCart} from "../cart/cart.actions";
+import {loadCart, storeCart} from "../cart/cart.actions";
 
 interface Props {
     leagues: League[];
@@ -66,6 +66,7 @@ export const LeagueSwitcher: React.FC<Props> = ({leagues, currentLeagueId, mobil
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
     const switchToLeague = async (leagueId: number) => {
+        await storeCart();
         await switchLeague(leagueId);
         await loadCart();
     }

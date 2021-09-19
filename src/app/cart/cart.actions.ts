@@ -11,6 +11,10 @@ export const loadCart = async () => {
     await cartStore.loadCart(cart.bets, cart.parlay);
 };
 
+export const storeCart = async() => {
+    LocalCart.storeCart();
+}
+
 export const addBetToCart = async (bet: PotentialBet) => {
     const cartBet = await LocalCart.addCartBet(bet);
     if (cartBet) {

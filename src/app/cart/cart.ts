@@ -23,6 +23,10 @@ class LocalCart {
         return this.cart;
     }
 
+    public storeCart = () => {
+        this.saveCart();
+    }
+
     private saveCart = () => {
         localStorage.setItem("cart-" + this.currentGamblerId, JSON.stringify(this.cart));
     }

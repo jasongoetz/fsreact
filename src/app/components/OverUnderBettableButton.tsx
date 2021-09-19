@@ -11,10 +11,6 @@ interface Props {
     isMobile: boolean;
 }
 
-const shortenName = (name: string, isMobile: boolean) => {
-    return isMobile ? name.charAt(0) : name;
-}
-
 const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overunder, isMobile}) => {
 
     const { cartStore } = useGlobalStores();
