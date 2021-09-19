@@ -45,6 +45,7 @@ const panelTitleStyle = {
 
 const totalTallyStyle = {
     marginTop: '20px',
+    marginBottom: '20px',
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: "#ececec",

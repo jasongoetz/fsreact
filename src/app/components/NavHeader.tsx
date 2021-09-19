@@ -71,14 +71,21 @@ const betSlipBadgeStyle = {
 
 const BetSlipCollapse = styled(Collapse)({
     width: '100%',
+    height: "100vh",
+    top: "50px",
+    left: '0px',
     zIndex: 4,
-    background: 'white',
+    background: 'rgba(255, 255, 255, 0.7)',
     overflow: 'scroll',
     position: 'absolute',
     maxHeight: 'calc(100vh - 50px)',
-    top: '50px',
-    left: '0px',
 });
+
+const TranslucentOverlay = styled.div({
+    borderTop: '1px solid',
+    opacity: 0.75,
+    background: 'white',
+})
 
 interface Props {
     toggleMobileMenu: () => void;
@@ -188,6 +195,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
                 {authenticated && gambler && isMobile &&
                     <BetSlipCollapse isOpen={mobileBetSlipOpen}>
                         <BetSlip gamblerId={gambler.id} onReview={() => setMobileBetSlipOpen(false)}/>
+                        <TranslucentOverlay/>
                     </BetSlipCollapse>
                 }
 
