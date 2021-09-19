@@ -29,22 +29,23 @@ const TeamNameCol = styled(Col)({
 });
 
 interface Props {
-    bettable: Bettable
+    bettable: Bettable;
+    isMobile: boolean;
 }
 
-const GameRow: FC<Props> = ({bettable}) => {
+const GameRow: FC<Props> = ({bettable, isMobile}) => {
     return <BettableRow>
-        <GameTimeCol md={4} sm={12}>
+        <GameTimeCol md={3} sm={12}>
             {moment(bettable.gameTime).format("dddd, MMM Do, h:mma z")}
         </GameTimeCol>
-            <Col md={8} sm={12}>
+            <Col md={9} sm={12}>
                 <TeamRow>
                     <TeamNameCol>{bettable.team1}</TeamNameCol>
                     <Col style={{width: '70px', padding: '5px'}}>
                         <TeamBettableButton bettable={bettable} team={'TEAM1'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <OverUnderBettableButton bettable={bettable} overunder='OVER' />
+                        <OverUnderBettableButton bettable={bettable} overunder='OVER' isMobile={isMobile}/>
                     </Col>
                 </TeamRow>
                 <TeamRow>
@@ -53,7 +54,7 @@ const GameRow: FC<Props> = ({bettable}) => {
                         <TeamBettableButton bettable={bettable} team={'TEAM2'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <OverUnderBettableButton bettable={bettable} overunder='UNDER' />
+                        <OverUnderBettableButton bettable={bettable} overunder='UNDER' isMobile={isMobile}/>
                     </Col>
                 </TeamRow>
             </Col>

@@ -45,7 +45,7 @@ const homePagePanelStyle = {
 
 const LeaguePage: React.FC = observer(() => {
 
-    const isMobile = useMediaQuery({ query: '(max-width: 415px)' });
+    const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 
     const { userStore, leagueStore } = useGlobalStores();
     const league = leagueStore.league;

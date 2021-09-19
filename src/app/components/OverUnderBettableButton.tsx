@@ -8,9 +8,14 @@ import {observer} from "mobx-react";
 interface Props {
     bettable: Bettable;
     overunder: OverUnder;
+    isMobile: boolean;
 }
 
-const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overunder}) => {
+const shortenName = (name: string, isMobile: boolean) => {
+    return isMobile ? name.charAt(0) : name;
+}
+
+const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overunder, isMobile}) => {
 
     const { cartStore } = useGlobalStores();
 
@@ -28,6 +33,9 @@ const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overunder}
     if (!bettable.ouoff) {
         let disabled = bettableInCart(bettable.id, overunder);
         let overUnderName = overunder === 'OVER' ? "Over " : "Under ";
+        if (isMobile) {
+            overUnderName = overUnderName.slice(0, 1);
+        }
         return <FSWideButton className="hidden-xs hidden-sm" disabled={disabled}
                          onClick={betClick}>{overUnderName} {bettable.overunder}</FSWideButton>;
     } else {

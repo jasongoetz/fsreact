@@ -26,7 +26,7 @@ import {getParlayWinnings} from "../../util/MoneylineUtil";
 const containerStyle = {
     borderRadius: "0px",
     backgroundColor: "#ececec",
-    maxWidth: 767,
+    maxWidth: 992,
 };
 
 const panelHeadingStyle = {

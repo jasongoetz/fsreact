@@ -86,7 +86,7 @@ interface Props {
 
 const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
-    const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+    const isMobile = useMediaQuery({ query: '(max-width: 992px)' });
 
     const [mobileBetSlipOpen, setMobileBetSlipOpen] = useState(false);
 
@@ -167,7 +167,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     }
 
     return (
-        <Navbar style={navbarStyle} fixed="top" light expand="md">
+        <Navbar style={navbarStyle} fixed="top" light expand="lg">
             <Container style={navbarContainerStyle}>
                 <NavbarToggler style={menuButtonStyle} onClick={toggleMobileMenu}/>
                 <Collapse navbar>
