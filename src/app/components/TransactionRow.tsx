@@ -22,13 +22,13 @@ const parlayBetOutcomeStyle = {
 
 const getRowColor = (betOrParlay: BetOrParlayWrapper) => {
     if (betOrParlay.value.outcome === 'WIN') {
-        return Colors.green1;
+        return Colors.washedGreen;
     } else if (betOrParlay.value.outcome === 'LOSS') {
-        return Colors.red1;
+        return Colors.washedRed;
     } else if (betOrParlay.value.complete === true) {
-        return Colors.yellow1;
+        return Colors.washedYellow;
     } else {
-        return Colors.lighterGray;
+        return Colors.lightestGraySepia;
     }
 };
 

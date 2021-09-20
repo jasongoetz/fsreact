@@ -48,7 +48,7 @@ const dropdownMenuStyle = {
 };
 
 const LeagueDropdownItem = styled(DropdownItem)({
-    color: Colors.lighterGray,
+    color: Colors.lightestGray,
     backgroundColor: Colors.lighterDarkBlue,
     ':focus': {
         color: Colors.white,

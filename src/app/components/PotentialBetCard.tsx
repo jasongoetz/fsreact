@@ -4,12 +4,13 @@ import {CartBet} from "../types";
 import moment from "moment";
 import {getBetSummary, getGameSummary} from "../../util/BetUtil";
 import {getBetWinnings} from "../../util/MoneylineUtil";
+import {Colors} from "../theme/theme";
 
 const potentialBetStyle = {
-    backgroundColor: "#ececec",
+    backgroundColor: Colors.whiteSepia,
     borderRadius: "0px",
     borderBottom: "0px",
-    borderTop: "1px solid",
+    borderTop: "1px dotted",
     borderLeft: "0px",
     borderRight: "0px",
 };
@@ -25,6 +26,7 @@ const betAmountStyle = {
 };
 
 const betWinningsStyle = {
+    backgroundColor: Colors.whiteSepia,
     borderRadius: "0px",
     padding: "6px 3px",
     width: "50px",
@@ -42,9 +44,9 @@ const wagerAmountLabelStyle = {
 };
 
 export const inputGroupAddOn = {
-    borderRadius: "1px solid #EEEEEE",
+    borderRadius: `1px solid ${Colors.lightestGray}`,
     padding: "7px 3px 6px 5px",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.white,
     borderLeft: '1px solid lightgray',
     borderTop: '1px solid lightgray',
     borderBottom: '1px solid lightgray',
@@ -58,9 +60,11 @@ const disabledGroupAddOn = {
 const closeStyle = {
     fontWeight: "normal" as "normal",
     opacity: 0.5,
+    marginTop: -5,
 };
 
 interface Props {
+    index: number;
     cartId: string;
     bet: CartBet;
     partOfParlay: boolean;
@@ -69,7 +73,7 @@ interface Props {
     onEdit: (cartId: string, amount: number) => void;
 }
 
-const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, cartId, moneyline}) => {
+const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, cartId, moneyline, index}) => {
 
     const getWagerFields = (bet) => {
         return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '10px'}}>
@@ -92,7 +96,7 @@ const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, 
         </div>;
     };
 
-    return <ListGroupItem style={potentialBetStyle}>
+    return <ListGroupItem style={{...potentialBetStyle, ...(index === 0) ? {borderTop: '0px'} : undefined}}>
         <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
             <div style={{display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '10px'}}>
                 <div style={betChoiceStyle}>

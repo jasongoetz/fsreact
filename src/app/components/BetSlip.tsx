@@ -22,20 +22,39 @@ import {useGlobalStores} from "../context/global_context";
 import {observer} from "mobx-react";
 import {editCartBet, editCartParlay, loadCart, removeCartBet, toggleParlay} from "../cart/cart.actions";
 import {getParlayWinnings} from "../../util/MoneylineUtil";
+import {Colors} from "../theme/theme";
 
 const containerStyle = {
     borderRadius: "0px",
-    backgroundColor: "#ececec",
+    backgroundColor: Colors.lightestGraySepia,
+    position: 'fixed' as 'fixed',
+    top: 86,
+    right: 26,
+    width: 380,
+    border: '1px solid',
+    maxHeight: '87%',
+    display: 'flex',
+    flexFlow: 'column',
+    paddingLeft: 0,
+    paddingRight: 0,
+};
+
+const mobileContainerStyle = {
+    borderRadius: "0px",
+    borderTop: '1px solid',
+    backgroundColor: Colors.lightestGraySepia,
     maxWidth: 992,
 };
 
 const panelHeadingStyle = {
     borderBottom: "0px",
-    borderColor: "#ececec",
+    borderColor: Colors.lightestGraySepia,
+    marginLeft: 0,
+    marginRight: 0,
     padding: "10px 15px",
     borderTopLeftRadius: "0px",
     borderTopRightRadius: "0px",
-    backgroundColor: "#ececec",
+    backgroundColor: Colors.lightestGraySepia,
 };
 
 const panelTitleStyle = {
@@ -48,7 +67,7 @@ const totalTallyStyle = {
     marginBottom: '20px',
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: "#ececec",
+    backgroundColor: Colors.lightestGraySepia,
     border: "0px",
 };
 
@@ -69,9 +88,9 @@ const wagerAmountLabelStyle = {
 };
 
 export const inputGroupAddOn = {
-    borderRadius: "1px solid #EEEEEE",
+    borderRadius: `1px solid ${Colors.lightestGray}`,
     padding: "7px 3px 6px 5px",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.white,
     borderLeft: '1px solid lightgray',
     borderTop: '1px solid lightgray',
     borderBottom: '1px solid lightgray',
@@ -90,6 +109,7 @@ const wagerAmountStyle = {
 };
 
 const wagerWinningsStyle = {
+    backgroundColor: Colors.lightestGraySepia,
     borderRadius: "0px",
     padding: "6px 3px",
     width: "100px",
@@ -97,12 +117,12 @@ const wagerWinningsStyle = {
 };
 
 const errorPanelStyle = {
-    color: "#a94442",
-    backgroundColor: "#f2dede",
-    borderColor: "#ebccd1",
+    color: Colors.red,
+    backgroundColor: Colors.pinkGray,
     padding: "15px",
-    marginTop: "20px",
-    border: "1px solid transparent",
+    margin: '20px 15px 0px 15px',
+    border: `1px solid ${Colors.red}`,
+    borderRadius: '0px',
 };
 
 const errorRowStyle = {
@@ -112,9 +132,10 @@ const errorRowStyle = {
 interface Props {
     gamblerId?: number;
     onReview?: () => void;
+    isMobile?: boolean;
 }
 
-const BetSlip: React.FC<Props> = observer(({gamblerId, onReview}) => {
+const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
 
     const [errors, setErrors] = useState<string[]>([]);
 
@@ -134,8 +155,9 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview}) => {
             padding: "5px 10px"
         };
         const activeStyles = {
-            color: "#fff",
-            backgroundColor: "#595756",
+            color: Colors.offBlack,
+            backgroundColor: Colors.whiteSepia,
+            border: '1px solid',
         };
         return active ? {...style, ...activeStyles} : style;
     };
@@ -162,13 +184,13 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview}) => {
     const insufficientBets = potentialBets.length < 2;
     const betParlayTabActive = !!parlay?.active && !insufficientBets;
     const totalAmount = potentialBets.reduce((sum, bet) => sum + (bet.amount || 0), 0);
-    return (<Container style={containerStyle}>
+    return (<Container style={isMobile ? mobileContainerStyle : containerStyle}>
         <Row style={panelHeadingStyle}>
             <div style={panelTitleStyle}>
                 BET SLIP
             </div>
         </Row>
-        <Nav pills>
+        <Nav style={!isMobile ? { margin: '0px 0px 5px 5px' } : undefined} pills>
             <NavItem>
                 <NavLink style={tabLinkStyle(!betParlayTabActive)} href="#bet-straight"
                          active={!betParlayTabActive}
@@ -180,15 +202,15 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview}) => {
                          disabled={insufficientBets}>Parlay</NavLink>
             </NavItem>
         </Nav>
-        <TabContent style={{width: '100%'}} activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
-
+        <TabContent style={{...(!isMobile ? {overflow: 'scroll', borderTop: '1px solid', borderBottom: '1px solid'} : {}), width: '100%' }} activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
             <TabPane tabId="bet-straight">
-                <Row style={{color: "#777574"}} hidden={(potentialBets.length > 0)}>
+                <Row style={{color: Colors.darkerGray}} hidden={(potentialBets.length > 0)}>
                     <Col sm={12}>Add games to your bet slip</Col>
                 </Row>
                 <ListGroup>
-                    {potentialBets.map(bet =>
+                    {potentialBets.map((bet, i) =>
                         <PotentialBetCard
+                            index={i}
                             key={bet.id}
                             cartId={bet.id}
                             bet={bet}
@@ -199,29 +221,16 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview}) => {
                         />
                     )}
                 </ListGroup>
-                <ListGroup hidden={(potentialBets.length === 0)}>
-                    {errors.length > 0 &&
-                    <ListGroupItem style={errorPanelStyle}>
-                        {errors.map(error =>
-                            <div style={errorRowStyle}>{error}</div>
-                        )}
-                    </ListGroupItem>
-                    }
-                    <ListGroupItem style={totalTallyStyle}>
-                        <FSButton onClick={() => reviewBets(gamblerId)}>
-                            {getButtonMessage('Review', potentialBets.length, totalAmount, betParlayTabActive)}
-                        </FSButton>
-                    </ListGroupItem>
-                </ListGroup>
             </TabPane>
 
             <TabPane tabId="bet-parlay">
-                <Row style={{color: "#777574"}} hidden={(potentialBets.length > 1)}>
+                <Row style={{color: Colors.darkerGray}} hidden={(potentialBets.length > 1)}>
                     <Col sm="12">Parlays only apply to more than one bet</Col>
                 </Row>
                 <ListGroup>
-                    {potentialBets.map(bet =>
+                    {potentialBets.map((bet, i) =>
                         <PotentialBetCard
+                            index={i}
                             key={bet.id}
                             cartId={bet.id}
                             bet={bet}
@@ -232,55 +241,73 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview}) => {
                         />
                     )}
                 </ListGroup>
-                <ListGroup>
-                    <ListGroupItem style={parlayWagerLineStyle}>
-                        <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                            <div>
-                                <InputGroup>
-                                    <span style={inputGroupAddOn}>$</span>
-                                    <Input type="number" min="0" step="1" style={wagerAmountStyle}
-                                           className="form-control" id="amount"
-                                           onChange={(e) => editCartParlay(parseInt(e.target.value))}
-                                           value={parlay?.amount || ''}/>
-                                </InputGroup>
-                            </div>
-                            <div>
-                                <span style={wagerAmountLabelStyle}>Wager: </span>
-                            </div>
+            </TabPane>
+        </TabContent>
+        {!betParlayTabActive && <ListGroup style={{flex: 'auto'}} hidden={(potentialBets.length === 0)}>
+            {errors.length > 0 &&
+                <ListGroupItem style={errorPanelStyle}>
+                    {errors.map(error =>
+                        <div style={errorRowStyle}>{error}</div>
+                    )}
+                </ListGroupItem>
+            }
+            <ListGroupItem style={totalTallyStyle}>
+                <FSButton onClick={() => reviewBets(gamblerId)}>
+                    {getButtonMessage('Review', potentialBets.length, totalAmount, betParlayTabActive)}
+                </FSButton>
+            </ListGroupItem>
+        </ListGroup>}
+        {betParlayTabActive &&
+            <ListGroup style={{flex: 'auto'}}>
+                <ListGroupItem style={parlayWagerLineStyle}>
+                    <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                        <div>
+                            <InputGroup>
+                                <span style={inputGroupAddOn}>$</span>
+                                <Input type="number" min="0" step="1" style={wagerAmountStyle}
+                                       className="form-control" id="amount"
+                                       onChange={(e) => editCartParlay(parseInt(e.target.value))}
+                                       value={parlay?.amount || ''}/>
+                            </InputGroup>
                         </div>
-                    </ListGroupItem>
-                    <ListGroupItem style={parlayWagerLineStyle}>
-                        <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
-                            <div>
-                                <InputGroup>
-                                    <span style={disabledGroupAddOn}>$</span>
-                                    <Input readOnly disabled type="number" min="0"
-                                           style={wagerWinningsStyle} className="form-control"
-                                           value={getParlayWinnings(parlay?.amount || 0, moneyline, potentialBets.length)}/>
-                                </InputGroup>
-                            </div>
-                            <div>
-                                <span style={wagerAmountLabelStyle}>Potential Winnings: </span>
-                            </div>
+                        <div>
+                            <span style={wagerAmountLabelStyle}>Wager: </span>
                         </div>
-                    </ListGroupItem>
-                </ListGroup>
-                <ListGroup>
-                    {errors.length > 0 &&
+                    </div>
+                </ListGroupItem>
+                <ListGroupItem style={parlayWagerLineStyle}>
+                    <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+                        <div>
+                            <InputGroup>
+                                <span style={disabledGroupAddOn}>$</span>
+                                <Input readOnly disabled type="number" min="0"
+                                       style={wagerWinningsStyle} className="form-control"
+                                       value={getParlayWinnings(parlay?.amount || 0, moneyline, potentialBets.length)}/>
+                            </InputGroup>
+                        </div>
+                        <div>
+                            <span style={wagerAmountLabelStyle}>Potential Winnings: </span>
+                        </div>
+                    </div>
+                </ListGroupItem>
+            </ListGroup>
+        }
+        {betParlayTabActive &&
+            <ListGroup style={{flex: 'auto'}}>
+                {errors.length > 0 &&
                     <ListGroupItem style={errorPanelStyle}>
                         {errors.map(error =>
                             <div style={errorRowStyle}>{error}</div>
                         )}
                     </ListGroupItem>
-                    }
-                    <ListGroupItem style={totalTallyStyle}>
-                        <FSButton onClick={() => reviewBets(gamblerId)}>
-                            {getButtonMessage('Review', potentialBets.length, parlay?.amount || 0, betParlayTabActive)}
-                        </FSButton>
-                    </ListGroupItem>
-                </ListGroup>
-            </TabPane>
-        </TabContent>
+                }
+                <ListGroupItem style={totalTallyStyle}>
+                    <FSButton onClick={() => reviewBets(gamblerId)}>
+                        {getButtonMessage('Review', potentialBets.length, parlay?.amount || 0, betParlayTabActive)}
+                    </FSButton>
+                </ListGroupItem>
+            </ListGroup>
+        }
     </Container>)
 });
 

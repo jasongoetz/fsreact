@@ -5,6 +5,7 @@ import TeamBettableButton from "./TeamBettableButton";
 import OverUnderBettableButton from "./OverUnderBettableButton";
 import styled from "@emotion/styled";
 import {Bettable} from "../types";
+import {Colors} from "../theme/theme";
 
 const TeamRow = styled(Row)({
     paddingTop: "5px",
@@ -14,7 +15,7 @@ const TeamRow = styled(Row)({
 const BettableRow = styled(Row)({
     paddingTop: "10px",
     paddingBottom: "10px",
-    borderBottom: "1px solid #777574"
+    borderBottom: `1px solid ${Colors.darkerGray}`
 });
 
 const GameTimeCol = styled(Col)({

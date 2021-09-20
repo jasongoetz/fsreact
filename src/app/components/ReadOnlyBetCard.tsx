@@ -4,9 +4,10 @@ import {CartBet} from "../types";
 import moment from "moment";
 import {getBetSummary, getGameSummary} from "../../util/BetUtil";
 import {getBetWinnings} from "../../util/MoneylineUtil";
+import {Colors} from "../theme/theme";
 
 const betCardStyle = {
-    backgroundColor: "#ececec",
+    backgroundColor: Colors.lightGray,
     borderRadius: "0px",
     border: "1px solid",
     marginTop: "10px",

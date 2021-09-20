@@ -5,7 +5,7 @@ import {Colors} from "../theme/theme";
 const headlineStyle = {
     marginTop: "100px",
     marginBottom: "20px",
-    color: Colors.black,
+    color: Colors.offBlack,
 };
 
 export function LoadingContainer() {

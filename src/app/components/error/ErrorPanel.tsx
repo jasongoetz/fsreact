@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
+import {Colors} from "../../theme/theme";
 
 const logoSmallStyle = {
     width: '100px',
@@ -20,7 +21,7 @@ const h1Style = {
 const pStyle = {
     fontFamily: '"Open Sans", "Myriad Pro", Arial, sans-serif',
     fontSize: '1.25em',
-    color: '#001c20',
+    color: Colors.offBlack,
 };
 
 const boldPStyle = {
@@ -30,7 +31,7 @@ const boldPStyle = {
 
 const explanationStyle = {
     marginTop: '20px',
-    border: '2px solid #ececec',
+    border: `2px solid ${Colors.lightGray}`,
     paddingBottom: '15px',
     paddingLeft: '20px',
     paddingRight: '20px',

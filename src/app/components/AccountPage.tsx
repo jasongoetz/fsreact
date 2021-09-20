@@ -48,7 +48,7 @@ const AccountPage: React.FC<Props> = observer(({providedGamblerId}) => {
             ${gambler.money.toFixed(2)} Pending: ${gambler.pending.toFixed(2)})
             <span style={userRecordStyle}>Record: {gambler.record}</span>
         </div>
-        <Table>
+        <Table responsive>
             <thead>
             <tr>
                 <th>Date</th>

@@ -3,6 +3,7 @@ import {Col} from "reactstrap";
 import {Bet, GamblerInfo, Parlay, Wager} from "../types";
 import {Link} from "react-router-dom";
 import moment from "moment";
+import {Colors} from "../theme/theme";
 
 interface Props {
     gambler: GamblerInfo;
@@ -16,8 +17,8 @@ const betCardStyle = {
 
 const titleBarStyle = {
     padding: "5px 10px",
-    backgroundColor: "whitesmoke",
-    border: "solid 1px lightgray"
+    backgroundColor: Colors.whiteSepia,
+    border: `solid 1px ${Colors.graySepia}`
 };
 
 const wagerStyle = {
@@ -27,8 +28,8 @@ const wagerStyle = {
 const betCardContentStyle = {
     padding: "10px",
     width: "100%",
-    backgroundColor: "#ececec",
-    border: "solid 1px lightgray",
+    backgroundColor: Colors.lightestGraySepia,
+    border: `solid 1px ${Colors.graySepia}`,
     borderTop: "0px"
 };
 

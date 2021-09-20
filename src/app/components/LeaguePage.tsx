@@ -10,15 +10,16 @@ import {LoadingContainer} from "./LoadingContainer";
 import styled from "@emotion/styled";
 import {useMediaQuery} from "react-responsive";
 import {LeagueSwitcher} from "./LeagueSwitcher";
+import {Colors} from "../theme/theme";
 
 const leagueHeaderStyle = {
     top: "40px",
     right: "0px",
     position: 'absolute' as 'absolute',
     width: "100%",
-    backgroundColor: "#003D63",
+    backgroundColor: Colors.lighterDarkBlue,
     height: "75px",
-    color: "#FFFFFF"
+    color: Colors.white
 };
 
 const LeagueNameHeader = styled.div<{mobile: boolean}>(

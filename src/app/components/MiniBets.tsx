@@ -1,6 +1,7 @@
 import React from "react";
 import {FullBet, Sport} from "../types";
 import {useGlobalStores} from "../context/global_context";
+import {Colors} from "../theme/theme";
 
 const pendingBetPanelStyle = {
     borderRadius: "0px",
@@ -9,7 +10,7 @@ const pendingBetPanelStyle = {
 };
 
 const pendingMiniBetCardStyle =  {
-    backgroundColor: "#ececec",
+    backgroundColor: Colors.lightestGraySepia,
     marginTop: "0",
     padding: "10px",
     width: "100%",

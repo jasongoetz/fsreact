@@ -17,7 +17,7 @@ import {loadUserContext} from "../user/user.actions";
 const OutcomeCard = styled.div({
     marginTop: 0,
     marginBottom: 40,
-    border: 'solid ' + Colors.gray,
+    border: 'solid ' + Colors.darkerGray,
     paddingTop: 15,
     paddingRight: 15,
     paddingLeft: 15,

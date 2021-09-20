@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {FSWideButton} from "./FSComponents";
+import {Colors} from "../theme/theme";
 
 interface Props {
     title: string;
@@ -9,12 +10,12 @@ interface Props {
 }
 
 const innerHomePagePanelStyle = {
-    border: "2px solid #c0c0c0",
+    border: `2px solid ${Colors.gray}`,
     padding: "20px 20px 10px 20px"
 };
 
 const homePagePanelHeading = {
-    color: "#003D63"
+    color: Colors.lighterDarkBlue
 };
 
 const homePagePanelContentStyle = {

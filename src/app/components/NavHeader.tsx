@@ -27,7 +27,7 @@ import {useGoogleLogout} from "react-google-login";
 import {requireEnv} from "../../util/require-env";
 
 const navbarStyle = {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.lightestGraySepia,
 };
 
 const navbarContainerStyle = {
@@ -63,7 +63,7 @@ const betSlipBadgeStyle = {
     padding: '3px 4px 4px 4px',
     fontSize: '10px',
     lineHeight: '.8',
-    backgroundColor: '#D16565',
+    backgroundColor: Colors.badgeRed,
     position: 'absolute' as 'absolute',
     top: '-3px',
     right: '-5px',
@@ -194,7 +194,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
                 {authenticated && gambler && isMobile &&
                     <BetSlipCollapse isOpen={mobileBetSlipOpen}>
-                        <BetSlip gamblerId={gambler.id} onReview={() => setMobileBetSlipOpen(false)}/>
+                        <BetSlip gamblerId={gambler.id} onReview={() => setMobileBetSlipOpen(false)} isMobile />
                         <TranslucentOverlay/>
                     </BetSlipCollapse>
                 }
