@@ -99,7 +99,15 @@ export type Bettable = {
     off: boolean;
 };
 
-export type BettableWithScore = Bettable & { gameScore: GameScore }
+export type BettableWithScore = Bettable & { gameScore?: GameScore }
+
+export type BettableWithBetsAndScore = BettableWithScore & { bets: Bet[] }
+
+export interface ScoresReport {
+    scores: BettableWithBetsAndScore[],
+    gamblerNames: { [id: number]: string },
+    parlays: Parlay[],
+}
 
 interface TeamInfo {
     teamId: number,
@@ -110,12 +118,18 @@ interface TeamInfo {
     sport: Sport;
 }
 
+export type ClockStatus = 'STATUS_FINAL' | 'STATUS_SCHEDULED' | 'STATUS_IN_PROGRESS';
+
 export interface GameScore {
     bettable: number;
     team1: TeamInfo;
     team2: TeamInfo;
     team1Score: number;
     team2Score: number;
+    clockText: string;
+    clockTime: string;
+    clockPeriod: number;
+    clockStatus: ClockStatus;
 }
 
 export interface GameScoreRequest {
@@ -141,6 +155,7 @@ export interface Bet extends Wager {
     sideId: string;
     overunder: OverUnder;
     line: string;
+    parlay?: Parlay | number;
 }
 
 export interface Parlay extends Wager {

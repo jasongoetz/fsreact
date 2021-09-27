@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import {observer} from "mobx-react";
-import * as yup from 'yup';
 import {Col, Container, Form, FormGroup, Input, Label, Row} from "reactstrap";
 import {useGlobalStores} from "../context/global_context";
 import {PageHeader} from "./PageHeader";
@@ -61,11 +60,14 @@ const AdminGamesPage: React.FC = observer(() => {
 });
 
 const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}) => {
-    const initialOutcomes = games.map(game => ({
-        bettable: game.id,
-        side1Score: game.gameScore?.team2Score, //FIXME: Determine the correct team here
-        side2Score: game.gameScore?.team1Score, //FIXME: Determine the correct team here
-    }));
+    const initialOutcomes = games.reduce((dict, game) => {
+        dict[game.id] = {
+            bettable: game.id,
+            side1Score: game.gameScore?.team2Score, //FIXME: Determine the correct team here
+            side2Score: game.gameScore?.team1Score, //FIXME: Determine the correct team here
+        };
+        return dict;
+    }, {});
 
     const {authStore} = useGlobalStores();
 
@@ -73,17 +75,8 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
         initialValues: {
             outcomes: initialOutcomes
         },
-        validationSchema: yup.object().shape({
-            outcomes: yup.array().of(
-                yup.object().shape({
-                    bettable: yup.number(),
-                    side1Score: yup.number().min(0),
-                    side2Score: yup.number().min(0),
-                })
-            )
-        }),
         onSubmit: async (values, actions) => {
-            await submitGameScores(values.outcomes);
+            await submitGameScores(Object.values(values.outcomes));
             if (authStore.userId) {
                 await loadUserContext(authStore.userId);
             }
@@ -91,7 +84,7 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
     });
 
     return <Form onSubmit={formik.handleSubmit}>
-        {games.map((game, index) => {
+        {games.map((game) => {
             return <OutcomeCard key={`gameOutcome-${game.id}`}>
                 <FormGroup row>
                     <Label xs={8} for={'team1Score-' + game.id}>
@@ -100,9 +93,9 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
                     <Col xs={4}>
                         <Input type="number" min="0" step="1"
                                id={'team1Score-' + game.id}
-                               name={`outcomes[${index}][side1Score]`}
-                               value={formik.values.outcomes[index].side1Score}
-                               error={formik.errors[`outcomes[${index}][side1Score]`]}
+                               name={`outcomes[${game.id}][side1Score]`}
+                               value={formik.values.outcomes[game.id].side1Score}
+                               error={formik.errors[`outcomes[${game.id}][side1Score]`]}
                                onChange={formik.handleChange}
                         />
                     </Col>
@@ -114,8 +107,8 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
                     <Col xs={4}>
                         <Input type="number" min="0" step="1"
                                id={'team2Score-' + game.id}
-                               name={`outcomes[${index}][side2Score]`}
-                               value={formik.values.outcomes[index].side2Score}
+                               name={`outcomes[${game.id}][side2Score]`}
+                               value={formik.values.outcomes[game.id].side2Score}
                                error={formik.errors[`outcomes[${game.id}][side2Score]`]}
                                onChange={formik.handleChange}
                         />
@@ -124,7 +117,7 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
                 <Input
                     type="hidden"
                     id={'bettable-' + game.id}
-                    name={`outcomes[${index}][bettable]`}
+                    name={`outcomes[${game.id}][bettable]`}
                     value={game.id}
                     required
                     onChange={formik.handleChange}

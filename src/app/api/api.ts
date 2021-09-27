@@ -2,13 +2,16 @@ import {deLete, get, post, put} from './fetch';
 import {
     AuthToken,
     BetOrParlayWrapper,
-    Bettable, BettableWithScore,
+    Bettable,
+    BettableWithScore,
     CartParlay,
-    Credentials, GameScoreRequest,
+    Credentials,
+    GameScoreRequest,
     League,
     LeagueInvite,
     LeagueRequest,
     PotentialBet,
+    ScoresReport,
     UserContext,
     UserRegistrationInfo
 } from "../types";
@@ -168,6 +171,14 @@ export const getGamesForSport = async (sportKey): Promise<{bettables: Bettable[]
 export const getBetsForLeague = async (leagueId): Promise<GamblerBets> => {
     const response = await get({
         path: `/api/leagues/${leagueId}/bets`,
+    });
+
+    return await response.json();
+};
+
+export const getLiveScores = async (leagueId: number, week?: number): Promise<ScoresReport> => {
+    const response = await get({
+        path: `/api/leagues/${leagueId}/scores` + (week ? `?week=${week}` : ''),
     });
 
     return await response.json();

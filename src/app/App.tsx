@@ -31,6 +31,7 @@ import FakeStacksLogin from "./components/FakeStacksLogin";
 import FakeStacksRegistration from "./components/FakeStacksRegistration";
 import CreateLeagueForm from "./components/CreateLeagueForm";
 import OpenRoute from "./components/routing/OpenRoute";
+import LiveScoresPage from "./components/LiveScoresPage";
 
 const appStyle = {
     fontFamily: Fonts.mainSite
@@ -156,6 +157,12 @@ const App: FC = () => {
         </UserContext>;
     };
 
+    const ScoresPage = () => {
+        return <UserContext>
+            <LiveScoresPage/>
+        </UserContext>;
+    };
+
     const AdminPage = () => {
         return <UserContext adminRequired>
             <AdminGamesPage/>
@@ -218,6 +225,7 @@ const App: FC = () => {
                     <PrivateLeagueRoute exact path="/games" component={GamePage}/>
                     <PrivateLeagueRoute exact path="/standings" component={StandingsPage}/>
                     <PrivateLeagueRoute exact path="/bets" component={BetsPage}/>
+                    <PrivateLeagueRoute exact path="/scores" component={ScoresPage}/>
                     <PrivateLeagueRoute exact path="/account" component={UserAccountPage}/>
                     <PrivateLeagueRoute exact path="/transaction/show/:gamblerId" component={UserAccountPage}/>
                     <PrivateLeagueRoute exact path="/league/settings" component={LeagueManagePage}/>

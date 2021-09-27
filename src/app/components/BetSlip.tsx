@@ -204,7 +204,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
         </Nav>
         <TabContent style={{...(!isMobile ? {overflow: 'scroll', borderTop: '1px solid', borderBottom: '1px solid'} : {}), width: '100%' }} activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
             <TabPane tabId="bet-straight">
-                <Row style={{color: Colors.darkerGray}} hidden={(potentialBets.length > 0)}>
+                <Row style={{color: Colors.darkerGray, margin: '10px 10px 10px 15px'}} hidden={(potentialBets.length > 0)}>
                     <Col sm={12}>Add games to your bet slip</Col>
                 </Row>
                 <ListGroup>

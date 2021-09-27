@@ -10,6 +10,7 @@ import {errorStore} from "../error/error.store";
 import {transactionsStore} from "../transactions/transactions.store";
 import {inviteStore} from "../invite/invite.store";
 import {adminStore} from "../admin/admin.store";
+import {scoresStore} from "../scores/scores.store";
 
 export const globalContext = createContext({
     adminStore,
@@ -21,6 +22,7 @@ export const globalContext = createContext({
     gamblerStore,
     inviteStore,
     leagueStore,
+    scoresStore,
     transactionsStore,
     userStore,
 });
