@@ -84,7 +84,7 @@ const LeaguePage: React.FC = observer(() => {
 
                     <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}}
                          lg={{size: 4, offset: 0}}>
-                        <HomePagePanel title="Pending Big Bets" linkUrl="/bets" action="SEE ALL BETS">
+                        <HomePagePanel title="Pending Big Bets" linkUrl="/scores" action="SEE ALL BETS">
                             <MiniBets/>
                         </HomePagePanel>
                     </Col>

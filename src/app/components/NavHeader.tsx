@@ -131,7 +131,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
         return <Nav className="justify-content-left" navbar>
             <NavItem>{navLink("GAMES", "/games")}</NavItem>
             <NavItem>{navLink("STANDINGS", "/standings")}</NavItem>
-            <NavItem>{navLink("BETS", "/bets")}</NavItem>
+            <NavItem>{navLink("SCORES", "/scores")}</NavItem>
             {isAdmin(league, gambler) && <NavItem>{navLink("MANAGE", "/league/settings")}</NavItem>}
         </Nav>;
     };
