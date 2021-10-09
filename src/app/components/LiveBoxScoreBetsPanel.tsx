@@ -46,12 +46,12 @@ const getWagerType = (bet: Bet, parlays: Parlay[], final: boolean) => {
 const getBetSide = (bet: Bet) => {
     if (bet.sideId) {
         if (bet.bettable.sideId1 === bet.sideId) {
-            return `${bet.bettable.team1} ${bet.bettable.team1Spread}`;
+            return `${bet.bettable.team1} ${bet.line}`;
         } else {
-            return `${bet.bettable.team2} ${bet.bettable.team2Spread}`;
+            return `${bet.bettable.team2} ${bet.line}`;
         }
     } else {
-        return `${bet.overunder.toLowerCase()} ${bet.bettable.overunder}`;
+        return `${bet.overunder.toLowerCase()} ${bet.line}`;
     }
 };
 
