@@ -156,6 +156,7 @@ export interface Bet extends Wager {
     overunder: OverUnder;
     line: string;
     parlay?: Parlay | number;
+    infoRedacted?: boolean;
 }
 
 export interface Parlay extends Wager {
