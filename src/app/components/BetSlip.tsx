@@ -178,7 +178,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
         return <div></div>;
     }
 
-    const moneyline = leagueStore.league.moneyline;
+    const leagueMoneyline = leagueStore.league.moneyline;
     const parlay = cartStore.parlay;
     const potentialBets = cartStore.bets;
     const insufficientBets = potentialBets.length < 2;
@@ -215,7 +215,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
                             cartId={bet.id}
                             bet={bet}
                             partOfParlay={false}
-                            moneyline={moneyline}
+                            moneyline={bet.moneyline ? parseInt(bet.line) : leagueMoneyline}
                             onClose={(cartId) => removeCartBet(cartId)}
                             onEdit={(cartId, amount) => editCartBet(cartId, amount)}
                         />
@@ -235,7 +235,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
                             cartId={bet.id}
                             bet={bet}
                             partOfParlay={true}
-                            moneyline={moneyline}
+                            moneyline={bet.moneyline ? parseInt(bet.line) : leagueMoneyline}
                             onClose={(cartId) => removeCartBet(cartId)}
                             onEdit={(cartId, amount) => editCartBet(cartId, amount)}
                         />
@@ -282,7 +282,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
                                 <span style={disabledGroupAddOn}>$</span>
                                 <Input readOnly disabled type="number" min="0"
                                        style={wagerWinningsStyle} className="form-control"
-                                       value={getParlayWinnings(parlay?.amount || 0, moneyline, potentialBets.length)}/>
+                                       value={getParlayWinnings(parlay?.amount || 0, potentialBets.map(bet => bet.moneyline ? parseInt(bet.line) : leagueMoneyline))}/>
                             </InputGroup>
                         </div>
                         <div>

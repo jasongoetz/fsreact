@@ -6,6 +6,7 @@ import OverUnderBettableButton from "./OverUnderBettableButton";
 import styled from "@emotion/styled";
 import {Bettable} from "../types";
 import {Colors} from "../theme/theme";
+import MoneylineBettableButton from "./MoneylineBettableButton";
 
 const TeamRow = styled(Row)({
     paddingTop: "5px",
@@ -46,6 +47,9 @@ const GameRow: FC<Props> = ({bettable, isMobile}) => {
                         <TeamBettableButton bettable={bettable} team={'TEAM1'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
+                        <MoneylineBettableButton bettable={bettable} team={'TEAM1'} />
+                    </Col>
+                    <Col style={{width: '70px', padding: '5px'}}>
                         <OverUnderBettableButton bettable={bettable} overunder='OVER' isMobile={isMobile}/>
                     </Col>
                 </TeamRow>
@@ -53,6 +57,9 @@ const GameRow: FC<Props> = ({bettable, isMobile}) => {
                     <TeamNameCol>{bettable.team2}</TeamNameCol>
                     <Col style={{width: '70px', padding: '5px'}}>
                         <TeamBettableButton bettable={bettable} team={'TEAM2'} />
+                    </Col>
+                    <Col style={{width: '70px', padding: '5px'}}>
+                        <MoneylineBettableButton bettable={bettable} team={'TEAM2'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
                         <OverUnderBettableButton bettable={bettable} overunder='UNDER' isMobile={isMobile}/>
