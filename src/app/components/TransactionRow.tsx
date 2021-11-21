@@ -43,6 +43,9 @@ const getDescription = (betOrParlay: BetOrParlayWrapper) => {
 };
 
 const getBetDescription = (bet: Bet) => {
+    if (bet.infoRedacted) {
+        return '[Info Redacted]';
+    }
     if (bet.sideId === bet.bettable.sideId1) {
         return `${bet.bettable.team1} ${bet.line} @ ${bet.bettable.team2}`
     } else if (bet.sideId === bet.bettable.sideId2) {

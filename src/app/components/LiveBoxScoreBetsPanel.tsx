@@ -44,6 +44,9 @@ const getWagerType = (bet: Bet, parlays: Parlay[], final: boolean) => {
 };
 
 const getBetSide = (bet: Bet) => {
+    if (bet.infoRedacted) {
+        return '[Info Redacted]';
+    }
     if (bet.sideId) {
         if (bet.bettable.sideId1 === bet.sideId) {
             return `${bet.bettable.team1} ${bet.line}`;
@@ -56,6 +59,9 @@ const getBetSide = (bet: Bet) => {
 };
 
 const getParlayBetDescription = (bet: Bet) => {
+    if (bet.infoRedacted) {
+        return '[Info Redacted]';
+    }
     if (bet.sideId) {
         if (bet.bettable.sideId1 === bet.sideId) {
             return `${bet.bettable.team1} ${bet.bettable.team1Spread} @ ${bet.bettable.team2}`;
@@ -84,7 +90,9 @@ export const LiveBoxScoreBetsPanel: React.FC<GameBetsProps> = observer(({side, s
             <Row xs={12}>
                 <ListGroup flush>
                     {bets.map(bet =>
-                        <ListGroupItem style={{background: Colors.whiteSepia, borderWidth: 0, padding: '0.25rem 0.5rem'}}>{gamblerNames[bet.gambler as number]}{getWagerType(bet, parlays, (!!score && score.clockStatus === 'STATUS_FINAL'))}{getBetSide(bet)} <UnofficialOutcome bet={bet} score={score}/></ListGroupItem>
+                        <ListGroupItem style={{background: Colors.whiteSepia, borderWidth: 0, padding: '0.25rem 0.5rem'}}>
+                            {gamblerNames[bet.gambler as number]}{getWagerType(bet, parlays, (!!score && score.clockStatus === 'STATUS_FINAL'))}{getBetSide(bet)} <UnofficialOutcome bet={bet} score={score}/>
+                        </ListGroupItem>
                     )}
                 </ListGroup>
 

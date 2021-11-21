@@ -35,6 +35,9 @@ const LiveScoresPage: React.FC = observer(() => {
         };
     });
 
+    const scores = scoresStore.scores.filter(game => game.bets.some(bet => !bet.infoRedacted));
+    const parlays = scoresStore.parlays.filter(parlay => parlay.bets.some(bet => !bet.infoRedacted));
+
     return (
         <Container>
             <Row>
@@ -43,11 +46,11 @@ const LiveScoresPage: React.FC = observer(() => {
                 </Col>
             </Row>
             <Col xs={12} md={{size:10, offset:1}} lg={{size: 8, offset: 2}}>
-                {scoresStore.loaded && scoresStore.scores.length === 0 &&
+                {scoresStore.loaded && scores.length === 0 &&
                     <div>There are currently no bet on games to process</div>
                 }
                 {scoresStore.scores.length > 0 &&
-                    <ScoreForm games={scoresStore.scores} parlays={scoresStore.parlays} gamblerNames={scoresStore.gamblerNames} />
+                    <ScoreForm games={scores} parlays={parlays} gamblerNames={scoresStore.gamblerNames} />
                 }
             </Col>
         </Container>

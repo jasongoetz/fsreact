@@ -52,12 +52,17 @@ const MiniBets = () => {
                     <div style={betHeadlineStyle}>
                         ${bet.amount} by {bet.gambler.user.firstName} {bet.gambler.user.lastName}
                     </div>
-                    <div>
-                        {getBetSummary(bet)}
-                    </div>
-                    <div>
-                        {shortenTeamName(bet.bettable.team1, league.sport)} @ {shortenTeamName(bet.bettable.team2, league.sport)}
-                    </div>
+                    {bet.infoRedacted && <><div>[Info Redacted]</div><div/></>}
+                    {!bet.infoRedacted &&
+                        <>
+                            <div>
+                                {getBetSummary(bet)}
+                            </div>
+                            <div>
+                                {shortenTeamName(bet.bettable.team1, league.sport)} @ {shortenTeamName(bet.bettable.team2, league.sport)}
+                            </div>
+                        </>
+                    }
                 </div>
             })}
         </div>
