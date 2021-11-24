@@ -39,8 +39,9 @@ class LocalCart {
             id: this.toCartBetId(bet),
             bettable: bet.bettable,
             sideId: bet.sideId,
+            moneyline: bet.moneyline,
             overunder: bet.overunder,
-            line: this.getLine(bet.bettable, bet.sideId),
+            line: this.getLine(bet.bettable, bet.moneyline, bet.sideId),
             amount: 0,
         };
         this.cart.bets.push(cartBet);
@@ -78,17 +79,17 @@ class LocalCart {
     }
 
     private betIsInCart = (bet: PotentialBet) => {
-        return this.cart.bets.some(cb => cb.id === this.toCartBetId(bet));
+        return this.cart.bets.some(cb => cb.id === this.toCartBetId(bet) && (cb.moneyline === bet.moneyline));
     }
 
-    private toCartBetId = (bet: PotentialBet) => `${(bet.bettable.id)}-${(bet.sideId)}-${(bet.overunder)}`;
+    private toCartBetId = (bet: PotentialBet) => `${(bet.bettable.id)}-${(bet.sideId)}-o${(bet.overunder ? 1 : 0)}-m${(bet.moneyline ? 1 : 0)}`;
 
-    private getLine = (bettable: Bettable, sideId?: string) => {
+    private getLine = (bettable: Bettable, isMoneyline: boolean, sideId?: string) => {
         if (sideId === bettable.sideId1) {
-            return bettable.team1Spread;
+            return isMoneyline ? bettable.team1MoneyLine : bettable.team1Spread;
         }
         else if (sideId === bettable.sideId2) {
-            return bettable.team2Spread;
+            return isMoneyline ? bettable.team2MoneyLine : bettable.team2Spread;
         }
         else {
             return bettable.overunder;

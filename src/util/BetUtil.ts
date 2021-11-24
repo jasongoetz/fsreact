@@ -3,9 +3,17 @@ import Pluralize from 'pluralize';
 
 export const getBetSummary = (bet: CartBet) => {
     if (bet.sideId === bet.bettable.sideId1) {
-        return `${bet.bettable.team1} ${bet.bettable.team1Spread}`;
+        if (bet.moneyline) {
+            return `${bet.bettable.team1} to win (${bet.bettable.team1MoneyLine})`;
+        } else {
+            return `${bet.bettable.team1} ${bet.bettable.team1Spread}`;
+        }
     } else if (bet.sideId === bet.bettable.sideId2) {
-        return `${bet.bettable.team2} ${bet.bettable.team2Spread}`;
+        if (bet.moneyline) {
+            return `${bet.bettable.team2} to win (${bet.bettable.team2MoneyLine})`;
+        } else {
+            return `${bet.bettable.team2} ${bet.bettable.team2Spread}`;
+        }
     } else if (bet.overunder != null) {
         return (bet.overunder === 'OVER' ? "Over " : "Under ") + bet.bettable.overunder;
     }

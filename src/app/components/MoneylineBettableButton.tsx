@@ -12,18 +12,18 @@ interface Props {
     team: Team;
 }
 
-const TeamBettableButton: React.FC<Props> = observer(({bettable, team}) => {
+const MoneylineBettableButton: React.FC<Props> = observer(({bettable, team}) => {
 
     const { cartStore } = useGlobalStores();
 
     const bettableInCart = (bettableId: number, sideId: string) => {
         let cartBet = cartStore.bets
-            .find(cartBet => cartBet.bettable.id === bettableId && cartBet.sideId === sideId && !cartBet.moneyline);
+            .find(cartBet => cartBet.bettable.id === bettableId && cartBet.sideId === sideId && cartBet.moneyline);
         return !!cartBet;
     };
 
-    const getSpread = () => {
-        let spreadPropName = team === 'TEAM1' ? 'team1Spread' : 'team2Spread';
+    const getMoneyline = () => {
+        let spreadPropName = team === 'TEAM1' ? 'team1MoneyLine' : 'team2MoneyLine';
         return bettable[spreadPropName];
     };
 
@@ -36,19 +36,19 @@ const TeamBettableButton: React.FC<Props> = observer(({bettable, team}) => {
         let bet = {
             bettable: bettable,
             sideId: getSideId(),
-            moneyline: false,
+            moneyline: true,
         };
         addBetToCart(bet);
     };
 
-    if (!bettable.off) {
-        let spread = getSpread();
+    let moneyline = getMoneyline();
+    if (!bettable.off && moneyline) {
         let sideId = getSideId();
         let disabled = bettableInCart(bettable.id, sideId);
-        return <FSWideButton disabled={disabled} onClick={betClick}>{spread}</FSWideButton>;
+        return <FSWideButton disabled={disabled} onClick={betClick}>{moneyline}</FSWideButton>;
     } else {
         return <FSWideButton disabled={true}>OFF</FSWideButton>;
     }
 });
 
-export default TeamBettableButton;
+export default MoneylineBettableButton;

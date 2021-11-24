@@ -4,11 +4,13 @@ import {Bet, GamblerInfo, Parlay, Wager} from "../types";
 import {Link} from "react-router-dom";
 import moment from "moment";
 import {Colors} from "../theme/theme";
+import {getParlayWinnings} from "../../util/MoneylineUtil";
 
 interface Props {
     gambler: GamblerInfo;
     bet: Bet;
     isParlay: boolean;
+    leagueMoneyline: number;
 }
 
 const betCardStyle = {
@@ -33,7 +35,7 @@ const betCardContentStyle = {
     borderTop: "0px"
 };
 
-const PendingBetCard: React.FC<Props> = ({gambler, bet, isParlay}) => {
+const PendingBetCard: React.FC<Props> = ({gambler, bet, isParlay, leagueMoneyline}) => {
 
     const getBetHeadline = (wager: Wager, isParlay: boolean) => {
         if (isParlay) {
@@ -52,10 +54,10 @@ const PendingBetCard: React.FC<Props> = ({gambler, bet, isParlay}) => {
         }
     };
 
-    const getWager = (wager: Wager, isParlay: boolean) => {
+    const getWager = (wager: Wager, isParlay: boolean, leagueMoneyline: number) => {
         if (isParlay) {
             const parlay = wager as Parlay;
-            return `$${parlay.amount} (to win $${parlay.amount * Math.pow(2, parlay.bets.length)})`
+            return `$${parlay.amount} (to win $${getParlayWinnings(parlay.amount, parlay.bets, leagueMoneyline)})`
         }
         else {
             return `$${wager.amount}`;
@@ -64,7 +66,7 @@ const PendingBetCard: React.FC<Props> = ({gambler, bet, isParlay}) => {
 
     return <Col lg={4} sm={6} xs={12} style={betCardStyle}>
         <div style={titleBarStyle}>
-            <div style={wagerStyle}>{getWager(bet, isParlay)}</div>
+            <div style={wagerStyle}>{getWager(bet, isParlay, leagueMoneyline)}</div>
             <div>{gambler.user.firstName} {gambler.user.lastName}</div>
         </div>
         <div style={betCardContentStyle}>

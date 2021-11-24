@@ -94,6 +94,8 @@ export type Bettable = {
     team2: string;
     team1Spread: string;
     team2Spread: string;
+    team1MoneyLine: string;
+    team2MoneyLine: string;
     overunder: string;
     ouoff: boolean;
     off: boolean;
@@ -155,6 +157,7 @@ export interface Bet extends Wager {
     sideId: string;
     overunder: OverUnder;
     line: string;
+    moneyline: boolean;
     parlay?: Parlay | number;
     infoRedacted?: boolean;
 }
@@ -167,6 +170,7 @@ export type PotentialBet = {
     bettable: Bettable;
     sideId?: string;
     overunder?: OverUnder;
+    moneyline: boolean;
 }
 
 export interface FullBet extends Bet {
@@ -193,6 +197,7 @@ export interface CartBet {
     bettable: Bettable;
     amount: number;
     sideId?: string;
+    moneyline: boolean;
     overunder?: OverUnder;
     line: string;
 }

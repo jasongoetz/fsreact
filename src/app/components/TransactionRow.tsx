@@ -71,10 +71,10 @@ const getWinnings = (betOrParlay: BetOrParlayWrapper, moneyline: number) => {
     if (betOrParlay.value.outcome === 'WIN') {
         if (betOrParlay.type === 'parlay') {
             const parlay = betOrParlay.value as Parlay;
-            return getParlayWinnings(parlay.amount, moneyline, parlay.bets.filter(b => b.outcome === 'WIN').length);
+            return getParlayWinnings(parlay.amount, parlay.bets.filter(b => b.outcome === 'WIN'), moneyline);
         } else {
             const bet = betOrParlay.value as Bet;
-            return getBetWinnings(bet.amount, moneyline);
+            return getBetWinnings(bet, moneyline);
         }
     } else if (betOrParlay.value.outcome === 'LOSS') {
         return '--';
@@ -83,10 +83,10 @@ const getWinnings = (betOrParlay: BetOrParlayWrapper, moneyline: number) => {
     } else {
         if (betOrParlay.type === 'parlay') {
             const parlay = betOrParlay.value as Parlay;
-            return `${betOrParlay.value.amount} to win ${getParlayWinnings(parlay.amount, moneyline, parlay.bets.length)}`;
+            return `${betOrParlay.value.amount} to win ${getParlayWinnings(parlay.amount, parlay.bets, moneyline)}`;
         } else {
             const bet = betOrParlay.value as Bet;
-            return getBetWinnings(bet.amount, moneyline);
+            return getBetWinnings(bet, moneyline);
         }
     }
 };
