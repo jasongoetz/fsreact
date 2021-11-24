@@ -21,7 +21,6 @@ const getWagerType = (bet: Bet, parlays: Parlay[], final: boolean) => {
         return <><span>{hadOrHas(final)}a </span><span>
             <span color="link" style={{cursor: 'pointer', fontWeight: 500, color: Colors.slightlyDarkerFSBlue}} id={`popover-${bet.parlay}-${bet.id}`}>{parlay.bets.length} game ${parlay.amount} parlay</span>
             <UncontrolledPopover trigger="legacy" placement="bottom" target={`popover-${bet.parlay}-${bet.id}`}>
-                {/*<PopoverHeader>{parlay.bets.length} bets in parlay</PopoverHeader>*/}
                 <PopoverBody>
                     <Container style={{paddingTop: 5, paddingBottom: 5 }}>
                         <Row xs={12}>
@@ -49,14 +48,22 @@ const getBetSide = (bet: Bet) => {
     }
     if (bet.sideId) {
         if (bet.bettable.sideId1 === bet.sideId) {
-            return `${bet.bettable.team1} ${bet.line}`;
+            return `${bet.bettable.team1} ${getLineWording(bet)}`;
         } else {
-            return `${bet.bettable.team2} ${bet.line}`;
+            return `${bet.bettable.team2} ${getLineWording(bet)}`;
         }
     } else {
         return `${bet.overunder.toLowerCase()} ${bet.line}`;
     }
 };
+
+const getLineWording = (bet: Bet) => {
+    if (bet.moneyline) {
+        return `to win (${bet.line})`;
+    } else {
+        return bet.line;
+    }
+}
 
 const getParlayBetDescription = (bet: Bet) => {
     if (bet.infoRedacted) {

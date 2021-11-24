@@ -29,7 +29,7 @@ const ReadOnlyBetCard: React.FC<Props> = ({bet, partOfParlay, moneyline}) => {
 
     const getWagerFields = (bet) => {
         return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginTop: '10px'}}>
-            Wager ${bet.amount}, Win ${getBetWinnings(bet.amount, moneyline)}
+            Wager ${bet.amount}, Win ${getBetWinnings(bet, moneyline)}
 
         </div>;
     };

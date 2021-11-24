@@ -91,7 +91,7 @@ const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, 
             <InputGroup style={{width: '30%'}}>
                 <span style={disabledGroupAddOn}>$</span>
                 <Input readOnly disabled type="number" min="0" style={betWinningsStyle} className="form-control"
-                       value={getBetWinnings(bet.amount || 0, moneyline)}/>
+                       value={getBetWinnings(bet, moneyline)}/>
             </InputGroup>
         </div>;
     };

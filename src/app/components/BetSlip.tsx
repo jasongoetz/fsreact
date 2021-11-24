@@ -282,7 +282,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
                                 <span style={disabledGroupAddOn}>$</span>
                                 <Input readOnly disabled type="number" min="0"
                                        style={wagerWinningsStyle} className="form-control"
-                                       value={getParlayWinnings(parlay?.amount || 0, potentialBets.map(bet => bet.moneyline ? parseInt(bet.line) : leagueMoneyline))}/>
+                                       value={getParlayWinnings(parlay?.amount || 0, potentialBets, leagueMoneyline)}/>
                             </InputGroup>
                         </div>
                         <div>

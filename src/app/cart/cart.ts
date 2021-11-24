@@ -82,7 +82,7 @@ class LocalCart {
         return this.cart.bets.some(cb => cb.id === this.toCartBetId(bet) && (cb.moneyline === bet.moneyline));
     }
 
-    private toCartBetId = (bet: PotentialBet) => `${(bet.bettable.id)}-${(bet.sideId)}-${(bet.overunder)}`;
+    private toCartBetId = (bet: PotentialBet) => `${(bet.bettable.id)}-${(bet.sideId)}-o${(bet.overunder ? 1 : 0)}-m${(bet.moneyline ? 1 : 0)}`;
 
     private getLine = (bettable: Bettable, isMoneyline: boolean, sideId?: string) => {
         if (sideId === bettable.sideId1) {

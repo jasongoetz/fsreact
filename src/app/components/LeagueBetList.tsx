@@ -26,10 +26,10 @@ const LeagueBetList: React.FC = observer(() => {
                 let bets = betsAndParlaysByGambler[gamblerId].bets;
                 let parlays = betsAndParlaysByGambler[gamblerId].parlays;
                 let betCards = bets.map(bet => {
-                    return <PendingBetCard key={bet.id} gambler={bet.gambler} bet={bet} isParlay={false}/>
+                    return <PendingBetCard key={bet.id} gambler={bet.gambler} bet={bet} isParlay={false} leagueMoneyline={league.moneyline}/>
                 });
                 let parlayCards = parlays.map(parlay => {
-                    return <PendingBetCard key={parlay.id} gambler={parlay.gambler} bet={parlay} isParlay={true}/>
+                    return <PendingBetCard key={parlay.id} gambler={parlay.gambler} bet={parlay} isParlay={true} leagueMoneyline={league.moneyline}/>
                 });
                 return betCards.concat(parlayCards);
             })}
