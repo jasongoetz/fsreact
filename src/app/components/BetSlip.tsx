@@ -174,13 +174,18 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
         }
     };
 
+    const parlay = cartStore.parlay;
+    const potentialBets = cartStore.bets;
+
+    useEffect(() => {
+        setErrors([]);
+    }, [potentialBets.length, parlay]);
+
     if (!gamblerId || !leagueStore.league) {
         return <div></div>;
     }
 
     const leagueMoneyline = leagueStore.league.moneyline;
-    const parlay = cartStore.parlay;
-    const potentialBets = cartStore.bets;
     const insufficientBets = potentialBets.length < 2;
     const betParlayTabActive = !!parlay?.active && !insufficientBets;
     const totalAmount = potentialBets.reduce((sum, bet) => sum + (bet.amount || 0), 0);
