@@ -36,7 +36,7 @@ const Standings: React.FC = observer(() => {
                         <th>Money</th>
                         <th>Pending</th>
                         <th>Record</th>
-                        <th></th>
+                        <th>Moneyline</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -52,7 +52,7 @@ const Standings: React.FC = observer(() => {
                             </td>
                             <td>${gambler.pending.toFixed(2)}</td>
                             <td>{gambler.record}</td>
-                            <td></td>
+                            <td>{gambler.moneylineRecord}</td>
                             <td></td>
                         </tr>;
                     })}

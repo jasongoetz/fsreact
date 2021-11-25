@@ -21,11 +21,10 @@ export const getUnofficialBetOutcome = (bet: Bet, score: GameScore): Outcome => 
         else {
             return (bet.overunder === "UNDER") ? 'WIN' : 'LOSS';
         }
-    }
-    else {
+    } else {
         let line = parseFloat(bet.line);
         let bettersPickScore = (bet.sideId === bet.bettable.sideId1) ? score.team2Score : score.team1Score; //TODO: This is backwards, like the rest
-        let bettersAdjustedScore = bettersPickScore + line;
+        let bettersAdjustedScore = bet.moneyline ? bettersPickScore : (bettersPickScore + line);
         let bettersOpponentScore = (bet.sideId === bet.bettable.sideId1) ? score.team1Score : score.team2Score; //TODO: This is backwards, like the rest
 
         if (bettersAdjustedScore > bettersOpponentScore) {

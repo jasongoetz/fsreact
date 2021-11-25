@@ -74,6 +74,7 @@ export interface GamblerInfo extends Gambler {
     losses: number;
     pushes: number;
     record: string;
+    moneylineRecord: string;
 }
 
 export interface Invite {
