@@ -1,0 +1,21 @@
+
+
+query getBettables($sport: String!) {
+  bettables(sport: $sport) {
+    id
+    sport
+    gameKey
+    gameTime
+    team1
+    team2
+    sideId1
+    sideId2
+    team1Spread
+    team2Spread
+    team1Moneyline
+    team2Moneyline
+    overunder
+    ouoff
+    off
+  }
+}

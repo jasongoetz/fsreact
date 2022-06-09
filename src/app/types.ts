@@ -1,3 +1,4 @@
+import { Bettable } from "../graphql/generated";
 
 export interface AuthToken {
     issued: string;
@@ -84,23 +85,6 @@ export interface Invite {
     league: number;
     accepted?: boolean;
 }
-
-export type Bettable = {
-    id: number;
-    gameKey: string;
-    gameTime: string;
-    sideId1: string;
-    sideId2: string;
-    team1: string;
-    team2: string;
-    team1Spread: string;
-    team2Spread: string;
-    team1MoneyLine: string;
-    team2MoneyLine: string;
-    overunder: string;
-    ouoff: boolean;
-    off: boolean;
-};
 
 export type BettableWithScore = Bettable & { gameScore?: GameScore }
 

@@ -1,5 +1,4 @@
 import {createContext, useContext} from 'react';
-import {bettableStore} from '../bettables/bettable.store';
 import {cartStore} from "../cart/cart.store";
 import {betStore} from "../bets/bet.store";
 import {leagueStore} from "../league/league.store";
@@ -15,7 +14,6 @@ import {scoresStore} from "../scores/scores.store";
 export const globalContext = createContext({
     adminStore,
     authStore,
-    bettableStore,
     betStore,
     cartStore,
     errorStore,

@@ -1,9 +1,10 @@
 import React from "react";
 import {FSWideButton} from "./FSComponents";
-import {Bettable, OverUnder} from "../types";
+import {OverUnder} from "../types";
 import {useGlobalStores} from "../context/global_context";
 import {addBetToCart} from "../cart/cart.actions";
 import {observer} from "mobx-react";
+import { Bettable } from "../../graphql/generated";
 
 interface Props {
     bettable: Bettable;

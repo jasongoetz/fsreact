@@ -4,9 +4,9 @@ import moment from 'moment';
 import TeamBettableButton from "./TeamBettableButton";
 import OverUnderBettableButton from "./OverUnderBettableButton";
 import styled from "@emotion/styled";
-import {Bettable} from "../types";
 import {Colors} from "../theme/theme";
 import MoneylineBettableButton from "./MoneylineBettableButton";
+import { Bettable } from "../../graphql/generated";
 
 const TeamRow = styled(Row)({
     paddingTop: "5px",

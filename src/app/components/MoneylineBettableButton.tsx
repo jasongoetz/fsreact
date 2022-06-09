@@ -1,9 +1,9 @@
 import React from "react";
 import {FSWideButton} from "./FSComponents";
-import {Bettable} from "../types";
 import {useGlobalStores} from "../context/global_context";
 import {addBetToCart} from "../cart/cart.actions";
 import {observer} from "mobx-react";
+import { Bettable } from "../../graphql/generated";
 
 export type Team = 'TEAM1' | 'TEAM2';
 

@@ -1,6 +1,17 @@
 # Fake Stacks Front End
 
-Hmmm
+The React Front End for Fake Stacks
+
+## Getting Started
+
+To get started, add an `.env` file with a couple key variables:
+
+```
+REACT_APP_GOOGLE_CLIENT_ID=
+REACT_APP_SERVER_URL=
+```
+
+Yarn install, start the back end server and start this front end and you'll be up and running.
 
 ## Running Cypress
 

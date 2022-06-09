@@ -1,4 +1,5 @@
-import {Bettable, Cart, CartBet, PotentialBet} from "../types";
+import {Cart, CartBet, PotentialBet} from "../types";
+import { Bettable } from "../../graphql/generated";
 
 class LocalCart {
     private cart: Cart;
@@ -41,7 +42,7 @@ class LocalCart {
             sideId: bet.sideId,
             moneyline: bet.moneyline,
             overunder: bet.overunder,
-            line: this.getLine(bet.bettable, bet.moneyline, bet.sideId),
+            line: this.getLine(bet.bettable, bet.moneyline, bet.sideId) || '',
             amount: 0,
         };
         this.cart.bets.push(cartBet);
@@ -86,10 +87,10 @@ class LocalCart {
 
     private getLine = (bettable: Bettable, isMoneyline: boolean, sideId?: string) => {
         if (sideId === bettable.sideId1) {
-            return isMoneyline ? bettable.team1MoneyLine : bettable.team1Spread;
+            return isMoneyline ? bettable.team1Moneyline : bettable.team1Spread;
         }
         else if (sideId === bettable.sideId2) {
-            return isMoneyline ? bettable.team2MoneyLine : bettable.team2Spread;
+            return isMoneyline ? bettable.team2Moneyline : bettable.team2Spread;
         }
         else {
             return bettable.overunder;

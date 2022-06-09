@@ -32,10 +32,13 @@ import FakeStacksRegistration from "./components/FakeStacksRegistration";
 import CreateLeagueForm from "./components/CreateLeagueForm";
 import OpenRoute from "./components/routing/OpenRoute";
 import LiveScoresPage from "./components/LiveScoresPage";
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const appStyle = {
     fontFamily: Fonts.mainSite
 };
+
+export const queryClient = new QueryClient();
 
 const App: FC = () => {
 
@@ -200,43 +203,45 @@ const App: FC = () => {
     };
 
     return (
-        <Router>
-            <div style={appStyle} className="App">
-                <NavHeader
-                    toggleMobileMenu={toggleMobileMenu}
-                />
+        <QueryClientProvider client={queryClient}>
+            <Router>
+                <div style={appStyle} className="App">
+                    <NavHeader
+                        toggleMobileMenu={toggleMobileMenu}
+                    />
 
-                {showMobileMenu && <MobileMenu
-                    isAdmin={true}
-                    closeMenu={toggleMobileMenu}
-                />}
+                    {showMobileMenu && <MobileMenu
+                        isAdmin={true}
+                        closeMenu={toggleMobileMenu}
+                    />}
 
-                <Switch>
-                    <UnauthenticatedRoute exact path="/login" component={LoginPage} redirectTo="/"/>
-                    <UnauthenticatedRoute exact path="/fslogin" component={FSLoginPage} redirectTo="/"/>
-                    <OpenRoute exact path="/rsvp" component={RSVPPageContainer} redirectTo="/"/>
-                    <UnauthenticatedRoute exact path="/register" component={RegistrationPage} redirectTo="/"/>
-                    <UnauthenticatedRoute exact path="/fsregister" component={FSRegistrationPage} redirectTo="/"/>
-                    <UnauthenticatedRoute exact path="/forgotpassword" component={ForgotPasswordPage} redirectTo="/"/>
-                    <UnauthenticatedRoute exact path="/passwordreset" component={PasswordResetPage} redirectTo="/"/>
-                    <PrivateLeagueRoute exact path="/" component={HomePage}/>
-                    <PrivateUnaffiliatedRoute exact path="/league/join" component={JoinLeaguePage}/>
-                    <PrivateLeagueRoute exact path="/league/new" component={NewLeaguePage}/>
-                    <PrivateLeagueRoute exact path="/games" component={GamePage}/>
-                    <PrivateLeagueRoute exact path="/standings" component={StandingsPage}/>
-                    <PrivateLeagueRoute exact path="/bets" component={BetsPage}/>
-                    <PrivateLeagueRoute exact path="/scores" component={ScoresPage}/>
-                    <PrivateLeagueRoute exact path="/account" component={UserAccountPage}/>
-                    <PrivateLeagueRoute exact path="/transaction/show/:gamblerId" component={UserAccountPage}/>
-                    <PrivateLeagueRoute exact path="/league/settings" component={LeagueManagePage}/>
-                    <PrivateLeagueRoute exact path="/confirmation" component={BetConfirmationPage}/>
-                    <PrivateLeagueRoute exact path="/profile" component={ProfileManagePage}/>
-                    <PrivateLeagueRoute exact path="/user/password" component={PasswordManagePage}/>
-                    <PrivateLeagueRoute exact path="/admin" component={AdminPage}/>
-                    <Route component={Page404}/>
-                </Switch>
-            </div>
-        </Router>
+                    <Switch>
+                        <UnauthenticatedRoute exact path="/login" component={LoginPage} redirectTo="/"/>
+                        <UnauthenticatedRoute exact path="/fslogin" component={FSLoginPage} redirectTo="/"/>
+                        <OpenRoute exact path="/rsvp" component={RSVPPageContainer} redirectTo="/"/>
+                        <UnauthenticatedRoute exact path="/register" component={RegistrationPage} redirectTo="/"/>
+                        <UnauthenticatedRoute exact path="/fsregister" component={FSRegistrationPage} redirectTo="/"/>
+                        <UnauthenticatedRoute exact path="/forgotpassword" component={ForgotPasswordPage} redirectTo="/"/>
+                        <UnauthenticatedRoute exact path="/passwordreset" component={PasswordResetPage} redirectTo="/"/>
+                        <PrivateLeagueRoute exact path="/" component={HomePage}/>
+                        <PrivateUnaffiliatedRoute exact path="/league/join" component={JoinLeaguePage}/>
+                        <PrivateLeagueRoute exact path="/league/new" component={NewLeaguePage}/>
+                        <PrivateLeagueRoute exact path="/games" component={GamePage}/>
+                        <PrivateLeagueRoute exact path="/standings" component={StandingsPage}/>
+                        <PrivateLeagueRoute exact path="/bets" component={BetsPage}/>
+                        <PrivateLeagueRoute exact path="/scores" component={ScoresPage}/>
+                        <PrivateLeagueRoute exact path="/account" component={UserAccountPage}/>
+                        <PrivateLeagueRoute exact path="/transaction/show/:gamblerId" component={UserAccountPage}/>
+                        <PrivateLeagueRoute exact path="/league/settings" component={LeagueManagePage}/>
+                        <PrivateLeagueRoute exact path="/confirmation" component={BetConfirmationPage}/>
+                        <PrivateLeagueRoute exact path="/profile" component={ProfileManagePage}/>
+                        <PrivateLeagueRoute exact path="/user/password" component={PasswordManagePage}/>
+                        <PrivateLeagueRoute exact path="/admin" component={AdminPage}/>
+                        <Route component={Page404}/>
+                    </Switch>
+                </div>
+            </Router>
+        </QueryClientProvider>
     );
 };
 

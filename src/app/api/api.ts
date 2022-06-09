@@ -2,7 +2,6 @@ import {deLete, get, post, put} from './fetch';
 import {
     AuthToken,
     BetOrParlayWrapper,
-    Bettable,
     BettableWithScore,
     CartParlay,
     Credentials,
@@ -160,14 +159,6 @@ export const postGameScores = async (scores: GameScoreRequest[]) => {
     });
 };
 
-export const getGamesForSport = async (sportKey): Promise<{bettables: Bettable[]}> => {
-    const response = await get({
-        path: `/api/games?sport=${sportKey}`,
-    });
-
-    return await response.json();
-};
-
 export const getBetsForLeague = async (leagueId): Promise<GamblerBets> => {
     const response = await get({
         path: `/api/leagues/${leagueId}/bets`,
@@ -207,6 +198,28 @@ export const getInviteByToken = async (token: string) => {
 
     return await response.json();
 }
+
+export const fetchGraphQL = <TData, TVariables>(
+  query: string,
+  variables?: TVariables,
+): (() => Promise<TData>) => async () => {
+  const response = await post({
+      path: '/graphql',
+      body: JSON.stringify({
+          query,
+          variables,
+      })
+  });
+
+  const json = await response.json();
+
+  if (json.errors) {
+    const { message } = json.errors[0] || 'Error..';
+    throw new Error(message);
+  }
+
+  return json.data;
+};
 
 
 
