@@ -48,7 +48,7 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
             startingAccount: '500',
             weeklyBetCountMax: '6',
             weeklyBetAccountRatio: '50',
-            bettingBonus: false,
+            moneyline: '100',
         },
         validationSchema: leagueCreationSchema,
         onSubmit: registerLeague
@@ -178,7 +178,7 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
                                     type="select"
                                     id="moneyline"
                                     name="moneyline"
-                                    defaultValue="50"
+                                    defaultValue="100"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                 >

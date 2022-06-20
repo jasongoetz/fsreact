@@ -56,7 +56,7 @@ const LeagueMembers: React.FC<Props> = ({adminId, gamblers}) => {
                                         {gambler.user.firstName} {gambler.user.lastName} {(adminId === gambler.user.id) && "(League Admin)"} {gambler.defunct && "(Defunct)"}
                                     </td>
                                     <td>
-                                        {gambler.money === 0 && !gambler.defunct &&
+                                        {gambler.tallies.money === 0 && !gambler.defunct &&
                                             <Button
                                                 size={"sm"}
                                                 color="link"

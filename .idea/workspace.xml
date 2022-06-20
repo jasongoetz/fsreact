@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="33b8973b-0018-488d-8009-6e7b85a21a76" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/integration/multi_league.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/integration/multi_league.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/cart/cart.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/cart/cart.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/AccountPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/AccountPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/CreateLeagueForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/CreateLeagueForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/GameRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/GameRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/LeagueManagement.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/LeagueManagement.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/LeagueMembers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/LeagueMembers.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/LiveBoxScore.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/LiveBoxScore.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/LiveBoxScoreBetsPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/LiveBoxScoreBetsPanel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/MiniBets.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/MiniBets.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/MiniStandings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/MiniStandings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/MobileMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/MobileMenu.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/NavHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/NavHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/OverUnderBettableButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/OverUnderBettableButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/PendingBetCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/PendingBetCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/Standings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/Standings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/TransactionRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/TransactionRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/UserContextContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/UserContextContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/BetUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/BetUtil.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/OutcomeUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/OutcomeUtil.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="29unuHlR8IfQn5J3nDmnLaYWF1f" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jasongoetz/personal-projects/fsreact/src/graphql&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/jasongoetz/personal-projects/fsreact/node_modules/typescript/lib&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/graphql" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/graphql" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.start">
+    <configuration name="graphql-codegen" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="graphql-codegen" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.start" />
+        <item itemvalue="npm.graphql-codegen" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="33b8973b-0018-488d-8009-6e7b85a21a76" name="Changes" comment="" />
+      <created>1653972058956</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1653972058956</updated>
+      <workItem from="1653972060492" duration="1252000" />
+      <workItem from="1654031430184" duration="53000" />
+      <workItem from="1654031492794" duration="598000" />
+      <workItem from="1654733535863" duration="3708000" />
+      <workItem from="1654741040084" duration="6187000" />
+      <workItem from="1655053040046" duration="1862000" />
+      <workItem from="1655093091173" duration="123000" />
+      <workItem from="1655093412370" duration="4674000" />
+      <workItem from="1655158153827" duration="3768000" />
+      <workItem from="1655522853558" duration="2716000" />
+      <workItem from="1655573722507" duration="12384000" />
+      <workItem from="1655654003245" duration="2612000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

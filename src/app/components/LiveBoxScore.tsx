@@ -25,8 +25,8 @@ const OutcomeCard = styled.div({
 
 const team1Cond = (bet) => bet.sideId && bet.bettable.sideId1 === bet.sideId;
 const team2Cond = (bet) => bet.sideId && bet.bettable.sideId2 === bet.sideId;
-const overCond = (bet) => !bet.sideId && bet.overunder === 'OVER';
-const underCond = (bet) => !bet.sideId && bet.overunder === 'UNDER';
+const overCond = (bet) => !bet.sideId && bet.overUnder === 'OVER';
+const underCond = (bet) => !bet.sideId && bet.overUnder === 'UNDER';
 
 export const ScoreForm: React.FC<ScoresFormProps> = observer(({games, gamblerNames, parlays }) => {
     const scores = games.map(game => ({

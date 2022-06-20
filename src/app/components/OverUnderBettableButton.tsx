@@ -7,33 +7,33 @@ import {observer} from "mobx-react";
 
 interface Props {
     bettable: Bettable;
-    overunder: OverUnder;
+    overUnder: OverUnder;
     isMobile: boolean;
 }
 
-const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overunder, isMobile}) => {
+const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overUnder, isMobile}) => {
 
     const { cartStore } = useGlobalStores();
 
-    const bettableInCart = (bettableId: number, overunder: OverUnder) => {
+    const bettableInCart = (bettableId: number, overUnder: OverUnder) => {
         let cartBet = cartStore.bets
-            .find(cartBet => cartBet.bettable.id === bettableId && cartBet.overunder === overunder);
+            .find(cartBet => cartBet.bettable.id === bettableId && cartBet.overUnder === overUnder);
         return !!cartBet;
     };
 
     const betClick = () => {
-        let bet = {bettable: bettable, overunder: overunder, moneyline: false};
+        let bet = {bettable: bettable, overUnder: overUnder, moneyline: false};
         addBetToCart(bet);
     };
 
     if (!bettable.ouoff) {
-        let disabled = bettableInCart(bettable.id, overunder);
-        let overUnderName = overunder === 'OVER' ? "Over " : "Under ";
+        let disabled = bettableInCart(bettable.id, overUnder);
+        let overUnderName = overUnder === OverUnder.OVER ? "Over " : "Under ";
         if (isMobile) {
             overUnderName = overUnderName.slice(0, 1);
         }
         return <FSWideButton className="hidden-xs hidden-sm" disabled={disabled}
-                         onClick={betClick}>{overUnderName} {bettable.overunder}</FSWideButton>;
+                         onClick={betClick}>{overUnderName} {bettable.overUnder}</FSWideButton>;
     } else {
         return <FSWideButton disabled={true}>O/U OFF</FSWideButton>;
     }

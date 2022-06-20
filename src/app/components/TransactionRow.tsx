@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import {Bet, Parlay, BetOrParlayWrapper, Wager} from "../types";
+import { Bet, Parlay, BetOrParlayWrapper, Wager, OverUnder, Outcome } from '../types';
 import {Colors} from "../theme/theme";
 import {getBetWinnings, getParlayWinnings} from "../../util/MoneylineUtil";
 
@@ -25,7 +25,7 @@ const getRowColor = (betOrParlay: BetOrParlayWrapper) => {
         return Colors.washedGreen;
     } else if (betOrParlay.value.outcome === 'LOSS') {
         return Colors.washedRed;
-    } else if (betOrParlay.value.complete === true) {
+    } else if (betOrParlay.value.complete) {
         return Colors.washedYellow;
     } else {
         return Colors.lightestGraySepia;
@@ -51,14 +51,14 @@ const getBetDescription = (bet: Bet) => {
     } else if (bet.sideId === bet.bettable.sideId2) {
         return `${bet.bettable.team2} ${bet.line} vs ${bet.bettable.team1}`
     } else {
-        return `${bet.overunder === 'OVER' ? " Over" : " Under"} ${bet.line} (${bet.bettable.team2} vs ${bet.bettable.team1})`
+        return `${bet.overUnder === OverUnder.OVER ? " Over" : " Under"} ${bet.line} (${bet.bettable.team2} vs ${bet.bettable.team1})`
     }
 };
 
 const getOutcome = (bet: Wager) => {
-    if (bet.outcome === 'WIN') {
+    if (bet.outcome === Outcome.WIN) {
         return "WIN";
-    } else if (bet.outcome === 'LOSS') {
+    } else if (bet.outcome === Outcome.LOSS) {
         return "LOSS";
     } else if (bet.complete === true) {
         return "PUSH";

@@ -4,7 +4,7 @@ import moment from 'moment';
 import TeamBettableButton from "./TeamBettableButton";
 import OverUnderBettableButton from "./OverUnderBettableButton";
 import styled from "@emotion/styled";
-import {Bettable} from "../types";
+import { Bettable, OverUnder } from '../types';
 import {Colors} from "../theme/theme";
 import MoneylineBettableButton from "./MoneylineBettableButton";
 
@@ -50,7 +50,7 @@ const GameRow: FC<Props> = ({bettable, isMobile}) => {
                         <MoneylineBettableButton bettable={bettable} team={'TEAM1'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <OverUnderBettableButton bettable={bettable} overunder='OVER' isMobile={isMobile}/>
+                        <OverUnderBettableButton bettable={bettable} overUnder={OverUnder.OVER} isMobile={isMobile}/>
                     </Col>
                 </TeamRow>
                 <TeamRow>
@@ -62,7 +62,7 @@ const GameRow: FC<Props> = ({bettable, isMobile}) => {
                         <MoneylineBettableButton bettable={bettable} team={'TEAM2'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <OverUnderBettableButton bettable={bettable} overunder='UNDER' isMobile={isMobile}/>
+                        <OverUnderBettableButton bettable={bettable} overUnder={OverUnder.UNDER} isMobile={isMobile}/>
                     </Col>
                 </TeamRow>
             </Col>

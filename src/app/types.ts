@@ -15,7 +15,7 @@ export interface UserProfile {
 export interface User extends UserProfile {
     id: number;
     createdAt: string;
-    systemadmin: boolean;
+    systemAdmin: boolean;
     leagueInvites: LeagueInviteWithFullLeague[];
     googleAccount: number;
     fsAccount: number;
@@ -51,12 +51,12 @@ export interface League {
     weeklyBetAccountRatio: number;
     moneyline: number,
     landingMessage: string,
-    admin: number
+    adminId: number
 }
 
 export type LeagueRequest = Pick<League, "name" | "sport" | "startingAccount" | "weeklyBetAccountRatio" | "weeklyBetCountMax">;
 
-export type Sport = 'CFB' | 'NFL' | 'NBA';
+export type Sport = 'CFB' | 'NFL' | 'NBA' | 'WNBA';
 
 export interface Gambler {
     id: number;
@@ -68,13 +68,15 @@ export interface Gambler {
 export interface GamblerInfo extends Gambler {
     bets: Bet[];
     parlays: Parlay[];
-    money: number;
-    pending: number;
-    wins: number;
-    losses: number;
-    pushes: number;
-    record: string;
-    moneylineRecord: string;
+    tallies: {
+        money: number;
+        pending: number;
+        wins: number;
+        losses: number;
+        pushes: number;
+        record: string;
+        moneylineRecord: string;
+    }
 }
 
 export interface Invite {
@@ -97,7 +99,7 @@ export type Bettable = {
     team2Spread: string;
     team1MoneyLine: string;
     team2MoneyLine: string;
-    overunder: string;
+    overUnder: string;
     ouoff: boolean;
     off: boolean;
 };
@@ -124,7 +126,8 @@ interface TeamInfo {
 export type ClockStatus = 'STATUS_FINAL' | 'STATUS_SCHEDULED' | 'STATUS_IN_PROGRESS';
 
 export interface GameScore {
-    bettable: number;
+    id: number;
+    bettableId: number;
     team1: TeamInfo;
     team2: TeamInfo;
     team1Score: number;
@@ -136,17 +139,26 @@ export interface GameScore {
 }
 
 export interface GameScoreRequest {
-    bettable: number;
+    bettableId: number;
     side1Score: number;
     side2Score: number;
 }
 
-export type OverUnder = 'OVER' | 'UNDER';
-export type Outcome = 'WIN' | 'LOSS' | 'PUSH';
+export enum OverUnder {
+  OVER = 'OVER',
+  UNDER = 'UNDER',
+}
+
+export enum Outcome {
+    WIN = 'WIN',
+    LOSS = 'LOSS',
+    PUSH = 'PUSH'
+}
 
 export interface Wager {
     id: number;
-    gambler: number | Gambler;
+    gambler: Gambler;
+    gamblerId: number;
     time: string
     amount: number;
     outcome: Outcome;
@@ -156,10 +168,11 @@ export interface Wager {
 export interface Bet extends Wager {
     bettable: Bettable;
     sideId: string;
-    overunder: OverUnder;
+    overUnder: OverUnder;
     line: string;
     moneyline: boolean;
-    parlay?: Parlay | number;
+    parlayId?: number;
+    parlay?: Parlay;
     infoRedacted?: boolean;
 }
 
@@ -170,7 +183,7 @@ export interface Parlay extends Wager {
 export type PotentialBet = {
     bettable: Bettable;
     sideId?: string;
-    overunder?: OverUnder;
+    overUnder?: OverUnder;
     moneyline: boolean;
 }
 
@@ -199,7 +212,7 @@ export interface CartBet {
     amount: number;
     sideId?: string;
     moneyline: boolean;
-    overunder?: OverUnder;
+    overUnder?: OverUnder;
     line: string;
 }
 
@@ -211,7 +224,8 @@ export interface CartParlay {
 export const Sports = {
     CFB: {key: "CFB", value: 0, name: "College Football"},
     NFL: {key: "NFL", value: 1, name: "NFL"},
-    NBA: {key: "NBA", value: 2, name: "NBA"}
+    NBA: {key: "NBA", value: 2, name: "NBA"},
+    WNBA: {key: "WNBA", value: 3, name: "WNBA"}
 };
 
 export interface LeagueInvite {

@@ -1,5 +1,5 @@
 import React from "react";
-import {FullBet, Sport} from "../types";
+import { FullBet, OverUnder, Sport } from '../types';
 import {useGlobalStores} from "../context/global_context";
 import {Colors} from "../theme/theme";
 
@@ -37,7 +37,7 @@ const getBetSummary = (bet: FullBet) => {
     } else if (bet.sideId === bet.bettable.sideId2) {
         return `${bet.bettable.team2} ${bet.line}`;
     } else {
-        return `${bet.overunder === 'OVER' ? "Over" : "Under"} ${bet.line}`;
+        return `${bet.overUnder === OverUnder.OVER ? "Over" : "Under"} ${bet.line}`;
     }
 };
 

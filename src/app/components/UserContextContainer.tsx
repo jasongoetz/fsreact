@@ -16,7 +16,7 @@ const UserContextContainer: FC<React.PropsWithChildren<Props>> = (props) => {
     if (!userStore.loaded) {
         return <LoadingContainer/>
     }
-    else if (props.adminRequired && !userStore.user?.systemadmin) {
+    else if (props.adminRequired && !userStore.user?.systemAdmin) {
         return <Redirect to={{pathname: '/login'}}/>
     }
     else {

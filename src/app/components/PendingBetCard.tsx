@@ -1,10 +1,10 @@
-import React from "react";
-import {Col} from "reactstrap";
-import {Bet, GamblerInfo, Parlay, Wager} from "../types";
-import {Link} from "react-router-dom";
-import moment from "moment";
-import {Colors} from "../theme/theme";
-import {getParlayWinnings} from "../../util/MoneylineUtil";
+import React from 'react';
+import { Col } from 'reactstrap';
+import { Bet, GamblerInfo, OverUnder, Parlay, Wager } from '../types';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
+import { Colors } from '../theme/theme';
+import { getParlayWinnings } from '../../util/MoneylineUtil';
 
 interface Props {
     gambler: GamblerInfo;
@@ -49,7 +49,7 @@ const PendingBetCard: React.FC<Props> = ({gambler, bet, isParlay, leagueMoneylin
             } else if (bet.sideId === bet.bettable.sideId2) {
                 return `${bet.bettable.team2} ${bet.line}`;
             } else {
-                return `${(bet.overunder === 'OVER' ? "Over" : "Under")} ${bet.line}`;
+                return `${(bet.overUnder === OverUnder.OVER ? "Over" : "Under")} ${bet.line}`;
             }
         }
     };

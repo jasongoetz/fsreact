@@ -76,7 +76,7 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin}) => {
     };
 
     const gambler = leagueStore.gamblers.find(g => g.id === gamblerStore.gambler?.id)
-    const gamblerMoney = gambler ? gambler.money - gambler.pending : 0;
+    const gamblerMoney = gambler ? gambler.tallies.money - gambler.tallies.pending : 0;
 
     return (
         <MobileMenuOverlay>

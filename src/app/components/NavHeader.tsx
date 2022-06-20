@@ -116,7 +116,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     };
 
     const getGamblerAccountBalance = (gambler: GamblerInfo) => {
-        return gambler.money - gambler.pending;
+        return gambler.tallies.money - gambler.tallies.pending;
     };
 
     const navLink = (label: string, path: string, onClick?: (e) => void) => {
@@ -124,7 +124,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     };
 
     const isAdmin = (league: League, gambler?: Gambler) => {
-        return !!gambler && league.admin === gambler.user.id;
+        return !!gambler && league.adminId === gambler.user.id;
     };
 
     const getLeftNavBar = (league: League, gambler?: Gambler) => {

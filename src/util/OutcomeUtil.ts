@@ -1,4 +1,4 @@
-import {Bet, GameScore} from "../app/types";
+import { Bet, GameScore, OverUnder } from '../app/types';
 
 type Outcome = 'WIN' | 'LOSS' | 'PUSH' | 'LIKELY_WIN' | 'LIKELY_LOSS' | 'UNDECIDED';
 
@@ -9,17 +9,17 @@ export const getUnofficialBetOutcome = (bet: Bet, score: GameScore): Outcome => 
         return 'UNDECIDED';
     }
 
-    if (bet.overunder != null && bet.overunder.length > 0) {
+    if (bet.overUnder != null && bet.overUnder.length > 0) {
         let totalGameScore = score.team1Score + score.team2Score;
         let betOverUnder = parseFloat(bet.line);
         if (betOverUnder === totalGameScore) {
             return 'PUSH';
         }
         else if (totalGameScore > betOverUnder) {
-            return (bet.overunder === "OVER") ? 'WIN' : 'LOSS';
+            return (bet.overUnder === OverUnder.OVER) ? 'WIN' : 'LOSS';
         }
         else {
-            return (bet.overunder === "UNDER") ? 'WIN' : 'LOSS';
+            return (bet.overUnder === OverUnder.UNDER) ? 'WIN' : 'LOSS';
         }
     } else {
         let line = parseFloat(bet.line);
