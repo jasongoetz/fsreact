@@ -90,7 +90,7 @@ const MobileMenu: React.FC<Props> = ({closeMenu, isAdmin}) => {
                 {navLink("SCORES", "/scores", closeMenu)}
                 {isAdmin && navLink("MANAGE", "/league/settings", closeMenu)}
                 {navLink("PROFILE", "/profile", closeMenu)}
-                {userStore.user?.fsAccount &&
+                {userStore.user?.fsAccountId &&
                     navLink("PASSWORD", "/user/password/", closeMenu)
                 }
                 {navLink("SIGN OUT", "/", handleLogout)}

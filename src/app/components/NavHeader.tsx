@@ -148,7 +148,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
                     <DropdownItem>
                         {navLink("EDIT", "/profile")}
                     </DropdownItem>
-                    {userStore.user?.fsAccount &&
+                    {userStore.user?.fsAccountId &&
                         <DropdownItem>
                             {navLink("UPDATE PASSWORD", "/user/password")}
                         </DropdownItem>

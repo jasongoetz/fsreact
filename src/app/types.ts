@@ -17,8 +17,8 @@ export interface User extends UserProfile {
     createdAt: string;
     systemAdmin: boolean;
     leagueInvites: LeagueInviteWithFullLeague[];
-    googleAccount: number;
-    fsAccount: number;
+    googleAccountId: number;
+    fsAccountId: number;
 }
 
 export interface UserRegistrationInfo {

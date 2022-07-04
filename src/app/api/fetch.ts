@@ -1,6 +1,6 @@
 import ApiError from './apiError';
 
-type Method = 'PUT' | 'POST' | 'GET' | 'DELETE';
+type Method = 'PUT' | 'PATCH' | 'POST' | 'GET' | 'DELETE';
 
 interface FetchBody {
     path: string;
@@ -41,6 +41,7 @@ const appFetch = async ({ method, token, path, body, headers = {} }: Fetch) => {
 };
 
 export const put = (data: FetchBody) => appFetch({ method: 'PUT', ...data });
+export const patch = (data: FetchBody) => appFetch({ method: 'PATCH', ...data });
 export const post = (data: FetchBody) => appFetch({ method: 'POST', ...data });
 export const get = (data: FetchBody) => appFetch({ method: 'GET', ...data });
 export const deLete = (data: FetchBody) => appFetch({ method: 'DELETE', ...data });
