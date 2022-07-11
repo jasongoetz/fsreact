@@ -119,8 +119,8 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
         return gambler.tallies.money - gambler.tallies.pending;
     };
 
-    const navLink = (label: string, path: string, onClick?: (e) => void) => {
-        return <NavLink id={label.toLowerCase().split(' ').join('-')} style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
+    const navLink = (label: string, path: string, onClick?: (e) => void, id?: string) => {
+        return <NavLink id={id ?? label.toLowerCase().split(' ').join('-')} style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
     };
 
     const isAdmin = (league: League, gambler?: Gambler) => {
@@ -157,7 +157,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
             </UncontrolledDropdown>
             {!!gambler &&
                 <NavItem>
-                    {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account")}
+                    {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account", undefined, 'account-balance')}
                 </NavItem>
             }
             <NavItem>

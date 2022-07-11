@@ -11,7 +11,7 @@ interface Props {
     isMobile: boolean;
 }
 
-const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overUnder, isMobile}) => {
+const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overUnder, isMobile, ...props}) => {
 
     const { cartStore } = useGlobalStores();
 
@@ -33,7 +33,7 @@ const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overUnder,
             overUnderName = overUnderName.slice(0, 1);
         }
         return <FSWideButton className="hidden-xs hidden-sm" disabled={disabled}
-                         onClick={betClick}>{overUnderName} {bettable.overUnder}</FSWideButton>;
+                         onClick={betClick} {...props}>{overUnderName} {bettable.overUnder}</FSWideButton>;
     } else {
         return <FSWideButton disabled={true}>O/U OFF</FSWideButton>;
     }

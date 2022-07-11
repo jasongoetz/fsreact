@@ -28,7 +28,7 @@ const Standings: React.FC = observer(() => {
         <Container>
             <PageHeader>Standings</PageHeader>
             <Col lg={8} md={10} sm={12} style={{paddingLeft: "0px", paddingTop: "15px"}}>
-                <Table striped size="sm">
+                <Table data-testid="standings-table" striped size="sm">
                     <thead>
                     <tr>
                         <th style={{width: "20px"}}>Rank</th>
