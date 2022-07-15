@@ -12,10 +12,10 @@ const hadOrHas = (final: boolean) => {
 }
 
 const getWagerType = (bet: Bet, parlays: Parlay[], final: boolean) => {
-    if (!!bet.parlay) {
-        const parlay = parlays.find(parlay => parlay.id === bet.parlay);
+    if (!!bet.parlayId) {
+        const parlay = parlays.find(parlay => parlay.id === bet.parlayId);
         if (!parlay) {
-            console.error("Could not find parlay " + bet.parlay);
+            console.error("Could not find parlay " + bet.parlayId);
             return hadOrHas(final);
         }
         return <><span>{hadOrHas(final)}a </span><span>
@@ -53,7 +53,7 @@ const getBetSide = (bet: Bet) => {
             return `${bet.bettable.team2} ${getLineWording(bet)}`;
         }
     } else {
-        return `${bet.overunder.toLowerCase()} ${bet.line}`;
+        return `${bet.overUnder.toLowerCase()} ${bet.line}`;
     }
 };
 
@@ -76,7 +76,7 @@ const getParlayBetDescription = (bet: Bet) => {
             return `${bet.bettable.team2} ${bet.moneyline ? `to win (${bet.bettable.team2MoneyLine})` : bet.bettable.team2Spread} vs ${bet.bettable.team1}`;
         }
     } else {
-        return `${bet.bettable.team1} @ ${bet.bettable.team2}: ${bet.overunder.toLowerCase()} ${bet.bettable.overunder}`;
+        return `${bet.bettable.team1} @ ${bet.bettable.team2}: ${bet.overUnder.toLowerCase()} ${bet.bettable.overUnder}`;
     }
 };
 
@@ -90,7 +90,7 @@ interface GameBetsProps {
 
 export const LiveBoxScoreBetsPanel: React.FC<GameBetsProps> = observer(({side, score, bets, parlays, gamblerNames}) => {
     return (
-        <Container style={{borderTop: `1px solid ${Colors.graySepia}`, paddingTop: 5, paddingBottom: 5 }}>
+        <Container key={`boxscore-${score?.id}`} style={{borderTop: `1px solid ${Colors.graySepia}`, paddingTop: 5, paddingBottom: 5 }}>
             <Row>
                 Bets on {side}:
             </Row>
@@ -98,7 +98,7 @@ export const LiveBoxScoreBetsPanel: React.FC<GameBetsProps> = observer(({side, s
                 <ListGroup flush>
                     {bets.map(bet =>
                         <ListGroupItem style={{background: Colors.whiteSepia, borderWidth: 0, padding: '0.25rem 0.5rem'}}>
-                            {gamblerNames[bet.gambler as number]}{getWagerType(bet, parlays, (!!score && score.clockStatus === 'STATUS_FINAL'))}{getBetSide(bet)} <UnofficialOutcome bet={bet} score={score}/>
+                            {gamblerNames[bet.gamblerId]}{getWagerType(bet, parlays, (!!score && score.clockStatus === 'STATUS_FINAL'))}{getBetSide(bet)} <UnofficialOutcome bet={bet} score={score}/>
                         </ListGroupItem>
                     )}
                 </ListGroup>

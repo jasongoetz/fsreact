@@ -23,12 +23,14 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
             await loadUserContext(userId);
             history.push('/');
         } catch (err) {
-            formik.setErrors({weeklyBetAccountRatio: 'Your league could not be created'});
+            console.log(JSON.stringify(err));
+            formik.setErrors({moneyline: 'Your league could not be created'});
         }
     };
 
     const leagueCreationSchema = yup.object().shape({
         name: yup.string()
+            .min(5, 'Your league name must be at least 5 characters')
             .required('Please enter your league name'),
         sport: yup.string()
             .required('Please select a sport'),
@@ -48,7 +50,7 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
             startingAccount: '500',
             weeklyBetCountMax: '6',
             weeklyBetAccountRatio: '50',
-            bettingBonus: false,
+            moneyline: '100',
         },
         validationSchema: leagueCreationSchema,
         onSubmit: registerLeague
@@ -171,14 +173,14 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
                     <FormGroup>
                         <Row>
                             <FSLabelColumn xs={5} sm={6}>
-                                <Label for="weeklyBetAccountRatio">Betting Bonus:</Label>
+                                <Label for="moneyline">Betting Bonus:</Label>
                             </FSLabelColumn>
                             <Col xs={7} sm={6}>
                                 <FSInput
                                     type="select"
                                     id="moneyline"
                                     name="moneyline"
-                                    defaultValue="50"
+                                    defaultValue="100"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                 >
@@ -188,8 +190,8 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
                                 </FSInput>
                             </Col>
                         </Row>
+                        <FSFormFeedback>{formik.errors.moneyline}</FSFormFeedback>
                     </FormGroup>
-
                     <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">CREATE LEAGUE</FSWideButton>
                 </FSForm>
             </Col>

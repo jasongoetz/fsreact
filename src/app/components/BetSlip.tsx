@@ -197,12 +197,12 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
         </Row>
         <Nav style={!isMobile ? { margin: '0px 0px 5px 5px' } : undefined} pills>
             <NavItem>
-                <NavLink style={tabLinkStyle(!betParlayTabActive)} href="#bet-straight"
+                <NavLink data-testid='straight-navlink' style={tabLinkStyle(!betParlayTabActive)} href="#bet-straight"
                          active={!betParlayTabActive}
                          onClick={() => toggleParlay(false)}>Straight</NavLink>
             </NavItem>
             <NavItem>
-                <NavLink style={tabLinkStyle(betParlayTabActive)} href="#bet-parlay"
+                <NavLink data-testid='parlay-navlink' style={tabLinkStyle(betParlayTabActive)} href="#bet-parlay"
                          active={betParlayTabActive} onClick={() => toggleParlay(true)}
                          disabled={insufficientBets}>Parlay</NavLink>
             </NavItem>
@@ -250,14 +250,14 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
         </TabContent>
         {!betParlayTabActive && <ListGroup style={{flex: 'auto'}} hidden={(potentialBets.length === 0)}>
             {errors.length > 0 &&
-                <ListGroupItem style={errorPanelStyle}>
+                <ListGroupItem data-testid='bet-validation-error-panel' style={errorPanelStyle}>
                     {errors.map(error =>
                         <div style={errorRowStyle}>{error}</div>
                     )}
                 </ListGroupItem>
             }
             <ListGroupItem style={totalTallyStyle}>
-                <FSButton onClick={() => reviewBets(gamblerId)}>
+                <FSButton data-testid='review-bet-button' onClick={() => reviewBets(gamblerId)}>
                     {getButtonMessage('Review', potentialBets.length, totalAmount, betParlayTabActive)}
                 </FSButton>
             </ListGroupItem>
@@ -300,14 +300,14 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
         {betParlayTabActive &&
             <ListGroup style={{flex: 'auto'}}>
                 {errors.length > 0 &&
-                    <ListGroupItem style={errorPanelStyle}>
+                    <ListGroupItem data-testid='bet-validation-error-panel' style={errorPanelStyle}>
                         {errors.map(error =>
                             <div style={errorRowStyle}>{error}</div>
                         )}
                     </ListGroupItem>
                 }
                 <ListGroupItem style={totalTallyStyle}>
-                    <FSButton onClick={() => reviewBets(gamblerId)}>
+                    <FSButton data-testid='review-bet-button' onClick={() => reviewBets(gamblerId)}>
                         {getButtonMessage('Review', potentialBets.length, parlay?.amount || 0, betParlayTabActive)}
                     </FSButton>
                 </ListGroupItem>

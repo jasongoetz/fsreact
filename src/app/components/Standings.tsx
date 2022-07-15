@@ -13,14 +13,14 @@ const Standings: React.FC = observer(() => {
         if (gamblers.length === 0) {
             return 0;
         }
-        let totalMoney = gamblers.reduce((acc, gambler) => acc + gambler.money, 0);
+        let totalMoney = gamblers.reduce((acc, gambler) => acc + gambler.tallies.money, 0);
         return (totalMoney / gamblers.length).toFixed(0);
     };
 
     const getTotalRecord = (gamblers: GamblerInfo[]) => {
-        let wins = gamblers.reduce((acc, gambler) => acc + gambler.wins, 0);
-        let losses = gamblers.reduce((acc, gambler) => acc + gambler.losses, 0);
-        let pushes = gamblers.reduce((acc, gambler) => acc + gambler.pushes, 0);
+        let wins = gamblers.reduce((acc, gambler) => acc + gambler.tallies.wins, 0);
+        let losses = gamblers.reduce((acc, gambler) => acc + gambler.tallies.losses, 0);
+        let pushes = gamblers.reduce((acc, gambler) => acc + gambler.tallies.pushes, 0);
         return `${wins}-${losses}-${pushes}`;
     };
 
@@ -28,7 +28,7 @@ const Standings: React.FC = observer(() => {
         <Container>
             <PageHeader>Standings</PageHeader>
             <Col lg={8} md={10} sm={12} style={{paddingLeft: "0px", paddingTop: "15px"}}>
-                <Table striped size="sm">
+                <Table data-testid="standings-table" striped size="sm">
                     <thead>
                     <tr>
                         <th style={{width: "20px"}}>Rank</th>
@@ -47,12 +47,12 @@ const Standings: React.FC = observer(() => {
                             <td>{gambler.user.firstName} {gambler.user.lastName}{gambler.defunct ? ' (Defunct)' : ''}</td>
                             <td>
                                 <a href={`transaction/show/${gambler.id}`}>
-                                    ${gambler.money.toFixed(2)}
+                                    ${gambler.tallies.money.toFixed(2)}
                                 </a>
                             </td>
-                            <td>${gambler.pending.toFixed(2)}</td>
-                            <td>{gambler.record}</td>
-                            <td>{gambler.moneylineRecord}</td>
+                            <td>${gambler.tallies.pending.toFixed(2)}</td>
+                            <td>{gambler.tallies.record}</td>
+                            <td>{gambler.tallies.moneylineRecord}</td>
                             <td></td>
                         </tr>;
                     })}

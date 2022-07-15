@@ -24,7 +24,7 @@ const GamesPage: React.FC<Props> = observer(() => {
     }, [leagueStore.league, bettableStore.loaded]);
 
     return (
-        <Container>
+        <Container data-testid="games-page-container">
             <Row>
                 <Col lg={7} xl={8}>
                     <PageHeader>Games</PageHeader>

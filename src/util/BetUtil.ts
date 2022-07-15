@@ -1,4 +1,4 @@
-import {CartBet} from "../app/types";
+import { CartBet, OverUnder } from '../app/types';
 import Pluralize from 'pluralize';
 
 export const getBetSummary = (bet: CartBet) => {
@@ -14,13 +14,13 @@ export const getBetSummary = (bet: CartBet) => {
         } else {
             return `${bet.bettable.team2} ${bet.bettable.team2Spread}`;
         }
-    } else if (bet.overunder != null) {
-        return (bet.overunder === 'OVER' ? "Over " : "Under ") + bet.bettable.overunder;
+    } else if (bet.overUnder != null) {
+        return (bet.overUnder === OverUnder.OVER ? "Over " : "Under ") + bet.bettable.overUnder;
     }
 };
 
 export const getGameSummary = (bet: CartBet) => {
-    if (bet.overunder != null || bet.sideId === bet.bettable.sideId1) {
+    if (bet.overUnder != null || bet.sideId === bet.bettable.sideId1) {
         return `${bet.bettable.team1} at ${bet.bettable.team2}`;
     } else {
         return `${bet.bettable.team2} at ${bet.bettable.team1}`;

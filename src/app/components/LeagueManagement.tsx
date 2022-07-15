@@ -18,7 +18,7 @@ const LeagueManagement: React.FC = observer(() => {
                     League Management
                 </PageHeader>
                 <LeagueSettings league={league}/>
-                <LeagueMembers adminId={league.admin} gamblers={leagueStore.gamblers}/>
+                <LeagueMembers adminId={league.adminId} gamblers={leagueStore.gamblers}/>
                 <LeagueInvites leagueId={league.id} gamblers={leagueStore.gamblers} invites={leagueStore.invites}/>
             </FSPageContainer>
     );

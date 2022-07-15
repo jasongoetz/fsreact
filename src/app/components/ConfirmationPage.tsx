@@ -58,7 +58,7 @@ const ConfirmationPage: React.FC = () => {
                     )}
                 </ListGroup>
                 <div style={totalTallyStyle}>
-                    <FSButton onClick={() => confirm()}>
+                    <FSButton data-testid='confirm-bet-button' onClick={() => confirm()}>
                         {getButtonMessage('Confirm', potentialBets.length, totalAmount, parlayActive)}
                     </FSButton>
                 </div>

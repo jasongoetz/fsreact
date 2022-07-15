@@ -44,9 +44,9 @@ const AccountPage: React.FC<Props> = observer(({providedGamblerId}) => {
     return <Container>
         <PageHeader>{gambler.user.firstName} {gambler.user.lastName}{gambler.defunct ? ' (Defunct)' : ''}</PageHeader>
         <div style={userStatsStyle}>
-            Account Balance: ${(gambler.money - gambler.pending).toFixed(2)} (Money:
-            ${gambler.money.toFixed(2)} Pending: ${gambler.pending.toFixed(2)})
-            <span style={userRecordStyle}>Record: {gambler.record}</span>
+            Account Balance: ${(gambler.tallies.money - gambler.tallies.pending).toFixed(2)} (Money:
+            ${gambler.tallies.money.toFixed(2)} Pending: ${gambler.tallies.pending.toFixed(2)})
+            <span style={userRecordStyle}>Record: {gambler.tallies.record}</span>
         </div>
         <Table responsive>
             <thead>

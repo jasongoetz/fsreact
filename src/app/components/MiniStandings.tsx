@@ -21,7 +21,7 @@ export const MiniStandings = () => {
                     <td>{gambler.user.firstName} {gambler.user.lastName}{gambler.defunct ? ' (Defunct)' : ''}</td>
                     <td>
                         <a href={`transaction/show/${gambler.id}`}>
-                            ${gambler.money.toFixed(2)}
+                            ${gambler.tallies.money.toFixed(2)}
                         </a>
                     </td>
                 </tr>)

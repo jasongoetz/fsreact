@@ -25,8 +25,8 @@ const OutcomeCard = styled.div({
 
 const team1Cond = (bet) => bet.sideId && bet.bettable.sideId1 === bet.sideId;
 const team2Cond = (bet) => bet.sideId && bet.bettable.sideId2 === bet.sideId;
-const overCond = (bet) => !bet.sideId && bet.overunder === 'OVER';
-const underCond = (bet) => !bet.sideId && bet.overunder === 'UNDER';
+const overCond = (bet) => !bet.sideId && bet.overUnder === 'OVER';
+const underCond = (bet) => !bet.sideId && bet.overUnder === 'UNDER';
 
 export const ScoreForm: React.FC<ScoresFormProps> = observer(({games, gamblerNames, parlays }) => {
     const scores = games.map(game => ({
@@ -37,8 +37,8 @@ export const ScoreForm: React.FC<ScoresFormProps> = observer(({games, gamblerNam
 
     return <Container>
         {games.map((game, index) => {
-            return <OutcomeCard key={`liveScore-${game.id}`}>
-                {game.gameScore && <div style={{ textTransform: 'uppercase', color: Colors.fsBlue, marginBottom: 10 }}>{game.gameScore.clockStatus === 'STATUS_SCHEDULED' ? moment(game.gameTime).format("dddd, MMM Do, h:mma z") : game.gameScore.clockText}</div>}
+            return <OutcomeCard data-testid='outcome-card' key={`liveScore-${game.id}`}>
+                {game.gameScore && <div style={{ textTransform: 'uppercase', color: Colors.fsBlue, marginBottom: 10 }}>{game.gameScore.clockStatus === 'STATUS_SCHEDULED' ? moment(game.gameTime).format("dddd, MMMM D, h:mma z") : game.gameScore.clockText}</div>}
                 <Row>
                     <Col xs={8} style={{fontWeight: 600, fontSize:'16px'}}>{game.team1}</Col>
                     <Col xs={4}>{game.gameScore && game.gameScore.clockStatus !== 'STATUS_SCHEDULED' ? scores[index].side1Score : ''}</Col>

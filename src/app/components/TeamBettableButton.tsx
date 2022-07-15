@@ -12,7 +12,7 @@ interface Props {
     team: Team;
 }
 
-const TeamBettableButton: React.FC<Props> = observer(({bettable, team}) => {
+const TeamBettableButton: React.FC<Props> = observer(({bettable, team, ...props}) => {
 
     const { cartStore } = useGlobalStores();
 
@@ -45,7 +45,7 @@ const TeamBettableButton: React.FC<Props> = observer(({bettable, team}) => {
         let spread = getSpread();
         let sideId = getSideId();
         let disabled = bettableInCart(bettable.id, sideId);
-        return <FSWideButton disabled={disabled} onClick={betClick}>{spread}</FSWideButton>;
+        return <FSWideButton disabled={disabled} onClick={betClick} {...props}>{spread}</FSWideButton>;
     } else {
         return <FSWideButton disabled={true}>OFF</FSWideButton>;
     }

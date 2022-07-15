@@ -1,6 +1,6 @@
 # Fake Stacks Front End
 
-Hmmm
+The React front end for Fake Stacks
 
 ## Running Cypress
 

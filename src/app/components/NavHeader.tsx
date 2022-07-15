@@ -116,15 +116,15 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     };
 
     const getGamblerAccountBalance = (gambler: GamblerInfo) => {
-        return gambler.money - gambler.pending;
+        return gambler.tallies.money - gambler.tallies.pending;
     };
 
-    const navLink = (label: string, path: string, onClick?: (e) => void) => {
-        return <NavLink id={label.toLowerCase().split(' ').join('-')} style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
+    const navLink = (label: string, path: string, onClick?: (e) => void, id?: string) => {
+        return <NavLink id={id ?? label.toLowerCase().split(' ').join('-')} style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
     };
 
     const isAdmin = (league: League, gambler?: Gambler) => {
-        return !!gambler && league.admin === gambler.user.id;
+        return !!gambler && league.adminId === gambler.user.id;
     };
 
     const getLeftNavBar = (league: League, gambler?: Gambler) => {
@@ -148,7 +148,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
                     <DropdownItem>
                         {navLink("EDIT", "/profile")}
                     </DropdownItem>
-                    {userStore.user?.fsAccount &&
+                    {userStore.user?.fsAccountId &&
                         <DropdownItem>
                             {navLink("UPDATE PASSWORD", "/user/password")}
                         </DropdownItem>
@@ -157,7 +157,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
             </UncontrolledDropdown>
             {!!gambler &&
                 <NavItem>
-                    {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account")}
+                    {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account", undefined, 'account-balance')}
                 </NavItem>
             }
             <NavItem>

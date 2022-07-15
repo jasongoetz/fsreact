@@ -4,7 +4,7 @@ import moment from 'moment';
 import TeamBettableButton from "./TeamBettableButton";
 import OverUnderBettableButton from "./OverUnderBettableButton";
 import styled from "@emotion/styled";
-import {Bettable} from "../types";
+import { Bettable, OverUnder } from '../types';
 import {Colors} from "../theme/theme";
 import MoneylineBettableButton from "./MoneylineBettableButton";
 
@@ -36,7 +36,7 @@ interface Props {
 }
 
 const GameRow: FC<Props> = ({bettable, isMobile}) => {
-    return <BettableRow>
+    return <BettableRow data-testid={'bettable-row'}>
         <GameTimeCol md={3} sm={12}>
             {moment(bettable.gameTime).format("dddd, MMM Do, h:mma z")}
         </GameTimeCol>
@@ -44,25 +44,25 @@ const GameRow: FC<Props> = ({bettable, isMobile}) => {
                 <TeamRow>
                     <TeamNameCol>{bettable.team1}</TeamNameCol>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <TeamBettableButton bettable={bettable} team={'TEAM1'} />
+                        <TeamBettableButton data-testid='team1-bet-button' bettable={bettable} team={'TEAM1'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
                         <MoneylineBettableButton bettable={bettable} team={'TEAM1'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <OverUnderBettableButton bettable={bettable} overunder='OVER' isMobile={isMobile}/>
+                        <OverUnderBettableButton data-testid='over-bet-button' bettable={bettable} overUnder={OverUnder.OVER} isMobile={isMobile}/>
                     </Col>
                 </TeamRow>
                 <TeamRow>
                     <TeamNameCol>{bettable.team2}</TeamNameCol>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <TeamBettableButton bettable={bettable} team={'TEAM2'} />
+                        <TeamBettableButton data-testid='team2-bet-button' bettable={bettable} team={'TEAM2'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
                         <MoneylineBettableButton bettable={bettable} team={'TEAM2'} />
                     </Col>
                     <Col style={{width: '70px', padding: '5px'}}>
-                        <OverUnderBettableButton bettable={bettable} overunder='UNDER' isMobile={isMobile}/>
+                        <OverUnderBettableButton data-testid='under-bet-button' bettable={bettable} overUnder={OverUnder.UNDER} isMobile={isMobile}/>
                     </Col>
                 </TeamRow>
             </Col>

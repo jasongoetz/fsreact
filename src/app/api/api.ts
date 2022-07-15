@@ -1,4 +1,4 @@
-import {deLete, get, post, put} from './fetch';
+import { deLete, get, patch, post, put } from './fetch';
 import {
     AuthToken,
     BetOrParlayWrapper,
@@ -81,7 +81,7 @@ export const getUserContext = async (userId): Promise<UserContext> => {
 };
 
 export const updateUser = async (userId, user): Promise<void> => {
-    await put({
+    await patch({
         path: `/api/users/${userId}`,
         body: JSON.stringify(user)
     });
