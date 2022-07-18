@@ -66,7 +66,7 @@ const FakeStacksLogin: React.FC<Props> = () => {
         validationSchema: loginSchema,
         onSubmit: async (values, actions) => {
             setAttemptedLogin(true);
-            submitLogin(values.email, values.password);
+            await submitLogin(values.email, values.password);
             actions.setSubmitting(false);
         }
     });
