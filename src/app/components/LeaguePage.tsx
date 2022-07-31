@@ -7,37 +7,9 @@ import HomePagePanel from "./HomePagePanel";
 import {useGlobalStores} from "../context/global_context";
 import {observer} from "mobx-react";
 import {LoadingContainer} from "./LoadingContainer";
-import styled from "@emotion/styled";
-import {useMediaQuery} from "react-responsive";
-import {LeagueSwitcher} from "./LeagueSwitcher";
-import {Colors} from "../theme/theme";
-
-const leagueHeaderStyle = {
-    top: "40px",
-    right: "0px",
-    position: 'absolute' as 'absolute',
-    width: "100%",
-    backgroundColor: Colors.lighterDarkBlue,
-    height: "75px",
-    color: Colors.white
-};
-
-const LeagueNameHeader = styled.div<{mobile: boolean}>(
-    {
-        marginTop: "25px",
-        display: "inline-block",
-        textTransform: 'uppercase',
-    },
-    ({ mobile }) => {
-        return {
-            marginTop: mobile ? "30px" : "25px",
-            fontSize: mobile ? "20px" : "28px",
-        }
-    },
-);
 
 const homePageStyle = {
-    marginTop: "75px"
+    marginTop: "20px"
 };
 
 const homePagePanelStyle = {
@@ -45,10 +17,7 @@ const homePagePanelStyle = {
 };
 
 const LeaguePage: React.FC = observer(() => {
-
-    const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
-
-    const { userStore, leagueStore } = useGlobalStores();
+    const { leagueStore } = useGlobalStores();
     const league = leagueStore.league;
 
     if (!league) {
@@ -57,15 +26,6 @@ const LeaguePage: React.FC = observer(() => {
 
     return (
         <div>
-            <div style={leagueHeaderStyle}>
-                <Container>
-                    <LeagueNameHeader mobile={isMobile}>{league.name}</LeagueNameHeader>
-                    {(userStore.leagues.length > 1) &&
-                        <LeagueSwitcher leagues={userStore.leagues} currentLeagueId={league.id} mobile={isMobile}/>
-                    }
-                </Container>
-            </div>
-
             <Container style={homePageStyle}>
                 <Row>
                     <Col style={homePagePanelStyle} xs={{size: 12}} md={{size: 8, offset: 2}}

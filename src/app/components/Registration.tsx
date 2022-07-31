@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
-import {Col, FormGroup, Row} from "reactstrap";
-import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from 'react-router-dom';
-import {FSForm} from "./FSForm";
-import {GoogleButton} from "./FSComponents";
+import {Col, Row} from "reactstrap";
+import {Link, RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
+import {FakeStacksForm} from "./FSForm";
+import {AuthButton} from "./FSComponents";
 import {oAuthAuthenticate} from "../auth/auth.actions";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
@@ -11,30 +11,22 @@ import {joinLeagueWithInvite} from "../user/user.actions";
 import {GoogleIcon} from "./svg/google_icon";
 import {useGoogleLogin} from "react-google-login";
 import {requireEnv} from "../../util/require-env";
+import {useQueryParam} from "../hooks/useQueryParam";
+import {FakeStacksIcon} from "./svg/fs_icon";
+import {Colors} from "../theme/theme";
 
 interface Props extends RouteComponentProps {
     token?: string;
 }
 
-const formSigninHeading = {
-    fontSize: '16px',
-    marginBottom: '10px',
-    marginTop: '0px',
-};
-
 const Registration: React.FC<Props> = () => {
+    const token = useQueryParam("token");
 
     const history = useHistory();
 
-    const location = useLocation();
-    const useQuery = () => {
-        return new URLSearchParams(location.search);
-    }
-
     const {authStore, inviteStore} = useGlobalStores();
-    const query = useQuery();
-    const token = query.get("token");
     const invite = inviteStore.invite;
+
     useEffect(() => {
         if (token && !invite) {
             loadInviteByToken(token);
@@ -58,30 +50,31 @@ const Registration: React.FC<Props> = () => {
         onSuccess: onSignIn,
         onFailure: onSignInFail,
         clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID'),
-        isSignedIn: true,
+        isSignedIn: authStore.authenticated,
     });
 
     if (token && !inviteStore.invite) {
         return <LoadingContainer/>;
     }
 
+    const headline = invite ? 'Finish registering an account to join.' : 'Register a new Fake Stacks account.';
+
     return (
         <Row>
             <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}}>
-                <FSForm id="registration">
-                    {invite && <FormGroup><h3 style={formSigninHeading}>Finish registering an account to join.</h3></FormGroup>}
-                    <GoogleButton data-testid="google-registration-button" outline onClick={signIn}>
+                <FakeStacksForm id="registration" headline={headline}>
+                    <AuthButton data-testid="google-registration-button" outline onClick={signIn}>
                         <GoogleIcon />
                         Sign up with Google
-                    </GoogleButton>
-                    <hr/>
-                    <GoogleButton data-testid="fs-registration-button" outline onClick={() => history.push('/fsregister')}>
+                    </AuthButton>
+                    <AuthButton data-testid="fs-registration-button" outline onClick={() => history.push('/fsregister')}>
+                        <FakeStacksIcon />
                         Sign up with email
-                    </GoogleButton>
+                    </AuthButton>
                     <div style={{marginTop: '10px'}}>
-                        Already have an account? <Link to={"/login" + (!!token && !!invite ? `?token=${invite.token}` : '')}>Log in.</Link>
+                        Already have an account? <Link style={{color: Colors.brandBlack, textDecoration: 'underline'}} to={"/login" + (!!token && !!invite ? `?token=${invite.token}` : '')}>Log in.</Link>
                     </div>
-                </FSForm>
+                </FakeStacksForm>
             </Col>
         </Row>
     );

@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, Form, FormFeedback, Input} from "reactstrap";
+import {Button, Col, Form, FormFeedback, Input, Row} from "reactstrap";
 import styled from "@emotion/styled";
 import {Colors} from "../theme/theme";
 
@@ -18,12 +18,56 @@ export const FSInput = styled(Input)`
     }
 `;
 
-export const FSForm = styled(Form)({
+const FSForm = styled(Form)({
     zIndex: 1030,
-    padding: "25px 15px",
     margin: "20px auto",
-    backgroundColor: Colors.lightGray,
+    padding: "25px 35px",
+    backgroundColor: Colors.brandGreen,
 });
+
+const FSFormHeadline = styled.h4({
+    textAlign: 'center',
+    textTransform: 'uppercase',
+});
+
+const FSFormHeadlineRow = styled(Row)({
+    marginTop: "10px",
+    marginBottom: "20px",
+    color: Colors.white,
+});
+
+export const FSFormSubmitButton: React.FC<{text: string, disabled?: boolean}> = ({ text, disabled = false }) => {
+    return <div className={'text-center'} style={{marginTop: 25}}>
+        <FSFormButton outline type="submit" size="lg" data-cy="submit" disabled={disabled}>{text}</FSFormButton>
+    </div>
+}
+
+const FSFormButton = styled(Button)({
+    width: '60%',
+    textTransform: 'uppercase' as 'uppercase',
+
+    //color: Colors.brandBlack,
+    backgroundColor: Colors.white,
+    borderColor: Colors.darkerGray,
+    borderRadius: '2px',
+});
+
+interface FormProps {
+    id?: string;
+    headline?: string;
+    onSubmit?: (e?: React.FormEvent<any> | undefined) => void;
+}
+
+export const FakeStacksForm: React.FC<FormProps> = ({ id, headline, onSubmit, children }) => {
+    return (
+        <FSForm id={id} onSubmit={onSubmit}>
+            <FSFormHeadlineRow>
+                <FSFormHeadline>{headline}</FSFormHeadline>
+            </FSFormHeadlineRow>
+            {children}
+        </FSForm>
+    );
+};
 
 export const AlertIcon = () => {
     return (

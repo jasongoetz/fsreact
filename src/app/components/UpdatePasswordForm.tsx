@@ -2,19 +2,12 @@ import React, {FC} from "react";
 import * as yup from "yup";
 import {useFormik} from "formik";
 import {Col, Container, FormGroup, Row} from "reactstrap";
-import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
-import {FSWideButton} from "./FSComponents";
+import {FakeStacksForm, FSFormFeedback, FSFormSubmitButton, FSInput} from "./FSForm";
 
 interface Props {
     onSubmit: (values) => void;
     instructions?: string;
 }
-
-const formSigninHeading = {
-    fontSize: '16px',
-    marginBottom: '10px',
-    marginTop: '0px',
-};
 
 export const UpdatePasswordForm: FC<Props> = ({onSubmit, instructions}) => {
     const updatePassword = async (values) => {
@@ -47,8 +40,7 @@ export const UpdatePasswordForm: FC<Props> = ({onSubmit, instructions}) => {
         <Row>
             <Col xs={{size: 12, offset: 0}} sm={{size: 10, offset: 1}} md={{size: 8, offset: 2}}
                  lg={{size: 6, offset: 3}}>
-                <FSForm onSubmit={formik.handleSubmit}>
-                    {instructions && <FormGroup><h3 style={formSigninHeading}>{instructions}</h3></FormGroup>}
+                <FakeStacksForm headline={instructions} onSubmit={formik.handleSubmit}>
                     <FormGroup>
                         <FSInput
                             placeholder="Password"
@@ -71,9 +63,8 @@ export const UpdatePasswordForm: FC<Props> = ({onSubmit, instructions}) => {
                         />
                         <FSFormFeedback>{formik.errors.confirmation}</FSFormFeedback>
                     </FormGroup>
-                    <FSWideButton type="submit" disabled={Object.keys(formik.errors).length > 0} color="primary"
-                                  size="lg" style={{marginTop: "15px"}}>Update Password</FSWideButton>
-                </FSForm>
+                    <FSFormSubmitButton text="Update Password" disabled={Object.keys(formik.errors).length > 0} />
+                </FakeStacksForm>
             </Col>
         </Row>
     </Container>;

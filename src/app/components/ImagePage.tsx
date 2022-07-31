@@ -1,7 +1,7 @@
 import React, {FC} from "react";
-import {Col, Container, Row} from "reactstrap";
+import {Container} from "reactstrap";
 import {getRandomImageUrl} from "../theme/imageRotate";
-import {Colors} from "../theme/theme";
+import {useScreenSize} from "../hooks/useScreenSize";
 
 const backgroundImageStyle = {
     width: "100%",
@@ -9,6 +9,7 @@ const backgroundImageStyle = {
     background: getRandomImageUrl(),
     backgroundSize: "cover",
     backgroundPosition: "center center",
+    opacity: 0.6,
     zIndex: -5,
     top: 0,
     bottom: 0,
@@ -28,33 +29,14 @@ const backgroundImageOverlay = {
     right: "0",
 };
 
-const headlineStyle = {
-    marginTop: "50px",
-    marginBottom: "20px",
-    color: Colors.white,
-};
-
-interface Props {
-    headline?: string;
-}
-
-const ImagePage: FC<Props> = ({headline, children}) => (
-    <Container>
-        {!!headline &&
-            <Row style={headlineStyle}>
-                <Col
-                    sm={{offset: 1, size: 10}}
-                    md={{offset: 2, size: 8}}
-                >
-                    <h1 style={{textAlign: 'center'}}>{headline}</h1>
-                </Col>
-            </Row>
-        }
+const ImagePage: FC = ({ children}) => {
+    const { isMobile } = useScreenSize();
+    return (<Container style={{marginTop: isMobile ? 0 : 50}}>
         {children}
         <div style={backgroundImageStyle}/>
         <div style={backgroundImageOverlay}/>
-    </Container>
-);
+    </Container>);
+};
 
 export default ImagePage;
 

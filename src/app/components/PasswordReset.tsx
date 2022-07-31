@@ -1,16 +1,12 @@
 import React from 'react';
-import {RouteComponentProps, useLocation, withRouter} from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {UpdatePasswordForm} from "./UpdatePasswordForm";
 import {resetUserPassword} from "../api/api";
+import {useQueryParam} from "../hooks/useQueryParam";
 
 const PasswordReset: React.FC<RouteComponentProps> = ({history}) => {
 
-    const location = useLocation();
-    const useQuery = () => {
-        return new URLSearchParams(location.search);
-    }
-    const query = useQuery();
-    const token = query.get("token");
+    const token = useQueryParam('token');
 
     const updatePassword = async (values) => {
         await resetUserPassword(token, values.password);

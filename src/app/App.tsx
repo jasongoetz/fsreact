@@ -53,7 +53,7 @@ const App: FC = () => {
 
     const LoginPage = (navProps) => {
         return (
-            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+            <ImagePage>
                 <Login {...navProps}/>
             </ImagePage>
         )
@@ -61,7 +61,7 @@ const App: FC = () => {
 
     const FSLoginPage = (navProps) => {
         return (
-            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+            <ImagePage>
                 <FakeStacksLogin {...navProps}/>
             </ImagePage>
         )
@@ -69,7 +69,7 @@ const App: FC = () => {
 
     const RegistrationPage = (navProps) => {
         return (
-            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+            <ImagePage>
                 <Registration {...navProps}/>
             </ImagePage>
         )
@@ -77,7 +77,7 @@ const App: FC = () => {
 
     const FSRegistrationPage = (navProps) => {
         return (
-            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+            <ImagePage>
                 <FakeStacksRegistration {...navProps}/>
             </ImagePage>
         )
@@ -103,7 +103,7 @@ const App: FC = () => {
         const {authStore} = useGlobalStores();
         if (authStore.userId) {
             return (
-                <UserContext>
+                <UserContext showLeagueNav={false}>
                     <JoinLeagueScreen/>
                 </UserContext>
             )
@@ -114,8 +114,8 @@ const App: FC = () => {
         const {authStore} = useGlobalStores();
         if (authStore.userId) {
             return (
-                <UserContext>
-                    <ImagePage headline={"CREATE YOUR LEAGUE."}>
+                <UserContext showLeagueNav={false}>
+                    <ImagePage>
                         <CreateLeagueForm userId={authStore.userId}/>
                     </ImagePage>
                 </UserContext>
@@ -142,7 +142,7 @@ const App: FC = () => {
     };
 
     const LeagueManagePage = () => {
-        return <UserContext>
+        return <UserContext showLeagueNav={false} leagueAdminRequired={true}>
             <LeagueManagement/>
         </UserContext>;
     };
@@ -151,7 +151,7 @@ const App: FC = () => {
         return <ConfirmationPage/>;
     };
 
-    const UserAccountPage = ({match}) => {
+    const GamblerAccountPage = ({match}) => {
         return <UserContext>
             <AccountPage providedGamblerId={match.params.gamblerId}/>
         </UserContext>;
@@ -164,14 +164,14 @@ const App: FC = () => {
     };
 
     const AdminPage = () => {
-        return <UserContext adminRequired>
+        return <UserContext showLeagueNav={false} adminRequired>
             <AdminGamesPage/>
         </UserContext>;
     };
 
     const ProfileManagePage = () => {
         const {userStore} = useGlobalStores();
-        return <UserContext>
+        return <UserContext showLeagueNav={false}>
             <ImagePage>
                 {userStore.user ? <ProfilePage user={userStore.user}/> : <></>}
             </ImagePage>
@@ -193,7 +193,7 @@ const App: FC = () => {
 
     const RSVPPageContainer = (navProps) => {
         return (
-            <ImagePage headline={"PUT YOUR FAKE MONEY WHERE YOUR MOUTH IS."}>
+            <ImagePage>
                 <RSVPPage {...navProps}/>
             </ImagePage>
         )
@@ -226,8 +226,8 @@ const App: FC = () => {
                     <PrivateLeagueRoute exact path="/standings" component={StandingsPage}/>
                     <PrivateLeagueRoute exact path="/bets" component={BetsPage}/>
                     <PrivateLeagueRoute exact path="/scores" component={ScoresPage}/>
-                    <PrivateLeagueRoute exact path="/account" component={UserAccountPage}/>
-                    <PrivateLeagueRoute exact path="/transaction/show/:gamblerId" component={UserAccountPage}/>
+                    <PrivateLeagueRoute exact path="/account" component={GamblerAccountPage}/>
+                    <PrivateLeagueRoute exact path="/transaction/show/:gamblerId" component={GamblerAccountPage}/>
                     <PrivateLeagueRoute exact path="/league/settings" component={LeagueManagePage}/>
                     <PrivateLeagueRoute exact path="/confirmation" component={BetConfirmationPage}/>
                     <PrivateLeagueRoute exact path="/profile" component={ProfileManagePage}/>

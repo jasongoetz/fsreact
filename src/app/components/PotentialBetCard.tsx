@@ -18,6 +18,8 @@ const potentialBetStyle = {
 const betChoiceStyle = {
     paddingTop: '10px',
     paddingBottom: '20px',
+    display: 'flex',
+    flexDirection: 'row' as 'row',
 };
 
 const betAmountStyle = {
@@ -57,12 +59,6 @@ const disabledGroupAddOn = {
     backgroundColor: "transparent"
 };
 
-const closeStyle = {
-    fontWeight: "normal" as "normal",
-    opacity: 0.5,
-    marginTop: -5,
-};
-
 interface Props {
     index: number;
     cartId: string;
@@ -100,10 +96,10 @@ const PotentialBetCard: React.FC<Props> = ({partOfParlay, bet, onEdit, onClose, 
         <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
             <div style={{display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '10px'}}>
                 <div style={betChoiceStyle}>
-                    <strong>{getBetSummary(bet)}</strong>
-                    <Button style={closeStyle} close onClick={() => onClose(cartId)}>
-                        <span>&times;</span>
-                    </Button>
+                    <strong style={{flexBasis: '50%'}}>{getBetSummary(bet)}</strong>
+                    <span style={{flexBasis: '50%', textAlign: 'right'}}>
+                        <Button close onClick={() => onClose(cartId)} />
+                    </span>
                 </div>
                 <div>{getGameSummary(bet)}</div>
                 <div>{moment(bet.bettable.gameTime).format("dddd, MMM Do, h:mma z")}</div>

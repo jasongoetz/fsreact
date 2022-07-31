@@ -2,7 +2,6 @@ import React, {FC, useState} from "react";
 import {
     Badge,
     Collapse,
-    Container,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
@@ -17,7 +16,6 @@ import {
 import {Colors} from "../theme/theme";
 import {Link} from "react-router-dom";
 import {Gambler, GamblerInfo, League, User} from "../types";
-import {useMediaQuery} from "react-responsive";
 import styled from "@emotion/styled";
 import BetSlip from "./BetSlip";
 import {logout} from "../auth/auth.actions";
@@ -25,24 +23,28 @@ import {useGlobalStores} from "../context/global_context";
 import {observer} from "mobx-react";
 import {useGoogleLogout} from "react-google-login";
 import {requireEnv} from "../../util/require-env";
+import {useScreenSize} from "../hooks/useScreenSize";
 
 const navbarStyle = {
-    backgroundColor: Colors.lightestGraySepia,
+    backgroundColor: Colors.white,
+    padding: "15px 3px",
 };
 
-const navbarContainerStyle = {
-    paddingLeft: "3px",
-    paddingRight: "3px",
-};
-
-const navbarLinkStyle = {
-    fontSize: "14px",
-    padding: "0px 15px",
-    color: Colors.darkestGray,
-};
+const navbarLinkStyle = (underline) => ({
+    fontSize: "16px",
+    margin: "0px 15px",
+    padding: "0px",
+    color: Colors.brandBlack,
+    borderBottom: underline ? `3px solid ${Colors.brandLightGreen}` : undefined,
+});
 
 const brandStyle = {
-    color: Colors.darkestGray,
+    color: Colors.brandGreen,
+    fontSize: "32px",
+    position: 'absolute' as 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    display: 'block',
 };
 
 const menuButtonStyle = {
@@ -93,7 +95,7 @@ interface Props {
 
 const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
-    const isMobile = useMediaQuery({ query: '(max-width: 992px)' });
+    const { isLargeMobile } = useScreenSize();
 
     const [mobileBetSlipOpen, setMobileBetSlipOpen] = useState(false);
 
@@ -111,7 +113,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
     const handleLogout = async (e) => {
         e.preventDefault();
         await signOut();
-        //FIXME: For some reason "onLogoutSuccess" above sometimes never happens
+        // "onLogoutSuccess" never happens if the user wasn't logged in through google
         await logout();
     };
 
@@ -119,20 +121,24 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
         return gambler.tallies.money - gambler.tallies.pending;
     };
 
-    const navLink = (label: string, path: string, onClick?: (e) => void, id?: string) => {
-        return <NavLink id={id ?? label.toLowerCase().split(' ').join('-')} style={navbarLinkStyle} tag={Link} to={path} onClick={onClick}>{label}</NavLink>;
-    };
-
-    const isAdmin = (league: League, gambler?: Gambler) => {
-        return !!gambler && league.adminId === gambler.user.id;
+    const navLink = (label: string, path: string, underline: boolean, onClick?: (e) => void, id?: string) => {
+        return <NavLink
+            id={id ?? label.toLowerCase().split(' ').join('-')}
+            tag={Link}
+            to={path}
+            onClick={onClick}
+            // underline={true}
+            style={navbarLinkStyle(underline)}
+        >
+            {label}
+        </NavLink>;
     };
 
     const getLeftNavBar = (league: League, gambler?: Gambler) => {
         return <Nav className="justify-content-left" navbar>
-            <NavItem>{navLink("GAMES", "/games")}</NavItem>
-            <NavItem>{navLink("STANDINGS", "/standings")}</NavItem>
-            <NavItem>{navLink("SCORES", "/scores")}</NavItem>
-            {isAdmin(league, gambler) && <NavItem>{navLink("MANAGE", "/league/settings")}</NavItem>}
+            <NavItem>{navLink("GAMES", "/games", true)}</NavItem>
+            <NavItem>{navLink("STANDINGS", "/standings", true)}</NavItem>
+            <NavItem>{navLink("SCORES", "/scores", true)}</NavItem>
         </Nav>;
     };
 
@@ -140,28 +146,28 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
         return <Nav className="justify-content-end" navbar>
             <UncontrolledDropdown>
                 {!!user &&
-                    <DropdownToggle style={navbarLinkStyle} nav>
-                        {user.firstName.toUpperCase()} {user.lastName.toUpperCase()}
+                    <DropdownToggle style={navbarLinkStyle(true)} nav>
+                        {user.firstName} {user.lastName}
                     </DropdownToggle>
                 }
-                <DropdownMenu right>
+                <DropdownMenu end>
                     <DropdownItem>
-                        {navLink("EDIT", "/profile")}
+                        {navLink("EDIT", "/profile", false)}
                     </DropdownItem>
                     {userStore.user?.fsAccountId &&
                         <DropdownItem>
-                            {navLink("UPDATE PASSWORD", "/user/password")}
+                            {navLink("UPDATE PASSWORD", "/user/password", false)}
                         </DropdownItem>
                     }
                 </DropdownMenu>
             </UncontrolledDropdown>
             {!!gambler &&
                 <NavItem>
-                    {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account", undefined, 'account-balance')}
+                    {navLink(`$${getGamblerAccountBalance(gambler).toFixed(2)}`, "/account", true, undefined, 'account-balance')}
                 </NavItem>
             }
             <NavItem>
-                {navLink("SIGN OUT", "/logout", handleLogout)}
+                {navLink("SIGN OUT", "/logout", true, handleLogout)}
             </NavItem>
         </Nav>;
     };
@@ -175,7 +181,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
 
     return (
         <Navbar style={navbarStyle} fixed="top" light expand="lg">
-            <Container style={navbarContainerStyle}>
+            {/*<Container style={navbarContainerStyle}>*/}
                 <NavbarToggler style={menuButtonStyle} onClick={toggleMobileMenu}/>
                 <Collapse navbar>
                     {authenticated && leagueStore.league && getLeftNavBar(leagueStore.league, gambler)}
@@ -192,7 +198,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
                     </span>
                 </NavbarToggler>
 
-                {authenticated && gambler && isMobile &&
+                {authenticated && gambler && isLargeMobile &&
                     <BetSlipCollapse isOpen={mobileBetSlipOpen}>
                         <BetSlip gamblerId={gambler.id} onReview={() => setMobileBetSlipOpen(false)} isMobile />
                         <TranslucentOverlay/>
@@ -202,7 +208,7 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
                 <Collapse className="justify-content-end" navbar>
                     {authenticated && getRightNavBar(userStore.user, gambler)}
                 </Collapse>
-            </Container>
+            {/*</Container>*/}
         </Navbar>
     );
 });

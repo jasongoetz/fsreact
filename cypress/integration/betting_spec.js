@@ -35,8 +35,8 @@ describe('Validate Game Betting', () => {
         cy.url().should('include', '/')
 
         // Nav bar should reflect this user being logged in
-        cy.get('a.nav-link').should('contain', 'CHRIS')
-        cy.get('a.nav-link').should('contain', 'WEBBER')
+        cy.get('a.nav-link').should('contain', 'Chris')
+        cy.get('a.nav-link').should('contain', 'Webber')
         cy.get('#account-balance').should('contain.text', '$500'); //Should bail right away if data hasn't been reset
     })
 
@@ -108,6 +108,7 @@ describe('Validate Game Betting', () => {
         cy.get('[name="outcomes[1][side2Score]"]').should('contain.value', 35);
 
         // Submit that score
+        cy.contains('SUBMIT').scrollIntoView();
         cy.contains('SUBMIT').click();
     })
 

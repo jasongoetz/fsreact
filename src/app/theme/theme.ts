@@ -5,8 +5,15 @@ export const Colors = {
     offBlack: '#111111',
     trueBlack: '#000',
 
+    //NEW DESIGN
+    brandMutedGreen: '#1DAB89',
+    brandGreen: '#57CC99',
+    brandLightGreen: '#80ED99',
+    brandSuperLightGreen: '#DBEEE2',
+    brandBlack: '#212529',
+
     //GRAYS
-    lightestGray: '#eee',
+    lightestGray: '#f1f1f1',
     lightGray: '#e5e5e5',
     gray: '#c0c0c0',
     darkerGray: '#777',
@@ -37,7 +44,7 @@ export const Colors = {
 };
 
 export const Fonts = {
-    mainSite: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+    mainSite: 'Futura, Helvetica, "Helvetica Neue", Arial, sans-serif',
 };
 
 

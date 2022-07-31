@@ -3,18 +3,13 @@ import {observer} from "mobx-react";
 import {Col, Container, Row} from "reactstrap";
 import {useGlobalStores} from "../context/global_context";
 import {PageHeader} from "./PageHeader";
-import {useLocation} from "react-router-dom";
 import {loadLiveScores} from "../scores/scores.actions";
 import {ScoreForm} from "./LiveBoxScore";
+import {useQueryParam} from "../hooks/useQueryParam";
 
 const LiveScoresPage: React.FC = observer(() => {
-    const location = useLocation();
-    const useQuery = () => {
-        return new URLSearchParams(location.search);
-    }
 
-    const query = useQuery();
-    const weekParam = query.get("week")
+    const weekParam = useQueryParam('week');
     const week = !!weekParam ? parseInt(weekParam) : undefined;
 
     const {leagueStore, scoresStore} = useGlobalStores();
@@ -47,7 +42,7 @@ const LiveScoresPage: React.FC = observer(() => {
             </Row>
             <Col xs={12} md={{size:10, offset:1}} lg={{size: 8, offset: 2}}>
                 {scoresStore.loaded && scores.length === 0 &&
-                    <div>There are currently no bet on games to process</div>
+                    <div>There are currently no upcoming games with bets on them</div>
                 }
                 {scoresStore.scores.length > 0 &&
                     <ScoreForm games={scores} parlays={parlays} gamblerNames={scoresStore.gamblerNames} />

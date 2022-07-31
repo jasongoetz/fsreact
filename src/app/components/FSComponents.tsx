@@ -10,8 +10,8 @@ export const FSButton = styled(Button)`
     && {
         cursor: ${props => props.disabled ? 'default' : 'pointer'};
         color: ${Colors.white};
-        background-color: ${Colors.fsBlue};
-        border-color: ${Colors.slightlyDarkerFSBlue};
+        background-color: ${Colors.brandGreen};
+        border-color: ${Colors.brandGreen};
         border-radius: 2px;
     }
 `;
@@ -21,8 +21,10 @@ export const FSWideButton = styled(FSButton)({
     textTransform: 'uppercase' as 'uppercase',
 });
 
-export const GoogleButton = styled(Button)({
+export const AuthButton = styled(Button)({
+    marginTop: '20px',
     width: '100%',
+    textAlign: 'left',
     textTransform: 'uppercase' as 'uppercase',
     color: Colors.mostDarkestGray,
     backgroundColor: Colors.white,

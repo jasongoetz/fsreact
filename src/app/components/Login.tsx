@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
-import {Col, FormGroup, Row} from "reactstrap";
-import {FSForm} from "./FSForm";
+import {Col, Row} from "reactstrap";
+import {FakeStacksForm} from "./FSForm";
 import {oAuthAuthenticate} from "../auth/auth.actions";
-import {GoogleButton} from "./FSComponents";
-import {Link, useHistory, useLocation} from "react-router-dom";
+import {AuthButton} from "./FSComponents";
+import {Link, useHistory} from "react-router-dom";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
@@ -11,37 +11,20 @@ import {joinLeagueWithInvite} from "../user/user.actions";
 import {useGoogleLogin} from "react-google-login";
 import {requireEnv} from "../../util/require-env";
 import {GoogleIcon} from "./svg/google_icon";
-
-const formSigninStyle = {
-    paddingBottom: "15px"
-};
-
-const formSigninHeading = {
-    fontSize: '16px',
-    marginBottom: '10px',
-    marginTop: '0px',
-};
+import {FakeStacksIcon} from "./svg/fs_icon";
+import {useQueryParam} from "../hooks/useQueryParam";
+import {Colors} from "../theme/theme";
 
 interface Props {
 }
-
-interface LoginValues {
-    token?: string;
-    email: string;
-    password: string;
-}
-
 const Login: React.FC<Props> = () => {
 
-    const location = useLocation();
     const history = useHistory();
-    const useQuery = () => {
-        return new URLSearchParams(location.search);
-    }
+
+    const token = useQueryParam("token");
 
     const {inviteStore, authStore} = useGlobalStores();
-    const query = useQuery();
-    const token = query.get("token");
+
     const invite = inviteStore.invite;
     useEffect(() => {
         if (token && !invite) {
@@ -65,12 +48,14 @@ const Login: React.FC<Props> = () => {
         onSuccess: onSignIn,
         onFailure: onSignInFail,
         clientId: requireEnv('REACT_APP_GOOGLE_CLIENT_ID'),
-        isSignedIn: true,
+        isSignedIn: authStore.authenticated,
     })
 
     if (token && !inviteStore.invite) {
         return <LoadingContainer/>;
     }
+
+    const headline = invite ? 'Sign in to join this league.' : 'Put your fake money where your mouth is.';
 
     return (
         <Row>
@@ -80,18 +65,17 @@ const Login: React.FC<Props> = () => {
                 md={{offset: 3, size: 6}}
                 lg={{offset: 4, size: 4}}
             >
-                <FSForm style={formSigninStyle}>
-                    {invite && <FormGroup><h3 style={formSigninHeading}>Sign in to join this league.</h3></FormGroup>}
-                    <GoogleButton data-testid="google-login-button" outline onClick={signIn}>
+                <FakeStacksForm headline={headline}>
+                    <AuthButton data-testid="google-login-button" outline onClick={signIn}>
                         <GoogleIcon />
                         Sign in with Google
-                    </GoogleButton>
-                    <hr/>
-                    <GoogleButton data-testid="fs-login-button" outline onClick={() => history.push('/fslogin')}>
+                    </AuthButton>
+                    <AuthButton data-testid="fs-login-button" outline onClick={() => history.push('/fslogin')}>
+                        <FakeStacksIcon />
                         Sign in with Fake Stacks
-                    </GoogleButton>
-                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
-                </FSForm>
+                    </AuthButton>
+                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link style={{color: Colors.brandBlack, textDecoration: 'underline'}} to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
+                </FakeStacksForm>
             </Col>
         </Row>
     );

@@ -151,6 +151,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
 
     const tabLinkStyle = (active: boolean) => {
         const style = {
+            color: Colors.brandBlack,
             borderRadius: "0px",
             padding: "5px 10px"
         };

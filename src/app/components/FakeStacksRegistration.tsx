@@ -1,40 +1,29 @@
 import React, {useEffect} from "react";
 import {Col, FormGroup, Row} from "reactstrap";
-import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from 'react-router-dom';
-import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
+import {Link, RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
+import {FakeStacksForm, FSFormFeedback, FSFormSubmitButton, FSInput} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import {FSWideButton} from "./FSComponents";
 import {register} from "../auth/auth.actions";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
 import {joinLeagueWithInvite} from "../user/user.actions";
 import ApiError from "../api/apiError";
+import {useQueryParam} from "../hooks/useQueryParam";
 
 interface Props extends RouteComponentProps {
     token?: string;
 }
 
-const formSigninHeading = {
-    fontSize: '16px',
-    marginBottom: '10px',
-    marginTop: '0px',
-};
-
 const FakeStacksRegistration: React.FC<Props> = () => {
 
     const history = useHistory();
-
-    const location = useLocation();
-    const useQuery = () => {
-        return new URLSearchParams(location.search);
-    }
+    const token = useQueryParam('token');
 
     const {authStore, inviteStore} = useGlobalStores();
-    const query = useQuery();
-    const token = query.get("token");
     const invite = inviteStore.invite;
+
     useEffect(() => {
         if (token && !invite) {
             loadInviteByToken(token);
@@ -83,7 +72,7 @@ const FakeStacksRegistration: React.FC<Props> = () => {
         initialValues: {
             firstName: '',
             lastName: '',
-            email: '',
+            email: invite?.email || '',
             password: '',
             confirmation: '',
         },
@@ -95,11 +84,12 @@ const FakeStacksRegistration: React.FC<Props> = () => {
         return <LoadingContainer/>;
     }
 
+    const headline = invite ? 'Finish registering an account to join.' : 'Create a new Fake Stacks account.';
+
     return (
         <Row>
             <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}}>
-                <FSForm id="registration" onSubmit={formik.handleSubmit}>
-                    {invite && <FormGroup><h3 style={formSigninHeading}>Finish registering an account to join.</h3></FormGroup>}
+                <FakeStacksForm id="registration" onSubmit={formik.handleSubmit} headline={headline}>
                     <FormGroup>
                         <FSInput
                             placeholder="First Name"
@@ -166,13 +156,13 @@ const FakeStacksRegistration: React.FC<Props> = () => {
                         {formik.touched.confirmation && <FSFormFeedback>{formik.errors.confirmation}</FSFormFeedback>}
                     </FormGroup>
                     <FSInput type="hidden" name="token" value={invite ? invite.token : ''} />
-                    <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">SIGN UP</FSWideButton>
+                    <FSFormSubmitButton text='Sign Up' />
                     {invite &&
                         <div style={{marginTop: '10px'}}>
                             Already have an account? <Link to={"/login" + (!!token ? `?token=${invite.token}` : '')}>Log in.</Link>
                         </div>
                     }
-                </FSForm>
+                </FakeStacksForm>
             </Col>
         </Row>
     );

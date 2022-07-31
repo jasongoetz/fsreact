@@ -1,45 +1,22 @@
 import React, {useEffect, useState} from "react";
 import {Col, FormGroup, Row} from "reactstrap";
-import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
+import {FakeStacksForm, FSFormFeedback, FSFormSubmitButton, FSInput} from "./FSForm";
 import {authenticate} from "../auth/auth.actions";
-import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import {Link, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
 import {joinLeagueWithInvite} from "../user/user.actions";
+import {useQueryParam} from "../hooks/useQueryParam";
+import {Colors} from "../theme/theme";
 
-const formSigninStyle = {
-    paddingBottom: "15px"
-};
+const FakeStacksLogin: React.FC = () => {
 
-const formSigninHeading = {
-    fontSize: '16px',
-    marginBottom: '10px',
-    marginTop: '0px',
-};
-
-interface Props {
-}
-
-interface LoginValues {
-    token?: string;
-    email: string;
-    password: string;
-}
-
-const FakeStacksLogin: React.FC<Props> = () => {
-
-    const location = useLocation();
-    const useQuery = () => {
-        return new URLSearchParams(location.search);
-    }
+    const token = useQueryParam('token');
 
     const {inviteStore, authStore} = useGlobalStores();
-    const query = useQuery();
-    const token = query.get("token");
     const invite = inviteStore.invite;
     useEffect(() => {
         if (token && !invite) {
@@ -86,6 +63,8 @@ const FakeStacksLogin: React.FC<Props> = () => {
         return <LoadingContainer/>;
     }
 
+    const headline = invite ? 'Sign in to join this league.' : 'Put your fake money where your mouth is.';
+
     return (
         <Row>
             <Col
@@ -94,8 +73,7 @@ const FakeStacksLogin: React.FC<Props> = () => {
                 md={{offset: 3, size: 6}}
                 lg={{offset: 4, size: 4}}
             >
-                <FSForm style={formSigninStyle} onSubmit={formik.handleSubmit}>
-                    {invite && <FormGroup><h3 style={formSigninHeading}>Sign in to join this league.</h3></FormGroup>}
+                <FakeStacksForm headline={headline} onSubmit={formik.handleSubmit}>
                     <FormGroup>
                         <FSInput
                             autoFocus
@@ -123,10 +101,10 @@ const FakeStacksLogin: React.FC<Props> = () => {
                         />
                         <FSFormFeedback>{formik.errors.password}</FSFormFeedback>
                     </FormGroup>
-                    <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">SIGN IN</FSWideButton>
-                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
+                    <FSFormSubmitButton text="Sign In" />
+                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link style={{color: Colors.brandBlack, textDecoration: 'underline'}} to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
                     {attemptedLogin && <div style={{marginTop: '10px'}}>Forgot your password? <Link to={"/forgotpassword"}>Reset it.</Link></div>}
-                </FSForm>
+                </FakeStacksForm>
             </Col>
         </Row>
     );

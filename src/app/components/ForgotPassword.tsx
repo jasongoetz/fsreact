@@ -1,29 +1,11 @@
 import React, {useState} from "react";
 import {Col, FormGroup, Row} from "reactstrap";
-import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
-import {FSWideButton} from "./FSComponents";
+import {FakeStacksForm, FSFormFeedback, FSFormSubmitButton, FSInput} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {requestPasswordReset} from "../api/api";
 
-const formSigninStyle = {
-    paddingBottom: "15px"
-};
-
-const formSigninHeading = {
-    fontSize: '16px',
-    marginBottom: '10px',
-    marginTop: '0px',
-};
-
-interface Props {
-}
-
-interface ForgotPasswordValues {
-    email: string;
-}
-
-const ForgotPassword: React.FC<Props> = () => {
+const ForgotPassword: React.FC = () => {
 
     const [resetRequested, setResetRequested] = useState(false);
 
@@ -61,9 +43,7 @@ const ForgotPassword: React.FC<Props> = () => {
                 md={{offset: 3, size: 6}}
                 lg={{offset: 4, size: 4}}
             >
-                <FSForm style={formSigninStyle}>
-                    <FormGroup><h3 style={formSigninHeading}>An email has been sent to {formik.values.email} with your password reset link.</h3></FormGroup>
-                </FSForm>
+                <FakeStacksForm headline={`An email has been sent to ${formik.values.email} with your password reset link.`} />
             </Col>
         </Row>
     }
@@ -76,8 +56,7 @@ const ForgotPassword: React.FC<Props> = () => {
                 md={{offset: 3, size: 6}}
                 lg={{offset: 4, size: 4}}
             >
-                <FSForm style={formSigninStyle} onSubmit={formik.handleSubmit}>
-                    <FormGroup><h3 style={formSigninHeading}>Enter your email and we'll send you a reset link.</h3></FormGroup>
+                <FakeStacksForm onSubmit={formik.handleSubmit} headline={"Enter your email and we'll send you a reset link"}>
                     <FormGroup>
                         <FSInput
                             autoFocus
@@ -92,8 +71,8 @@ const ForgotPassword: React.FC<Props> = () => {
                         />
                         {formik.touched.email && <FSFormFeedback>{formik.errors.email}</FSFormFeedback>}
                     </FormGroup>
-                    <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">RESET PASSWORD</FSWideButton>
-                </FSForm>
+                    <FSFormSubmitButton text="Reset Password" />
+                </FakeStacksForm>
             </Col>
         </Row>
     );

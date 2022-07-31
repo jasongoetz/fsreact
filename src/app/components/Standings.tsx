@@ -4,6 +4,8 @@ import {PageHeader} from "./PageHeader";
 import {useGlobalStores} from "../context/global_context";
 import {GamblerInfo} from "../types";
 import {observer} from "mobx-react";
+import {Colors} from "../theme/theme";
+import {Link} from "react-router-dom";
 
 const Standings: React.FC = observer(() => {
 
@@ -46,9 +48,9 @@ const Standings: React.FC = observer(() => {
                             <td>{index + 1}</td>
                             <td>{gambler.user.firstName} {gambler.user.lastName}{gambler.defunct ? ' (Defunct)' : ''}</td>
                             <td>
-                                <a href={`transaction/show/${gambler.id}`}>
+                                <Link style={{color: Colors.brandBlack, textDecoration: 'underline'}} to={`transaction/show/${gambler.id}`}>
                                     ${gambler.tallies.money.toFixed(2)}
-                                </a>
+                                </Link>
                             </td>
                             <td>${gambler.tallies.pending.toFixed(2)}</td>
                             <td>{gambler.tallies.record}</td>

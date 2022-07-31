@@ -42,7 +42,7 @@ const JoinLeagueScreen: React.FC = observer(() => {
     }
     else {
         return (
-            <ImagePage headline={"CREATE YOUR LEAGUE."}>
+            <ImagePage>
                 <CreateLeagueForm userId={authStore.userId} />
             </ImagePage>
         );

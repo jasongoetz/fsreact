@@ -6,16 +6,15 @@ import {LoadingContainer} from "./LoadingContainer";
 import {observer} from "mobx-react";
 import Registration from "./Registration";
 import {joinLeagueWithInvite} from "../user/user.actions";
+import {useQueryParam} from "../hooks/useQueryParam";
 
 export const RSVPPage: React.FC = observer(() => {
+
     const location = useLocation();
-    const useQuery = () => {
-        return new URLSearchParams(location.search);
-    }
+    const token = useQueryParam('token');
 
     const {inviteStore, authStore} = useGlobalStores();
-    const query = useQuery();
-    const token = query.get("token");
+
     useEffect(() => {
         if (token) {
             loadInviteByToken(token);

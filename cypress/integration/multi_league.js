@@ -80,7 +80,8 @@ describe('MultiLeague', () => {
 
         //Visit league manage page
         it('Visit league management page', function () {
-            cy.get('[id="manage"]').click();
+            cy.get('[data-testid="league-switcher"]').click();
+            cy.get('[data-testid="league-settings"]').click();
             cy.contains("League Management");
         });
 
@@ -103,7 +104,6 @@ describe('MultiLeague', () => {
 
         // save the waylonInboxId for later checking the emails
         waylonInboxId = inbox.id;
-        console.log("waylon inbox = " + waylonInboxId);
         waylon.email = inbox.emailAddress;
 
         // sign up with inbox email address and the password
@@ -143,14 +143,13 @@ describe('MultiLeague', () => {
       // wait for an email in the inbox
       cy.logout();
 
-      let time = Date.now().valueOf();
       cy.visit('/rsvp?token=' + waylonInviteToken);
 
       cy.get('[data-testid="fs-registration-button"]').click();
 
       cy.get('input[name=firstName]').type(waylon.firstName);
       cy.get('input[name=lastName]').type(waylon.lastName);
-      cy.get('input[name=email]').type(waylon.email);
+      //cy.get('input[name=email]').type(waylon.email);
       cy.get('input[name=password]').type(waylon.password);
       cy.get('input[name=confirmation]').type(`${waylon.password}`);
 
@@ -163,7 +162,6 @@ describe('MultiLeague', () => {
       // wait for an email in the inbox
       cy.logout();
 
-      let time = Date.now().valueOf();
       cy.visit('/');
 
       cy.get('[data-testid="fs-login-button"]').click();
@@ -249,7 +247,8 @@ describe('MultiLeague', () => {
 
 
     it('Tammy visits the league management page and invites Waylon to second league', function () {
-      cy.get('[id="manage"]').click();
+      cy.get('[data-testid="league-switcher"]').click();
+      cy.get('[data-testid="league-settings"]').click();
       cy.contains("League Management");
 
       cy.get("input[type=email]").clear();
@@ -262,7 +261,6 @@ describe('MultiLeague', () => {
     let secondWaylonInviteToken;
     it("Waylon gets second invite email extracts the token", () => {
       // wait for an email in the inbox
-      console.log("waylon inbox (2nd time) = " + waylonInboxId);
       cy.waitForLatestUnreadEmail(waylonInboxId).then((email) => {
         // verify we received an email
         assert.isDefined(email);
@@ -305,7 +303,7 @@ describe('MultiLeague', () => {
       cy.contains('CFB');
 
       //There are only two people in the standings (We're in Tammy's league)
-      cy.get('.standings').find('tbody>tr').should('have.length', 3);
+      cy.get('.standings').find('tbody>tr').should('have.length', 2);
     });
 
   });

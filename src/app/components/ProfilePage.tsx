@@ -1,8 +1,7 @@
 import React from 'react';
 import {Col, Container, FormGroup, Label, Row} from "reactstrap";
-import {FSForm, FSFormFeedback, FSInput} from "./FSForm";
+import {FakeStacksForm, FSFormFeedback, FSFormSubmitButton, FSInput} from "./FSForm";
 import {User} from "../types";
-import {FSWideButton} from "./FSComponents";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
@@ -65,7 +64,7 @@ const ProfilePage: React.FC<Props> = ({ user}) => {
         <Container>
             <Row>
                 <Col xs={{size: 12, offset: 0}} sm={{size: 10, offset: 1}} md={{size: 8, offset: 2}} lg={{size: 6, offset: 3}}>
-                    <FSForm onSubmit={formik.handleSubmit}>
+                    <FakeStacksForm onSubmit={formik.handleSubmit}>
                         <Row>
                             <Col md={6}>
                                 <FormGroup>
@@ -120,8 +119,8 @@ const ProfilePage: React.FC<Props> = ({ user}) => {
                             />
                             <Label for="notifyprocessedbets" check>Email me when bets are processed</Label>
                         </FormGroup>
-                        <FSWideButton type="submit" disabled={Object.keys(formik.errors).length > 0} color="primary" size="lg" style={{marginTop: '15px'}}>UPDATE PROFILE</FSWideButton>
-                    </FSForm>
+                        <FSFormSubmitButton text="Update Profile" disabled={Object.keys(formik.errors).length > 0} />
+                    </FakeStacksForm>
                 </Col>
             </Row>
         </Container>

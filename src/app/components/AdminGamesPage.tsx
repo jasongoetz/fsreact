@@ -9,8 +9,8 @@ import {FSWideButton} from "./FSComponents";
 import styled from "@emotion/styled";
 import {Colors} from "../theme/theme";
 import {BettableWithScore} from "../types";
-import {useLocation} from "react-router-dom";
 import {loadUserContext} from "../user/user.actions";
+import {useQueryParam} from "../hooks/useQueryParam";
 
 
 const OutcomeCard = styled.div({
@@ -24,13 +24,7 @@ const OutcomeCard = styled.div({
 });
 
 const AdminGamesPage: React.FC = observer(() => {
-    const location = useLocation();
-    const useQuery = () => {
-        return new URLSearchParams(location.search);
-    }
-
-    const query = useQuery();
-    const future = query.get("future");
+    const future = useQueryParam('future');
 
     const {adminStore} = useGlobalStores();
 

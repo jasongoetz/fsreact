@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { Bet, Parlay, BetOrParlayWrapper, Wager, OverUnder, Outcome } from '../types';
+import {Bet, Parlay, BetOrParlayWrapper, Wager, OverUnder, Outcome} from '../types';
 import {Colors} from "../theme/theme";
 import {getBetWinnings, getParlayWinnings} from "../../util/MoneylineUtil";
 
@@ -20,12 +20,14 @@ const parlayBetOutcomeStyle = {
     paddingLeft: "15px"
 };
 
-const getRowColor = (betOrParlay: BetOrParlayWrapper) => {
-    if (betOrParlay.value.outcome === 'WIN') {
+type Status = 'WIN' | 'LOSS' | 'PUSH' | 'PENDING';
+
+const getRowColor = (status: Status) => {
+    if (status === 'WIN') {
         return Colors.washedGreen;
-    } else if (betOrParlay.value.outcome === 'LOSS') {
+    } else if (status === 'LOSS') {
         return Colors.washedRed;
-    } else if (betOrParlay.value.complete) {
+    } else if (status === 'PUSH') {
         return Colors.washedYellow;
     } else {
         return Colors.lightestGraySepia;
@@ -55,7 +57,7 @@ const getBetDescription = (bet: Bet) => {
     }
 };
 
-const getOutcome = (bet: Wager) => {
+const getStatus = (bet: Wager) => {
     if (bet.outcome === Outcome.WIN) {
         return "WIN";
     } else if (bet.outcome === Outcome.LOSS) {
@@ -92,20 +94,21 @@ const getWinnings = (betOrParlay: BetOrParlayWrapper, moneyline: number) => {
 };
 
 export const TransactionRow: React.FC<{ betOrParlay: BetOrParlayWrapper, moneyline: number }> = ({betOrParlay, moneyline}) => {
-    let amount = betOrParlay.value.amount;
-    let winnings = getWinnings(betOrParlay, moneyline);
+    const amount = betOrParlay.value.amount;
+    const winnings = getWinnings(betOrParlay, moneyline);
+    const status = getStatus(betOrParlay.value as Wager)
     return (
         <React.Fragment>
-            <tr style={{backgroundColor: getRowColor(betOrParlay)}}>
+            <tr style={{backgroundColor: getRowColor(status)}}>
                 <td>{betOrParlay.type === 'bet' ? moment((betOrParlay.value as Bet).bettable.gameTime).format("dddd, MMMM Do") : ''}</td>
                 <td>{getDescription(betOrParlay)}</td>
-                <td>{getOutcome(betOrParlay.value as Wager)}</td>
+                <td>{status}</td>
                 <td>{typeof amount === 'number' ? amount.toFixed(2) : amount}</td>
                 <td>{typeof winnings === 'number' ? winnings.toFixed(2) : winnings}</td>
                 <td>{betOrParlay.tally.toFixed(2)}</td>
             </tr>
             {betOrParlay.type === 'parlay' && (betOrParlay.value as Parlay).bets.map((bet, index) => {
-                return <tr key={`trr-${index}`} style={{backgroundColor: getRowColor(betOrParlay)}}>
+                return <tr key={`trr-${index}`} style={{backgroundColor: getRowColor(status)}}>
                     <td style={{...parlayBetDateStyle, ...parlayBetRowStyle}}>{moment(bet.bettable.gameTime).format("dddd, MMMM Do")}</td>
                     <td style={{...parlayBetRowStyle, paddingLeft: "20px"}}>{getBetDescription(bet)}</td>
                     <td style={{...parlayBetRowStyle, ...parlayBetOutcomeStyle}}>{bet.outcome}</td>

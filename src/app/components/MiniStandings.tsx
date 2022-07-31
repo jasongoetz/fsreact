@@ -1,6 +1,8 @@
 import React from "react";
 import {GamblerInfo} from "../types";
 import {useGlobalStores} from "../context/global_context";
+import {Colors} from "../theme/theme";
+import {Link} from "react-router-dom";
 
 export const MiniStandings = () => {
     const { leagueStore } = useGlobalStores();
@@ -20,9 +22,9 @@ export const MiniStandings = () => {
                     <td>{index + 1}</td>
                     <td>{gambler.user.firstName} {gambler.user.lastName}{gambler.defunct ? ' (Defunct)' : ''}</td>
                     <td>
-                        <a href={`transaction/show/${gambler.id}`}>
+                        <Link style={{color: Colors.brandBlack, textDecoration: 'underline'}} to={`transaction/show/${gambler.id}`}>
                             ${gambler.tallies.money.toFixed(2)}
-                        </a>
+                        </Link>
                     </td>
                 </tr>)
             })}

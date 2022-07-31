@@ -1,10 +1,9 @@
 import React from "react";
 import {Col, FormGroup, Label, Row} from "reactstrap";
 import {useHistory} from 'react-router-dom';
-import {FSForm, FSFormFeedback, FSInput, FSLabelColumn} from "./FSForm";
+import {FakeStacksForm, FSFormFeedback, FSFormSubmitButton, FSInput, FSLabelColumn} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import {FSWideButton} from "./FSComponents";
 import {Sports} from "../types";
 import {createLeague} from "../league/league.actions";
 import {loadUserContext} from "../user/user.actions";
@@ -23,7 +22,6 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
             await loadUserContext(userId);
             history.push('/');
         } catch (err) {
-            console.log(JSON.stringify(err));
             formik.setErrors({moneyline: 'Your league could not be created'});
         }
     };
@@ -59,7 +57,7 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
     return (
         <Row>
             <Col xs={{size: 12, offset: 0}} sm={{size: 10, offset: 1}} md={{size: 8, offset: 2}} lg={{size: 6, offset: 3}}>
-                <FSForm id="create-league" onSubmit={formik.handleSubmit}>
+                <FakeStacksForm id="create-league" headline="Create your league." onSubmit={formik.handleSubmit}>
                     <FormGroup>
                         <Row>
                             <FSLabelColumn xs={5} sm={6}>
@@ -192,8 +190,8 @@ const CreateLeagueForm: React.FC<Props> = ({ userId}) => {
                         </Row>
                         <FSFormFeedback>{formik.errors.moneyline}</FSFormFeedback>
                     </FormGroup>
-                    <FSWideButton type="submit" color="primary" size="lg" data-cy="submit">CREATE LEAGUE</FSWideButton>
-                </FSForm>
+                    <FSFormSubmitButton text="Create League" />
+                </FakeStacksForm>
             </Col>
         </Row>
     );
