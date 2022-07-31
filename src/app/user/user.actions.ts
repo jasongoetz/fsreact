@@ -5,6 +5,8 @@ import {leagueStore} from "../league/league.store";
 import {gamblerStore} from "../gambler/gambler.store";
 import {userStore} from "./user.store";
 import {inviteStore} from "../invite/invite.store";
+import {bettableStore} from "../bettables/bettable.store";
+import {scoresStore} from "../scores/scores.store";
 
 export const loadUserContext = async (userId: number) => {
     try {
@@ -39,6 +41,8 @@ export const switchLeague = async (leagueId: number) => {
     if (userStore.user) {
         await switchUserLeague(userStore.user.id, leagueId);
         await loadUserContext(userStore.user.id);
+        bettableStore.clear();
+        scoresStore.clear();
     }
 }
 

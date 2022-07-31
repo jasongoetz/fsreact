@@ -6,6 +6,7 @@ import {Colors} from "../theme/theme";
 import checkMark from "./icons/checkMark.png";
 import xMark from "./icons/xMark.png";
 import {getUnofficialBetOutcome} from "../../util/OutcomeUtil";
+import {FSLink} from "./FSComponents";
 
 const hadOrHas = (final: boolean) => {
    return final ? ' had ' : ' has ';
@@ -19,7 +20,7 @@ const getWagerType = (bet: Bet, parlays: Parlay[], final: boolean) => {
             return hadOrHas(final);
         }
         return <><span>{hadOrHas(final)}a </span><span>
-            <span color="link" style={{cursor: 'pointer', fontWeight: 500, color: Colors.slightlyDarkerFSBlue}} id={`popover-${bet.parlay}-${bet.id}`}>{parlay.bets.length} game ${parlay.amount} parlay</span>
+            <span color="link" style={{cursor: 'pointer', textDecoration: 'underline', color: Colors.brandBlack}} id={`popover-${bet.parlay}-${bet.id}`}>{parlay.bets.length} game ${parlay.amount} parlay</span>
             <UncontrolledPopover trigger="legacy" placement="bottom" target={`popover-${bet.parlay}-${bet.id}`}>
                 <PopoverBody>
                     <Container style={{paddingTop: 5, paddingBottom: 5 }}>

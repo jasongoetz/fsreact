@@ -14,6 +14,14 @@ class ScoresStore {
         this.parlays = scoresReport.parlays;
         this.loaded = true;
     };
+
+    @action
+    clear = () => {
+        this.scores = [];
+        this.gamblerNames = {};
+        this.parlays = [];
+        this.loaded = false;
+    }
 }
 
 export const scoresStore = new ScoresStore()

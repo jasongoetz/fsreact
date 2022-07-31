@@ -10,6 +10,12 @@ class BettableStore {
         this.bettables = bettables;
         this.loaded = true;
     };
+
+    @action
+    clear = () => {
+        this.bettables = [];
+        this.loaded = false;
+    }
 }
 
 export const bettableStore = new BettableStore()
