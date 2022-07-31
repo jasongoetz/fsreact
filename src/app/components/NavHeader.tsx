@@ -127,7 +127,6 @@ const NavHeader: FC<Props> = observer(({toggleMobileMenu}) => {
             tag={Link}
             to={path}
             onClick={onClick}
-            // underline={true}
             style={navbarLinkStyle(underline)}
         >
             {label}

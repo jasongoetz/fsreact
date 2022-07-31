@@ -4,13 +4,12 @@ import {FakeStacksForm, FSFormFeedback, FSFormSubmitButton, FSInput} from "./FSF
 import {authenticate} from "../auth/auth.actions";
 import {useFormik} from "formik";
 import * as yup from "yup";
-import {Link} from "react-router-dom";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
 import {joinLeagueWithInvite} from "../user/user.actions";
 import {useQueryParam} from "../hooks/useQueryParam";
-import {Colors} from "../theme/theme";
+import {FSLink} from "./FSComponents";
 
 const FakeStacksLogin: React.FC = () => {
 
@@ -102,8 +101,8 @@ const FakeStacksLogin: React.FC = () => {
                         <FSFormFeedback>{formik.errors.password}</FSFormFeedback>
                     </FormGroup>
                     <FSFormSubmitButton text="Sign In" />
-                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link style={{color: Colors.brandBlack, textDecoration: 'underline'}} to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
-                    {attemptedLogin && <div style={{marginTop: '10px'}}>Forgot your password? <Link to={"/forgotpassword"}>Reset it.</Link></div>}
+                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <FSLink to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</FSLink></div>
+                    {attemptedLogin && <div style={{marginTop: '10px'}}>Forgot your password? <FSLink to={"/forgotpassword"}>Reset it.</FSLink></div>}
                 </FakeStacksForm>
             </Col>
         </Row>

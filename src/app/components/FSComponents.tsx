@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import {Button, Container} from "reactstrap";
 import {Colors} from "../theme/theme";
+import {Link} from "react-router-dom";
 
 export const FSPageContainer = styled(Container)({
    marginTop: 15
@@ -29,4 +30,9 @@ export const AuthButton = styled(Button)({
     color: Colors.mostDarkestGray,
     backgroundColor: Colors.white,
     borderRadius: 3,
+});
+
+export const FSLink = styled(Link)({
+    color: Colors.brandBlack,
+    textDecoration: 'underline'
 });

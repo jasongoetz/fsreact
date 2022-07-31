@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import {Col, Row} from "reactstrap";
-import {Link, RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
+import {RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
 import {FakeStacksForm} from "./FSForm";
-import {AuthButton} from "./FSComponents";
+import {AuthButton, FSLink} from "./FSComponents";
 import {oAuthAuthenticate} from "../auth/auth.actions";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
@@ -13,7 +13,6 @@ import {useGoogleLogin} from "react-google-login";
 import {requireEnv} from "../../util/require-env";
 import {useQueryParam} from "../hooks/useQueryParam";
 import {FakeStacksIcon} from "./svg/fs_icon";
-import {Colors} from "../theme/theme";
 
 interface Props extends RouteComponentProps {
     token?: string;
@@ -72,7 +71,7 @@ const Registration: React.FC<Props> = () => {
                         Sign up with email
                     </AuthButton>
                     <div style={{marginTop: '10px'}}>
-                        Already have an account? <Link style={{color: Colors.brandBlack, textDecoration: 'underline'}} to={"/login" + (!!token && !!invite ? `?token=${invite.token}` : '')}>Log in.</Link>
+                        Already have an account? <FSLink to={"/login" + (!!token && !!invite ? `?token=${invite.token}` : '')}>Log in.</FSLink>
                     </div>
                 </FakeStacksForm>
             </Col>

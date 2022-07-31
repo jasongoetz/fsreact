@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Col, FormGroup, Row} from "reactstrap";
-import {Link, RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
+import {RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
 import {FakeStacksForm, FSFormFeedback, FSFormSubmitButton, FSInput} from "./FSForm";
 import {useFormik} from "formik";
 import * as yup from "yup";
@@ -11,6 +11,7 @@ import {LoadingContainer} from "./LoadingContainer";
 import {joinLeagueWithInvite} from "../user/user.actions";
 import ApiError from "../api/apiError";
 import {useQueryParam} from "../hooks/useQueryParam";
+import {FSLink} from "./FSComponents";
 
 interface Props extends RouteComponentProps {
     token?: string;
@@ -159,7 +160,7 @@ const FakeStacksRegistration: React.FC<Props> = () => {
                     <FSFormSubmitButton text='Sign Up' />
                     {invite &&
                         <div style={{marginTop: '10px'}}>
-                            Already have an account? <Link to={"/login" + (!!token ? `?token=${invite.token}` : '')}>Log in.</Link>
+                            Already have an account? <FSLink to={"/login" + (!!token ? `?token=${invite.token}` : '')}>Log in.</FSLink>
                         </div>
                     }
                 </FakeStacksForm>

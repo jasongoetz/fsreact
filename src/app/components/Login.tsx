@@ -2,8 +2,8 @@ import React, {useEffect} from "react";
 import {Col, Row} from "reactstrap";
 import {FakeStacksForm} from "./FSForm";
 import {oAuthAuthenticate} from "../auth/auth.actions";
-import {AuthButton} from "./FSComponents";
-import {Link, useHistory} from "react-router-dom";
+import {AuthButton, FSLink} from "./FSComponents";
+import {useHistory} from "react-router-dom";
 import {useGlobalStores} from "../context/global_context";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
@@ -13,7 +13,6 @@ import {requireEnv} from "../../util/require-env";
 import {GoogleIcon} from "./svg/google_icon";
 import {FakeStacksIcon} from "./svg/fs_icon";
 import {useQueryParam} from "../hooks/useQueryParam";
-import {Colors} from "../theme/theme";
 
 interface Props {
 }
@@ -74,7 +73,7 @@ const Login: React.FC<Props> = () => {
                         <FakeStacksIcon />
                         Sign in with Fake Stacks
                     </AuthButton>
-                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <Link style={{color: Colors.brandBlack, textDecoration: 'underline'}} to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</Link></div>
+                    <div style={{marginTop: '10px'}}>New to Fake Stacks? <FSLink to={"/register" + (!!token ? `?token=${token}` : '')}>Sign up.</FSLink></div>
                 </FakeStacksForm>
             </Col>
         </Row>
