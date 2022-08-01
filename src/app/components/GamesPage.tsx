@@ -15,7 +15,8 @@ const GamesPage: React.FC<Props> = observer(() => {
 
     const {bettableStore, leagueStore, gamblerStore} = useGlobalStores();
 
-    const { isMobile, isLargeMobile } = useScreenSize();
+    const { isMedium, isLarge, isMobile, isLargeMobile } = useScreenSize();
+    const isExactlyLarge = !isMedium && isLarge;
 
     useEffect(() => {
         if (leagueStore.league && !bettableStore.loaded) {
@@ -28,7 +29,9 @@ const GamesPage: React.FC<Props> = observer(() => {
             <Row>
                 <Col lg={7} xl={8}>
                     <PageHeader>Games</PageHeader>
-                    {bettableStore.bettables.map(bettable => <GameRow key={`game-${bettable.id}`} bettable={bettable} isMobile={isMobile}/>)}
+                    {bettableStore.bettables.map(bettable =>
+                        <GameRow key={`game-${bettable.id}`} bettable={bettable} isMobile={isMobile} isExactlyLarge={isExactlyLarge} />
+                    )}
                 </Col>
                 <Col lg={5} xl={4}>
                     {!isLargeMobile &&

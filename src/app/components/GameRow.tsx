@@ -9,13 +9,13 @@ import {Colors} from "../theme/theme";
 import MoneylineBettableButton from "./MoneylineBettableButton";
 
 const TeamRow = styled(Row)({
-    paddingTop: "5px",
-    paddingBottom: "5px",
+    paddingTop: "1px",
+    paddingBottom: "1px",
 });
 
 const BettableRow = styled(Row)({
-    paddingTop: "10px",
-    paddingBottom: "10px",
+    paddingTop: "6px",
+    paddingBottom: "6px",
     borderBottom: `1px solid ${Colors.darkerGray}`
 });
 
@@ -33,36 +33,45 @@ const TeamNameCol = styled(Col)({
 interface Props {
     bettable: Bettable;
     isMobile: boolean;
+    isExactlyLarge: boolean;
 }
 
-const GameRow: FC<Props> = ({bettable, isMobile}) => {
+const MultilineTimeString: FC<{bettable: Bettable}> = ({bettable}) => {
+    const gameTime = moment(bettable.gameTime);
+    const date = gameTime.format("dddd, MMM D");
+    const time = gameTime.format("h:mma z");
+    return <>{date}<br/>{time}</>;
+}
+
+const GameRow: FC<Props> = ({bettable, isMobile, isExactlyLarge}) => {
+
     return <BettableRow data-testid={'bettable-row'}>
         <GameTimeCol md={3} sm={12}>
-            {moment(bettable.gameTime).format("dddd, MMM Do, h:mma z")}
+            {isMobile ? moment(bettable.gameTime).format("dddd, MMM Do [at] h:mma z") : <MultilineTimeString bettable={bettable}/>}
         </GameTimeCol>
             <Col md={9} sm={12}>
                 <TeamRow>
                     <TeamNameCol>{bettable.team1}</TeamNameCol>
-                    <Col style={{width: '70px', padding: '5px'}}>
+                    <Col style={{padding: '5px'}}>
                         <TeamBettableButton data-testid='team1-bet-button' bettable={bettable} team={'TEAM1'} />
                     </Col>
-                    <Col style={{width: '70px', padding: '5px'}}>
+                    <Col style={{padding: '5px'}}>
                         <MoneylineBettableButton bettable={bettable} team={'TEAM1'} />
                     </Col>
-                    <Col style={{width: '70px', padding: '5px'}}>
-                        <OverUnderBettableButton data-testid='over-bet-button' bettable={bettable} overUnder={OverUnder.OVER} isMobile={isMobile}/>
+                    <Col style={{padding: '5px'}}>
+                        <OverUnderBettableButton data-testid='over-bet-button' bettable={bettable} overUnder={OverUnder.OVER} isMobile={isMobile || isExactlyLarge}/>
                     </Col>
                 </TeamRow>
                 <TeamRow>
                     <TeamNameCol>{bettable.team2}</TeamNameCol>
-                    <Col style={{width: '70px', padding: '5px'}}>
+                    <Col style={{padding: '5px'}}>
                         <TeamBettableButton data-testid='team2-bet-button' bettable={bettable} team={'TEAM2'} />
                     </Col>
-                    <Col style={{width: '70px', padding: '5px'}}>
+                    <Col style={{padding: '5px'}}>
                         <MoneylineBettableButton bettable={bettable} team={'TEAM2'} />
                     </Col>
-                    <Col style={{width: '70px', padding: '5px'}}>
-                        <OverUnderBettableButton data-testid='under-bet-button' bettable={bettable} overUnder={OverUnder.UNDER} isMobile={isMobile}/>
+                    <Col style={{padding: '5px'}}>
+                        <OverUnderBettableButton data-testid='under-bet-button' bettable={bettable} overUnder={OverUnder.UNDER} isMobile={isMobile || isExactlyLarge}/>
                     </Col>
                 </TeamRow>
             </Col>

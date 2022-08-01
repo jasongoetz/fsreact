@@ -6,7 +6,6 @@ import {Colors} from "../theme/theme";
 import checkMark from "./icons/checkMark.png";
 import xMark from "./icons/xMark.png";
 import {getUnofficialBetOutcome} from "../../util/OutcomeUtil";
-import {FSLink} from "./FSComponents";
 
 const hadOrHas = (final: boolean) => {
    return final ? ' had ' : ' has ';
