@@ -1,8 +1,9 @@
-import {FullBet, GamblerInfo, League, LeagueInvite, Parlay} from "../types";
+import { FullBet, GamblerInfo, League, LeagueInvite, Parlay, SportWeek } from "../types";
 import {action, observable} from "mobx";
 
 class LeagueStore {
 
+    @observable week?: SportWeek;
     @observable league?: League;
     @observable gamblers: GamblerInfo[] = [];
     @observable invites: LeagueInvite[] = [];
@@ -20,6 +21,11 @@ class LeagueStore {
     }
 
     @action
+    saveWeek = (week: SportWeek) => {
+        this.week = week;
+    }
+
+    @action
     addInvite = (invitedUser: LeagueInvite) => {
         this.invites.push(invitedUser);
     };
@@ -32,6 +38,7 @@ class LeagueStore {
     @action
     clear = () => {
         this.league = undefined;
+        this.week = undefined;
         this.gamblers = [];
         this.invites = [];
     }

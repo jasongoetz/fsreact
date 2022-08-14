@@ -74,7 +74,7 @@ const betSlipBadgeStyle = {
 const BetSlipCollapse = styled(Collapse)({
     width: '100%',
     height: "100vh",
-    top: "50px",
+    top: "60px",
     left: '0px',
     zIndex: 4,
     background: 'rgba(255, 255, 255, 0.7)',

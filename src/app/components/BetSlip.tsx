@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Col,
     Container,
@@ -14,15 +14,16 @@ import {
     TabPane
 } from "reactstrap";
 import PotentialBetCard from "./PotentialBetCard";
-import {validateBets} from "../api/api";
-import {FSButton} from "./FSComponents";
-import {getButtonMessage} from "../../util/BetUtil";
-import {useHistory} from "react-router-dom";
-import {useGlobalStores} from "../context/global_context";
-import {observer} from "mobx-react";
-import {editCartBet, editCartParlay, loadCart, removeCartBet, toggleParlay} from "../cart/cart.actions";
-import {getParlayWinnings} from "../../util/MoneylineUtil";
-import {Colors} from "../theme/theme";
+import { validateBets } from "../api/api";
+import { FSButton } from "./FSComponents";
+import { getButtonMessage } from "../../util/BetUtil";
+import { useHistory } from "react-router-dom";
+import { useGlobalStores } from "../context/global_context";
+import { observer } from "mobx-react";
+import { editCartBet, editCartParlay, loadCart, removeCartBet, toggleParlay } from "../cart/cart.actions";
+import { getParlayWinnings } from "../../util/MoneylineUtil";
+import { Colors } from "../theme/theme";
+import { GamblerStatusPanel } from "./GamblerStatusPanel";
 
 const containerStyle = {
     borderRadius: "0px",
@@ -141,7 +142,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
 
     const history = useHistory();
 
-    const {cartStore, leagueStore} = useGlobalStores();
+    const {cartStore, leagueStore, gamblerStore} = useGlobalStores();
 
     useEffect(() => {
         if (gamblerId) {
@@ -196,6 +197,9 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
                 BET SLIP
             </div>
         </Row>
+        {gamblerStore.gamblerStatus && leagueStore.league &&
+          <GamblerStatusPanel gamblerStatus={gamblerStore.gamblerStatus} league={leagueStore.league}/>
+        }
         <Nav style={!isMobile ? { margin: '0px 0px 5px 5px' } : undefined} pills>
             <NavItem>
                 <NavLink data-testid='straight-navlink' style={tabLinkStyle(!betParlayTabActive)} href="#bet-straight"
@@ -210,7 +214,7 @@ const BetSlip: React.FC<Props> = observer(({gamblerId, onReview, isMobile}) => {
         </Nav>
         <TabContent style={{...(!isMobile ? {overflow: 'scroll', borderTop: '1px solid', borderBottom: '1px solid'} : {}), width: '100%' }} activeTab={betParlayTabActive ? "bet-parlay" : "bet-straight"}>
             <TabPane tabId="bet-straight">
-                <Row style={{color: Colors.darkerGray, margin: '10px 10px 10px 15px'}} hidden={(potentialBets.length > 0)}>
+                <Row style={{color: Colors.darkerGray, margin: '20px 10px 20px 15px'}} hidden={(potentialBets.length > 0)}>
                     <Col sm={12}>Add games to your bet slip</Col>
                 </Row>
                 <ListGroup>

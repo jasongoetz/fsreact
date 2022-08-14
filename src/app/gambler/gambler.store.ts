@@ -1,8 +1,9 @@
 import {action, observable} from "mobx";
-import {Gambler} from "../types";
+import { Gambler, GamblerStatus } from "../types";
 
 class GamblerStore {
     @observable gambler?: Gambler;
+    @observable gamblerStatus?: GamblerStatus;
 
     @action
     saveGambler = (gambler: Gambler) => {
@@ -10,8 +11,14 @@ class GamblerStore {
     }
 
     @action
+    saveGamblerStatus = (gamblerStatus: GamblerStatus) => {
+        this.gamblerStatus = gamblerStatus;
+    }
+
+    @action
     clear = () => {
         this.gambler = undefined;
+        this.gamblerStatus = undefined;
     }
 }
 

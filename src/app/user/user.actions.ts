@@ -15,7 +15,9 @@ export const loadUserContext = async (userId: number) => {
         userStore.saveLeagues(userContext.userLeagues);
         if (userContext.league) {
             gamblerStore.saveGambler(userContext.gambler);
+            gamblerStore.saveGamblerStatus(userContext.gamblerStatus);
             leagueStore.saveLeague(userContext.league, userContext.league.gamblers, userContext.league.invites, userContext.league.topBets);
+            leagueStore.saveWeek(userContext.week);
         }
     } catch (error) {
         handleHTTPError(error);

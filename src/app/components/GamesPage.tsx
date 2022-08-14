@@ -24,11 +24,13 @@ const GamesPage: React.FC<Props> = observer(() => {
         }
     }, [leagueStore.league, bettableStore.loaded]);
 
+
+
     return (
         <Container data-testid="games-page-container">
             <Row>
                 <Col lg={7} xl={8}>
-                    <PageHeader>Games</PageHeader>
+                    <PageHeader>Games {leagueStore.week ? ` - ${leagueStore.week.name}` : ''}</PageHeader>
                     {bettableStore.bettables.map(bettable =>
                         <GameRow key={`game-${bettable.id}`} bettable={bettable} isMobile={isMobile} isExactlyLarge={isExactlyLarge} />
                     )}

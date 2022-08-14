@@ -33,13 +33,21 @@ export interface UserContext {
     user: User;
     league: LeagueContext;
     gambler: GamblerInfo;
+    gamblerStatus: GamblerStatus;
     userLeagues: League[];
+    week: SportWeek;
 }
 
 export interface LeagueContext extends League {
     gamblers: GamblerInfo[];
     topBets: {bets: FullBet[], parlays: Parlay[]};
     invites: LeagueInvite[];
+}
+
+export interface SportWeek {
+    week: number;
+    name: string;
+    start: Date;
 }
 
 export interface League {
@@ -77,6 +85,12 @@ export interface GamblerInfo extends Gambler {
         record: string;
         moneylineRecord: string;
     }
+}
+
+export interface GamblerStatus {
+    startingMoneyThisWeek: number;
+    betsThisWeek: Bet[];
+    moneyBetThisWeek: number;
 }
 
 export interface Invite {
