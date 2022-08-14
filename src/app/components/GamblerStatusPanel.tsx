@@ -29,10 +29,10 @@ export const GamblerStatusPanel: React.FC<Props> = ({gamblerStatus, league}) => 
         <img style={iconStyle} src="/images/svg/caret-right.svg" alt="info"/>
         {`You made ${gamblerStatus.betsThisWeek.length} out of ${league.weeklyBetCountMax} maximum bets this week`}
       </div>
-      <div style={gamblerInfoStyle}>
+      {league.weeklyBetAccountRatio < 1 && <div style={gamblerInfoStyle}>
         <img style={iconStyle} src="/images/svg/caret-right.svg" alt="info"/>
         {`You bet $${gamblerStatus.moneyBetThisWeek} out of $${(gamblerStatus.startingMoneyThisWeek * league.weeklyBetAccountRatio).toFixed(0)} allowed this week`}
-      </div>
+      </div>}
     </ListGroupItem>
   </ListGroup>;
 }
