@@ -11,6 +11,7 @@ import {Colors} from "../theme/theme";
 import {BettableWithScore} from "../types";
 import {loadUserContext} from "../user/user.actions";
 import {useQueryParam} from "../hooks/useQueryParam";
+import moment from "moment";
 
 
 const OutcomeCard = styled.div({
@@ -80,6 +81,9 @@ const AdminGamesForm: React.FC<{games: BettableWithScore[]}> = observer(({games}
     return <Form onSubmit={formik.handleSubmit}>
         {games.map((game) => {
             return <OutcomeCard key={`gameOutcome-${game.id}`}>
+                <FormGroup row>
+                    <Label>{moment(game.gameTime).format("dddd, MMMM D, h:mma z")}</Label>
+                </FormGroup>
                 <FormGroup row>
                     <Label xs={8} for={'team1Score-' + game.id}>
                         {game.team1}
