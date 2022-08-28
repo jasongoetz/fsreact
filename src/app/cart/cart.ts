@@ -86,10 +86,10 @@ class LocalCart {
 
     private getLine = (bettable: Bettable, isMoneyline: boolean, sideId?: string) => {
         if (sideId === bettable.sideId1) {
-            return isMoneyline ? bettable.team1MoneyLine : bettable.team1Spread;
+            return isMoneyline ? bettable.team1Moneyline : bettable.team1Spread;
         }
         else if (sideId === bettable.sideId2) {
-            return isMoneyline ? bettable.team2MoneyLine : bettable.team2Spread;
+            return isMoneyline ? bettable.team2Moneyline : bettable.team2Spread;
         }
         else {
             return bettable.overUnder;

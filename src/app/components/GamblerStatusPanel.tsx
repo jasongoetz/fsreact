@@ -12,6 +12,7 @@ const iconStyle = {
 const gamblerInfoPanelStyle = {
   backgroundColor: Colors.lightestGraySepia,
   marginBottom: '15px',
+  border: '0px',
 }
 const gamblerInfoStyle = {
   padding: "2px 2px",

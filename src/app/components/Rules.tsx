@@ -43,7 +43,7 @@ export const Rules: React.FC = () => {
     return (
         <div>
           {rules.map((rule, index) => (
-            <div style={index === rules.length - 1 ? lastRuleStyle: ruleStyle}>
+            <div key={`rule-${index}`} style={index === rules.length - 1 ? lastRuleStyle: ruleStyle}>
               {index + 1}. {rule}
             </div>
           ))}

@@ -1,5 +1,5 @@
 import React from "react";
-import {FSWideButton} from "./FSComponents";
+import { FSWideButton, OffButton } from "./FSComponents";
 import {Bettable, OverUnder} from "../types";
 import {useGlobalStores} from "../context/global_context";
 import {addBetToCart} from "../cart/cart.actions";
@@ -35,7 +35,7 @@ const OverUnderBettableButton: React.FC<Props> = observer(({bettable, overUnder,
         return <FSWideButton className="hidden-xs hidden-sm" disabled={disabled}
                          onClick={betClick} {...props}>{overUnderName} {bettable.overUnder}</FSWideButton>;
     } else {
-        return <FSWideButton disabled={true}>O/U OFF</FSWideButton>;
+        return <OffButton disabled={true}>O/U OFF</OffButton>;
     }
 
 });

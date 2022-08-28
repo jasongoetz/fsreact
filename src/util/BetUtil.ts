@@ -4,13 +4,13 @@ import Pluralize from 'pluralize';
 export const getBetSummary = (bet: CartBet) => {
     if (bet.sideId === bet.bettable.sideId1) {
         if (bet.moneyline) {
-            return `${bet.bettable.team1} to win (${bet.bettable.team1MoneyLine})`;
+            return `${bet.bettable.team1} to win (${bet.bettable.team1Moneyline})`;
         } else {
             return `${bet.bettable.team1} ${bet.bettable.team1Spread}`;
         }
     } else if (bet.sideId === bet.bettable.sideId2) {
         if (bet.moneyline) {
-            return `${bet.bettable.team2} to win (${bet.bettable.team2MoneyLine})`;
+            return `${bet.bettable.team2} to win (${bet.bettable.team2Moneyline})`;
         } else {
             return `${bet.bettable.team2} ${bet.bettable.team2Spread}`;
         }

@@ -111,8 +111,8 @@ export type Bettable = {
     team2: string;
     team1Spread: string;
     team2Spread: string;
-    team1MoneyLine: string;
-    team2MoneyLine: string;
+    team1Moneyline: string;
+    team2Moneyline: string;
     overUnder: string;
     ouoff: boolean;
     off: boolean;

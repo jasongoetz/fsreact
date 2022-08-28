@@ -17,6 +17,18 @@ export const FSButton = styled(Button)`
     }
 `;
 
+export const OffButton = styled(Button)`
+    && {
+        cursor: ${props => props.disabled ? 'default' : 'pointer'};
+        color: ${Colors.gray};
+        background-color: inherit;
+        border: solid 1px ${Colors.lightGray};
+        border-radius: 2px;
+        width: 100%;
+        text-transform: uppercase;
+    },
+`;
+
 export const FSWideButton = styled(FSButton)({
     width: '100%',
     textTransform: 'uppercase' as 'uppercase',

@@ -1,5 +1,5 @@
 import React from "react";
-import {FSWideButton} from "./FSComponents";
+import { FSWideButton, OffButton } from "./FSComponents";
 import {Bettable} from "../types";
 import {useGlobalStores} from "../context/global_context";
 import {addBetToCart} from "../cart/cart.actions";
@@ -23,7 +23,7 @@ const MoneylineBettableButton: React.FC<Props> = observer(({bettable, team}) => 
     };
 
     const getMoneyline = () => {
-        let spreadPropName = team === 'TEAM1' ? 'team1MoneyLine' : 'team2MoneyLine';
+        let spreadPropName = team === 'TEAM1' ? 'team1Moneyline' : 'team2Moneyline';
         return bettable[spreadPropName];
     };
 
@@ -47,7 +47,7 @@ const MoneylineBettableButton: React.FC<Props> = observer(({bettable, team}) => 
         let disabled = bettableInCart(bettable.id, sideId);
         return <FSWideButton disabled={disabled} onClick={betClick}>{moneyline}</FSWideButton>;
     } else {
-        return <FSWideButton disabled={true}>OFF</FSWideButton>;
+        return <OffButton disabled={true}>OFF</OffButton>;
     }
 });
 

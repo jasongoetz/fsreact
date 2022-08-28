@@ -1,5 +1,5 @@
 import React from "react";
-import {FSWideButton} from "./FSComponents";
+import { FSWideButton, OffButton } from "./FSComponents";
 import {Bettable} from "../types";
 import {useGlobalStores} from "../context/global_context";
 import {addBetToCart} from "../cart/cart.actions";
@@ -47,7 +47,7 @@ const TeamBettableButton: React.FC<Props> = observer(({bettable, team, ...props}
         let disabled = bettableInCart(bettable.id, sideId);
         return <FSWideButton disabled={disabled} onClick={betClick} {...props}>{spread}</FSWideButton>;
     } else {
-        return <FSWideButton disabled={true}>OFF</FSWideButton>;
+        return <OffButton disabled={true}>OFF</OffButton>;
     }
 });
 
