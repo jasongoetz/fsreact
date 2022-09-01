@@ -42,7 +42,7 @@ const MoneylineBettableButton: React.FC<Props> = observer(({bettable, team}) => 
     };
 
     let moneyline = getMoneyline();
-    if (!bettable.off && moneyline) {
+    if (!bettable.off && moneyline && !isNaN(moneyline)) {
         let sideId = getSideId();
         let disabled = bettableInCart(bettable.id, sideId);
         return <FSWideButton disabled={disabled} onClick={betClick}>{moneyline}</FSWideButton>;
