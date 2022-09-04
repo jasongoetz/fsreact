@@ -4,7 +4,6 @@ import React, {useEffect} from "react";
 import {loadInviteByToken} from "../invite/invite.actions";
 import {LoadingContainer} from "./LoadingContainer";
 import {observer} from "mobx-react";
-import Registration from "./Registration";
 import {joinLeagueWithInvite} from "../user/user.actions";
 import {useQueryParam} from "../hooks/useQueryParam";
 
@@ -39,6 +38,6 @@ export const RSVPPage: React.FC = observer(() => {
         return <Redirect to={{pathname: '/', state: {from: location}}}/>
     }
 
-    return <Registration />
+    return <Redirect to={{pathname: '/register', search: `token=${token}`, state: {from: location}}}/>
 });
 
