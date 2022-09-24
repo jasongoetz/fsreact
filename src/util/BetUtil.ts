@@ -20,11 +20,7 @@ export const getBetSummary = (bet: CartBet) => {
 };
 
 export const getGameSummary = (bet: CartBet) => {
-    if (bet.overUnder != null || bet.sideId === bet.bettable.sideId1) {
-        return `${bet.bettable.team1} at ${bet.bettable.team2}`;
-    } else {
-        return `${bet.bettable.team2} at ${bet.bettable.team1}`;
-    }
+    return `${bet.bettable.team1} at ${bet.bettable.team2}`;
 };
 
 export const getButtonMessage = (actionVerb: string, numBets: number, totalAmount: number, parlayActive: boolean) => {
