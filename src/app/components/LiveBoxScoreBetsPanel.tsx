@@ -71,9 +71,9 @@ const getParlayBetDescription = (bet: Bet) => {
     }
     if (bet.sideId) {
         if (bet.bettable.sideId1 === bet.sideId) {
-            return `${bet.bettable.team1} ${bet.moneyline ? `to win (${bet.bettable.team1Moneyline})` : bet.bettable.team1Spread} @ ${bet.bettable.team2}`;
+            return `${bet.bettable.team1} ${bet.moneyline ? `to win (${bet.line})` : bet.line} @ ${bet.bettable.team2}`;
         } else {
-            return `${bet.bettable.team2} ${bet.moneyline ? `to win (${bet.bettable.team2Moneyline})` : bet.bettable.team2Spread} vs ${bet.bettable.team1}`;
+            return `${bet.bettable.team2} ${bet.moneyline ? `to win (${bet.line})` : bet.line} vs ${bet.bettable.team1}`;
         }
     } else {
         return `${bet.bettable.team1} @ ${bet.bettable.team2}: ${bet.overUnder.toLowerCase()} ${bet.bettable.overUnder}`;

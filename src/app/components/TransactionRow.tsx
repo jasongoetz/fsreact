@@ -49,9 +49,9 @@ const getBetDescription = (bet: Bet) => {
         return '[Info Redacted]';
     }
     if (bet.sideId === bet.bettable.sideId1) {
-        return `${bet.bettable.team1} ${bet.line} @ ${bet.bettable.team2}`
+        return `${bet.bettable.team1} ${bet.moneyline ? `to win (${bet.line})` : bet.line} @ ${bet.bettable.team2}`
     } else if (bet.sideId === bet.bettable.sideId2) {
-        return `${bet.bettable.team2} ${bet.line} vs ${bet.bettable.team1}`
+        return `${bet.bettable.team2} ${bet.moneyline ? `to win (${bet.line})` : bet.line} vs ${bet.bettable.team1}`
     } else {
         return `${bet.overUnder === OverUnder.OVER ? " Over" : " Under"} ${bet.line} (${bet.bettable.team2} vs ${bet.bettable.team1})`
     }
