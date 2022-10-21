@@ -41,8 +41,8 @@ const TeamBettableButton: React.FC<Props> = observer(({bettable, team, ...props}
         addBetToCart(bet);
     };
 
-    if (!bettable.off) {
-        let spread = getSpread();
+    const spread = getSpread();
+    if (!bettable.off && spread && !isNaN(spread)) {
         let sideId = getSideId();
         let disabled = bettableInCart(bettable.id, sideId);
         return <FSWideButton disabled={disabled} onClick={betClick} {...props}>{spread}</FSWideButton>;
